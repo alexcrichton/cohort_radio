@@ -1,0 +1,13 @@
+body { background: #D3F3FF; font-family: "Lucida Grande", "Trebuchet MS", Verdana, sans-serif; color: #3D3D3D; padding: 20px; }
+#container { width: 980px; margin: 0 auto; }
+#content { background: #F4F7F7; -webkit-border-radius: 20px; -moz-border-radius: 20px; padding: 20px; padding-top: 30px; clear: left; }
+#other{ background: #F9FDFD; margin: 20px -20px; padding: 20px; border-top: solid 4px #eff1f1; border-bottom: solid 4px #eff1f1; overflow: auto; }
+#footer { margin-top: 10px;text-align: center;font-size: 80%; }
+.defaultTextActive { color: #a1a1a1;font-style: italic; }
+@media print {
+body {background: inherit;}
+#header {display: none;}
+#footer {display: none;}
+#right {display: none;visibility: collapse;}
+div.main {border-right: 0;width: 100%;}
+}
