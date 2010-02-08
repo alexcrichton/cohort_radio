@@ -1,0 +1,27 @@
+<% if @user.admin %>
+  <p>
+    You have been granted the status of an administrator with <strong>Cohort Radio</strong>.<br /> This is a large
+    responsibility as you can no do pretty much just about anything on the website:
+  <p>
+    <%= root_url %>
+  <p>
+    You are not allowed to abuse this power, however. Whoever controls the server has ultimate power, meaning your
+    actions can always be undone and you can be banned. Here are some good rules to go by, I call them the three R's:
+  </p>
+  <ul>
+    <li>Respect</li>
+    <li>Responsibility</li>
+    <li>Arrrrrr, don't be a douchebag</li>
+  </ul>
+  <p>
+    As long as you abide by these rules, you will be allowed to remain as an admin.
+  </p>
+<% else %>
+  <p>
+    Your status as an administrator has been revoked from <strong>Cohort Radio</strong>.
+  </p>
+  <p>
+    This action was performed by another administrator, so contact them as to why if you do now know. Otherwise, please
+    enjoy the rest of your stay at Cohort Radio.
+  </p>
+<% end %>

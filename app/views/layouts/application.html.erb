@@ -1,41 +1,23 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
-<head>
-  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-  <title>Title</title>
-  <link rel="shortcut icon" href="/favicon.ico" />
-  <meta name="description" content="" />
-  <meta name="keywords" content="" />
-  <%= stylesheet_link_tag 'blueprint/screen', 'style', :cache => 'cache/all', :media => "screen, projection, print" %>
-  <!--[if IE lt 8]><%= stylesheet_link_tag 'blueprint/ie', :media => "screen, projection" %><![endif]-->
-  <%= javascript_include_tag 'jquery', 'jquery.form', 'application', :cache => 'cache/all' %>
-</head>
-<body>
-<div id="container">
-  <div id="header">
-    <%= link_to image_tag('logo.jpg', :id => 'logo'), root_path %>
-    <div id="login_links">
-      <% if current_user %>
-        Logged in as: <%= link_to h(current_user.name), current_user %> | <%= link_to 'Log out', logout_path %>
-      <% else %>
-        <%= link_to 'Log in', login_path %> | <%= link_to 'Register', new_user_path %>
-      <% end %>
+<html>
+  <head>
+    <title><%= h(yield(:title) || "Cohort Radio") %></title>
+    <%= stylesheet_link_tag 'blueprint/screen', 'application' %>
+    <%= javascript_include_tag 'jquery', 'jquery.form', 'jquery.validate', 'jquery.autocomplete', 'application' %>
+    <%= yield(:head) %>
+  </head>
+  <body>
+    <div id="container">
+      <%- flash.each do |name, msg| -%>
+        <%= content_tag :div, msg, :id => "flash_#{name}" %>
+      <%- end -%>
+      
+      <%- if show_title? -%>
+        <h1><%=h yield(:title) %></h1>
+      <%- end -%>
+      
+      <%= yield %>
     </div>
-    <ul id="topnav">
-      <li><%= link_to 'Home', root_path %></li>
-    </ul>
-    <%= render 'layouts/topnav' %>
-  </div>
-  <div id="content">
-    <%= render 'layouts/flash_messages' %>
-    <%= yield %>
-  </div>
-  <div id="footer">
-    <p>® 2009, WEBSITE</p>
-  </div>
-</div>
-
-</body>
+  </body>
 </html>

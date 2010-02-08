@@ -1,5 +1,10 @@
-<% title "New User" %>
 
-<%= render :partial => 'form' %>
+<h1 class="tcenter">Signup</h1>
+<% form_for @user, :url => user_path do |f| %>
 
-<p><%= link_to "Back to List", users_path %></p>
+  <%= render 'form', :f => f %>
+
+  <div class="tcenter">
+    <%= f.submit 'Create' %>
+  </div>
+<% end %>

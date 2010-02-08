@@ -2,11 +2,7 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
-  helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
-
-  # Scrub sensitive parameters from your log
-  filter_parameter_logging :password, :password_confirmation
 
   # nil for AJAX
   layout proc { |controller| controller.request.xhr? ? nil : 'application' }
@@ -15,6 +11,13 @@ class ApplicationController < ActionController::Base
 
   # Authlogic stuff
   helper_method :current_user_session, :current_user
+  
+  rescue_from CanCan::AccessDenied do |exception|
+    Exceptional.handle exception
+    flash[:error] = 'Access denied.'
+    store_location unless current_user
+    redirect_to current_user ? playlists_url : login_url
+  end
 
   private
 
@@ -28,33 +31,6 @@ class ApplicationController < ActionController::Base
     @current_user = current_user_session && current_user_session.user
   end
 
-  def require_user
-    unless current_user
-      store_location
-      flash[:notice] = "You must be logged in to access this page"
-      redirect_to login_path
-      return false
-    end
-  end
-
-  def require_admin
-    unless current_user && current_user.admin
-      store_location
-      flash[:notice] = "You must be an administrator to access this page"
-      redirect_to root_path
-      return false
-    end
-  end
-
-  def require_no_user
-    if current_user
-      store_location
-      flash[:notice] = "You must be logged out to access this page"
-      redirect_to root_path
-      return false
-    end
-  end
-
   def store_location
     session[:return_to] = request.request_uri
   end
@@ -65,29 +41,26 @@ class ApplicationController < ActionController::Base
   end
 
   def load_models
-    begin
-      @current = controller_name.classify.constantize.find(params[:id].to_i) if params[:id]
-    rescue NameError # id doesn't mean for this controller
-    rescue ActiveRecord::RecordNotFound
-      klass = controller_name.classify.constantize
-      @current = klass.try(:find_by_slug, params[:id])
-    end
+    @current = find_model params[:id]
     instance_variable_set "@#{controller_name.singularize}", @current
-    @parent = nil
-    keys = params.keys
+
     regex = /(.+)_id/
-    keys = keys.select{ |k| regex.match(k) }
-    return if keys.nil? || keys.size == 0
-    keys.each do |key|
-      begin
-        @parent = regex.match(key)[1].classify.constantize.find(params[key].to_i)
-      rescue NameError
-      rescue ActiveRecord::RecordNotFound
-        klass = regex.match(key)[1].classify.constantize
-        @parent = klass.try(:find_by_slug, params[key])
-      end
+    params.keys.each do |key|
+      next unless regex.match(key)
+      @parent = find_model params[key], regex.match(key)[1]
       instance_variable_set "@#{regex.match(key)[1]}", @parent
     end
+  end
+  
+  def find_model id, name = controller_name
+    return nil if id.blank?
+    klass = name.to_s.classify.constantize
+    if klass.include? Acts::Slug::InstanceMethods
+      klass.find_by_slug id
+    else
+      klass.find(id.to_i)
+    end
+  rescue NameError # id doesn't mean for this controller
   end
 
 end

@@ -19,3 +19,58 @@ function error() {
   $('img.loading').remove();
   alert('Server Error... Please try later');
 }
+
+$.fn.extend({
+  bindActivationLinks: function() {
+    return $(this);
+  }
+});
+$(function() {
+  if ($('#activations').length == 0) return;
+  // send activation email
+  $('#pending a').live('click', function() {
+    var span = $(this).parent();
+    span.html(smallAjax);
+    span.parents('form').ajaxSubmit({
+      success: function(response, text) {
+        if (response.match(/error/))
+          err(span);
+        else
+          span.parents('td').html($('<span>success</span>').css('color', 'green'));
+      }
+    });
+    return false;
+  });
+
+  $('#activated form a, #confirmed form a').live('click', function() {
+    var other = $(this).parents('#confirmed').length == 0 ? 'confirmed' : 'activated';
+    var parent = $(this).parent();
+    parent.html(smallAjax);
+    parent.parents('form').ajaxSubmit({
+      success: function(response) {
+        if (!response.match(/error/)) {
+          $.get('/activation/form/' + response, {form:other}, function(response) {
+            parent.parents('tr').fadeOut(function() {
+              $(this).remove();
+            });
+            $('#' + other + ' table').append($(response).hide().fadeIn()).parents('#activations');
+          });
+        } else {
+          err(element);
+        }
+      }
+    });
+    
+    return false;
+  });
+  // adminize the user
+  $('#confirmed input:checkbox').live('click', function() {
+    $(this).next('span').html(smallAjax).parents('form').ajaxSubmit({
+      target: $(this).next('span')
+    });
+  });
+});
+
+function err(span) {
+  span.html('error').css('color', 'red');
+}

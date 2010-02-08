@@ -1,0 +1,10 @@
+<tr>
+  <td><%= h user.name %></td>
+  <td><%= user.email %></td>
+  <% id = "pending_user_#{user.id}" %>
+  <td>
+    <% form_for user, :url => activation_path, :html => {:method => :put, :id => id} do |f| %>
+      <%= render 'activations/form', :user => user, :id => id, :op => 'activate', :link => '[send]', :f => f %>
+    <% end %>
+  </td>
+</tr>

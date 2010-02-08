@@ -1,0 +1,12 @@
+<% title "Playlist" %>
+
+<p>
+  <strong>Name:</strong>
+  <%=h @playlist.name %>
+</p>
+
+<p>
+  <%= link_to "Edit", edit_playlist_path(@playlist) %> |
+  <%= link_to "Destroy", @playlist, :confirm => 'Are you sure?', :method => :delete %> |
+  <%= link_to "View All", playlists_path %>
+</p>

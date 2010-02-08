@@ -1,10 +1,12 @@
 class UsersController < ApplicationController
-  def index
-    @users = User.all
+  
+  authorize_resource
+  
+  def home
+    redirect_to(current_user ? playlists_path : login_path)
   end
   
   def show
-    @user = User.find(params[:id])
   end
   
   def new
@@ -13,20 +15,22 @@ class UsersController < ApplicationController
   
   def create
     @user = User.new(params[:user])
-    if @user.save
-      flash[:notice] = "Successfully created user."
-      redirect_to @user
+
+    # Saving without session maintenance to skip auto-login which can't happen here because
+    # the user has not yet been activated
+    if @user.save_without_session_maintenance
+      @user.deliver_activation_instructions!
+      flash[:notice] = "Account created! Please check your email for activation instructions."
+      redirect_to login_path
     else
       render :action => 'new'
     end
   end
   
   def edit
-    @user = User.find(params[:id])
   end
   
   def update
-    @user = User.find(params[:id])
     if @user.update_attributes(params[:user])
       flash[:notice] = "Successfully updated user."
       redirect_to @user
@@ -35,10 +39,16 @@ class UsersController < ApplicationController
     end
   end
   
+  def adminize
+    @user.admin = params[:user][:admin]
+    Notifier.send_later :deliver_admin_notification, @user if @user.save
+    render :text => (params[:user][:admin] == '1' ? 'Adminized' : 'Revoked')
+  end
+  
   def destroy
-    @user = User.find(params[:id])
     @user.destroy
     flash[:notice] = "Successfully destroyed user."
     redirect_to users_url
   end
+  
 end

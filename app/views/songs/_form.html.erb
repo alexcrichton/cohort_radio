@@ -1,0 +1,9 @@
+<% form_for @song, :html => {:multipart => true} do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label :audio, 'Audio File' %><br />
+    <%= f.file_field :audio %>
+  </p>
+<%= f.object.audio_content_type%>
+  <p><%= f.submit "Submit" %></p>
+<% end %>

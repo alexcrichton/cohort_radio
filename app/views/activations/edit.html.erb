@@ -1,0 +1,58 @@
+<div id="activations">
+  <div id="activated" class="span-10 colborder">
+    <h1>Activated</h1>
+
+    <p>
+      You or another admin must confirm these people so they can use the website.
+    </p>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Action</th>
+      </tr>
+      <% @activated.each do |user| %>
+        <%= render 'activated', :user => user if user.id != current_user.id %>
+      <% end %>
+    </table>
+  </div>
+
+  <div id="confirmed" class="span-10 last">
+    <h1>Confirmed</h1>
+
+    <p>
+      People who have been confirmed. If done by accident, or due to behavior, this priviledge can be revoked using the
+      '[revoke]' link. You can also make any of these users an admin via the use of the check box. Similarly, you can
+      revoke admin privileges.
+    </p>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Action</th>
+        <th>Admin</th>
+      </tr>
+      <% @confirmed.each do |user| %>
+        <%= render 'confirmed', :user => user if user.id != current_user.id %>
+      <% end %>
+    </table>
+  </div>
+  <hr />
+  <div id="pending" class="span-10">
+    <h1>Pending Activation</h1>
+
+    <p>
+      Instructions to activate accounts have been sent, click the link to re-send this email.
+    </p>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Action</th>
+      </tr>
+      <% @pending.each do |user| %>
+        <%= render 'pending', :user => user if user.id != current_user.id %>
+      <% end %>
+    </table>
+  </div>
+</div>
