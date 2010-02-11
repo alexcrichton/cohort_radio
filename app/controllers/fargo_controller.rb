@@ -1,0 +1,4 @@
+class FargoController < ApplicationController
+  
+  
+end

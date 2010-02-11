@@ -56,11 +56,13 @@ class ApplicationController < ActionController::Base
     return nil if id.blank?
     klass = name.to_s.classify.constantize
     if klass.include? Acts::Slug::InstanceMethods
+      puts 'here'
       klass.find_by_slug id
     else
       klass.find(id.to_i)
     end
-  rescue NameError # id doesn't mean for this controller
+  # rescue NameError => e # id doesn't mean for this controller
+  #   raise e
   end
 
 end

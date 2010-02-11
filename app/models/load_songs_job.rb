@@ -1,0 +1,1 @@
+class LoadSongsJob < Struct.new(:path)

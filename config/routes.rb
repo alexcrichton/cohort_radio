@@ -1,6 +1,9 @@
 CohortRadio::Application.routes.draw do |map|
   
-  resources :songs
+  resources :songs do 
+    get :load_locally, :on => :collection
+    get :admin, :on => :collection
+  end
 
   resources :playlists
 
@@ -19,6 +22,6 @@ CohortRadio::Application.routes.draw do |map|
   resource :user_session, :only => [:create]
 
   root :to => 'users#home'
+  match ':controller(/:action(/:id(.:format)))'
   match ':id' => 'playlists#show'
-
 end

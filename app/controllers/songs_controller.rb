@@ -1,6 +1,7 @@
 class SongsController < ApplicationController
+  
   def index
-    @songs = Song.paginate :page => params[:page]
+    @songs = Song.scoped.paginate :page => params[:page]
   end
   
   def show
@@ -32,9 +33,27 @@ class SongsController < ApplicationController
     end
   end
   
+  def download
+    send_file @song.audio.path
+  end
+  
   def destroy
     @song.destroy
     flash[:notice] = "Successfully destroyed song."
     redirect_to songs_url
   end
+  
+  def admin
+  end
+  
+  def load_locally
+    path = params[:path]
+    Delayed::Job.enqueue 
+    # @failed = []
+    # Dir[path + '/**/*.mp3'].each do |file|
+    #   s = Song.new :audio => File.new(file)
+    #   @failed << [file, s] unless s.save
+    # end
+  end
+  
 end

@@ -2,13 +2,17 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
   <head>
-    <title><%= h(yield(:title) || "Cohort Radio") %></title>
+		<%= csrf_meta_tag %>
+    <title><%= content_for?(:title) ? yield(:title) : "Cohort Radio" %></title>
     <%= stylesheet_link_tag 'blueprint/screen', 'application' %>
-    <%= javascript_include_tag 'jquery', 'jquery.form', 'jquery.validate', 'jquery.autocomplete', 'application' %>
+    <%= javascript_include_tag 'jquery', 'rails', 'jquery.form', 'jquery.validate', 'jquery.autocomplete', 'application' %>
     <%= yield(:head) %>
   </head>
   <body>
     <div id="container">
+			<%= link_to 'Songs', songs_path %>
+			<%= link_to 'Playlists', playlists_path %>
+			<%= link_to "Admin songs", :controller => "songs", :action => "admin" %>
       <%- flash.each do |name, msg| -%>
         <%= content_tag :div, msg, :id => "flash_#{name}" %>
       <%- end -%>

@@ -57,7 +57,4 @@ module Acts
   end
 end
 
-ActiveRecord::Base.class_eval do
-  include Acts::Slug
-end
 
