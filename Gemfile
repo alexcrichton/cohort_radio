@@ -3,7 +3,7 @@
 
 gem "rails", "3.0.0.beta"
 gem 'cancan'
-gem 'authlogic', :git => "git://github.com/binarylogic/authlogic.git"
+gem 'authlogic'
 gem 'paperclip'
 gem 'ruby-mp3info', :require => 'mp3info'
 gem 'ruby-shout', :require => 'shout'
