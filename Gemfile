@@ -12,6 +12,7 @@ gem 'exceptional'
 gem 'will_paginate'
 gem 'scrobbler'
 gem 'daemons'
+
 # Not compatible with rails 3 just yet...
 # gem 'thinking-sphinx', :require => 'thinking_sphinx', :source => 'http://gemcutter.org/'
 

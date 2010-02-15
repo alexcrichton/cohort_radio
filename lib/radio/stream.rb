@@ -35,6 +35,8 @@ class Radio
           m = ShoutMetadata.new
           m.add 'filename', song.audio.path
           m.add 'song', @@tag_recoder.iconv("#{song.title} (#{song.artist} - #{song.album})")
+          m.add 'artist', @@tag_recoder.iconv("#{song.artist}")
+          m.add 'album', @@tag_recoder.iconv("#{song.album}")
 
           self.metadata = m
         
@@ -43,11 +45,13 @@ class Radio
           begin
             File.open(song.audio.path) do |file|
               while data = file.read(BLOCKSIZE)
+                break if @next
               	self.send data
                 puts "Stream: #{name} - Block sent"
               	self.sync
               end
             end
+            @next = false
           rescue => e
             Rails.logger.error "Stream: #{name} ERROR: #{e}"
             disconnect
@@ -58,15 +62,20 @@ class Radio
       }
     end
     
-    def random_song
-      ids = Song.select(:id).map &:id
-      Song.find(ids[rand(ids.size)])
-    end
-    
     def disconnect
       @thread.exit if @thread
       @thread = nil
       super if connected?
+    end
+    
+    def next
+      @next = true
+    end
+    
+    private
+    def random_song
+      ids = Song.select(:id).map &:id
+      Song.find(ids[rand(ids.size)])
     end
     
   end

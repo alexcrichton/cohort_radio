@@ -1,14 +1,14 @@
 server "eve.alexcrichton.com", :app, :web, :db, :primary => true
-set :rake, "/opt/ruby1.8/bin/rake"
 ssh_options[:port] = 7779
 
 set :user, "capistrano"
 set :use_sudo, false
 
+set :rake, "/opt/ruby1.8/bin/rake"
+
 set :scm, :git
-set :repository, "git://github.com/alexcrichton/cohort_radio.git"
-set :branch, ENV['BRANCH'] || "master"
-set :rails_env, ENV['RAILS_ENV'] || "production"
+set :repository, "git://eve.alexcrichton.com/public/cohort_radio.git"
+set :branch, "master"
 set :deploy_via, :remote_cache
 
 set :deploy_to, "/srv/http/cohort_radio"
@@ -21,13 +21,16 @@ after "deploy:update_code", "db:symlink"
 namespace :db do
   task :default do
     run "mkdir -p #{shared_path}/config"
+    run "mkdir -p #{shared_path}/files"
   end
 
   desc "Make symlink for database yaml" 
   task :symlink do
     run "ln -nsf #{shared_path}/config/mail_auth.rb #{release_path}/config/initializers/"
     run "ln -nsf #{shared_path}/config/database.yml #{release_path}/config/"
+    run "ln -nsf #{shared_path}/files #{latest_release}/private"
   end
+
 end
 
 # run through phusion passenger on nginx
@@ -43,14 +46,26 @@ namespace :deploy do
   end
 end
 
-namespace :worker do 
+namespace :push do 
   task :restart, :roles => :app do
-    run "RAILS_ENV=#{rails_env} #{release_path}/script/delayed_job restart"
+    run "#{release_path}/script/push_server restart"
   end
   task :start, :roles => :app do
-    run "RAILS_ENV=#{rails_env} #{release_path}/script/delayed_job start"
+    run "#{release_path}/script/push_server start"
   end
   task :stop, :roles => :app do
-    run "RAILS_ENV=#{rails_env} #{release_path}/script/delayed_job stop"
+    run "#{release_path}/script/push_server stop"
+  end
+end
+
+namespace :worker do 
+  task :restart, :roles => :app do
+    run "RAILS_ENV=production #{release_path}/script/delayed_job restart"
+  end
+  task :start, :roles => :app do
+    run "RAILS_ENV=production #{release_path}/script/delayed_job start"
+  end
+  task :stop, :roles => :app do
+    run "RAILS_ENV=production #{release_path}/script/delayed_job stop"
   end
 end
