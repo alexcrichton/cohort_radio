@@ -17,7 +17,7 @@ module Fargo
       
       def receive(data)
         message = parse_message data
-        publish message
+        publish message[:type], message
         case message[:type]
           when :mynick
             if @handshake_step == 0
@@ -71,7 +71,6 @@ module Fargo
           else
             # Fargo.logger.warn "Ignoring `#{data}'\n"
         end
-        publish message
       end
   
       def write_chunk

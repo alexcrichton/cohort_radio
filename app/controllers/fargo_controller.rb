@@ -1,4 +1,0 @@
-class FargoController < ApplicationController
-  
-  
-end

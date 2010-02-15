@@ -1,12 +1,15 @@
-<% title "Playlist" %>
+<div class="search">
+	<div>
+		<%= link_to 'Add your own', new_song_path %>
+		<%= link_to 'Find a new one', :controller => 'fargo/search' if fargo_connected? %>
+	</div>
+	<% form_tag enqueue_playlist_path(@playlist), :id => 'song-search' do %>
+		<div>
+			<%= hidden_field_tag :playlist_id, @playlist.slug %>
+			<%= text_field_tag :q, '', :autocomplete => 'off' %>
+			<%= submit_tag "Add" %>
+		</div>
+	<% end %>
+</div>
 
-<p>
-  <strong>Name:</strong>
-  <%=h @playlist.name %>
-</p>
-
-<p>
-  <%= link_to "Edit", edit_playlist_path(@playlist) %> |
-  <%= link_to "Destroy", @playlist, :confirm => 'Are you sure?', :method => :delete %> |
-  <%= link_to "View All", playlists_path %>
-</p>
+<%= render @playlist.songs %>

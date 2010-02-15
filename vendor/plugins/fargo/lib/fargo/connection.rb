@@ -39,57 +39,71 @@ module Fargo
       !@socket.nil?
     end
     
+    def listen
+      return unless @threads.nil? || @threads.size == 0
+      @threads = []
+      # Start a thread to read the socket
+      @threads << Thread.start { loop { read_data } }
+      # Start a thread to send information from the queue
+      @threads << Thread.start { loop { write_data @outgoing.pop } }
+      @threads.each { |t| t.abort_on_exception = true }
+      post_listen if respond_to? :post_listen
+    end
+  
+    def disconnect
+      Fargo.logger.debug "#{self}: Disconnecting connection"
+      write "$Quit #{self[:nick]}"
+      if @threads
+        @threads.each &:exit
+        @threads.clear
+      end
+      if @socket
+        begin
+          @socket.close
+        rescue => e
+          Fargo.logger.error "Error closing socket: #{e}"
+        end
+      end
+      @socket = nil
+      @outgoing.clear
+      
+      connection_type = self.class.name.split("::").last.downcase
+      publish :"#{connection_type}_disconnected"
+    end
+  
+    def write string
+      string << '|' unless string =~ /\|$/
+      @outgoing << string
+    end
+    
+    private
     def read_data
-      data = @socket.gets "|"
-      if data.nil?
-        publish :socket_gone
+      if @socket.closed?
+        Fargo.logger.debug "When reading data, socket was already closed!"
         disconnect
       else
-        puts "#{self} Received: #{data.inspect}" if defined?(Fargo::DEBUG)
+        data = @socket.gets "|"
+        Fargo.logger.debug "#{self} Received: #{data.inspect}" 
         receive data.chomp('|')
       end
-    rescue IOError
+    rescue => e
+      Fargo.logger.warn "#{self}: Error reading data, disconnecting: #{e}"
       disconnect
     end
     
-    def write_data
-      data = @outgoing.pop
-      puts "#{self} Sending: #{data.inspect}" if defined?(Fargo::DEBUG)
+    def write_data data
+      if @socket.closed?
+        Fargo.logger.debug "When writing data, socket was already closed!"
+        disconnect
+        return
+      end
+
+      Fargo.logger.debug "#{self} Sending: #{data.inspect}" 
       @socket << data
     rescue 
       publish :write_error
       disconnect
     end
-
-    def listen
-      return unless @threads.nil? || @threads.size > 0
-      @threads = []
-      # Start a thread to read the socket
-      @threads << Thread.start { loop { read_data } }
-      # Start a thread to send information from the queue
-      @threads << Thread.start { loop { write_data } }
-      post_listen if respond_to? :post_listen
-    end
-  
-    def disconnect
-      write "$Quit #{self[:nick]}"
-      @threads.each { |thread| thread.exit } if @threads
-      if @socket
-        begin
-          @socket.close
-          @socket = nil
-        rescue
-        end
-      end
-      @outgoing.clear
-
-      publish :disconnected
-    end
-  
-    def write(string)
-      string << '|' unless string =~ /\|$/
-      @outgoing << string
-    end
-  
+    
   end
 end

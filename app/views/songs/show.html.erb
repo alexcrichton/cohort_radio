@@ -4,7 +4,7 @@
   <strong>Name:</strong>
   <%= @song.title %>
 </p>
-
+<%= link_to "download", download_song_path(@song) %>
 <p>
   <%= link_to "Edit", edit_song_path(@song) %> |
   <%= link_to "Destroy", @song, :confirm => 'Are you sure?', :method => :delete %> |

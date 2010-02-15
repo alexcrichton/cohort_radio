@@ -15,7 +15,7 @@ class SongsController < ApplicationController
     @song = Song.new(params[:song])
     if @song.save
       flash[:notice] = "Successfully created song."
-      redirect_to @song
+      redirect_to playlist_path('main')
     else
       render :action => 'new'
     end
@@ -34,6 +34,7 @@ class SongsController < ApplicationController
   end
   
   def download
+    puts @song.audio.path
     send_file @song.audio.path
   end
   
@@ -43,17 +44,9 @@ class SongsController < ApplicationController
     redirect_to songs_url
   end
   
-  def admin
-  end
-  
-  def load_locally
-    path = params[:path]
-    Delayed::Job.enqueue 
-    # @failed = []
-    # Dir[path + '/**/*.mp3'].each do |file|
-    #   s = Song.new :audio => File.new(file)
-    #   @failed << [file, s] unless s.save
-    # end
+  def search
+    @songs = Song.limit(params[:limit]).where('title LIKE ?', "%#{params[:q]}%")
+    render :text => @songs.map { |s| "<img src='#{s.album_image_url}' height='30px'/> #{s.title} - #{s.artist} (#{s.id})\n" }
   end
   
 end

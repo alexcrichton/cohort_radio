@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   authorize_resource
   
   def home
-    redirect_to(current_user ? playlists_path : login_path)
+    redirect_to current_user ? playlist_path('main') : login_path
   end
   
   def show

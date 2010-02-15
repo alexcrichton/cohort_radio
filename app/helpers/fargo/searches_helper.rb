@@ -1,0 +1,2 @@
+module Fargo::SearchesHelper
+end

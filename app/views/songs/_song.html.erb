@@ -1,0 +1,15 @@
+<div class="song">
+	<div class='image'>
+		<%= image_tag song.album_image_url %>
+	</div>
+	<div class='content'>
+		<h3><%= song.title %></h3>
+		<h5><%= song.artist %> &mdash; <%= song.album %></h5>
+		<p>
+			Play count: <%= song.play_count %>
+		</p>
+	</div>
+	<div class='links'>
+		<%= link_to '[download]', download_song_path(song) %>
+	</div>
+</div>

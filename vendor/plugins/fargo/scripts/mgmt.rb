@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'init'
-Fargo::DEBUG = 1
-mgmt = Fargo::Management::Server.new :port => 10090, :client => Fargo::Client.new
+require '../init'
+mgmt = Fargo::Management::Server.new :port => 10091, :client => Fargo::Client.new
 puts "Creating management server"
 mgmt.connect
 

@@ -2,9 +2,7 @@ class Ability
   include CanCan::Ability
   
   def initialize(user)
-    
-    alias_action :search, :to => :read
-    
+        
     if user.nil? || user.activation.nil? || user.activation.pending?
       can :login, User
       can :create, User
@@ -14,6 +12,8 @@ class Ability
       can :manage, :all
       cannot :reset, 'password' # need to be logged out (don't want to mess with other users)
     elsif user.confirmed?
+      can :read, Playlist
+      can [:download, :create], Song
       can :manage, user
       can :read, User
       can :read, :all

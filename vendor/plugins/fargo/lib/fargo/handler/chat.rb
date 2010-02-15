@@ -18,13 +18,14 @@ module Fargo
         @public_chats = []
         @chats = Hash.new{ |h, k| h[k] = [] }
 
-        hub.subscribe do |map|
-          if map.is_a?(Hash) && (map[:type] == :privmsg || map[:type] == :chat)
-            if map[:type] == :chat
-              @public_chats << map
-            else
-              @chats[map[:from]] << map
-            end
+        hub.subscribe do |type, map|
+          if type == :chat
+            @public_chats << map
+          elsif type == :privmsg
+            @chats[map[:from]] << map
+          elsif type == :hub_disconnected
+            @chats.clear
+            @public_chats.clear
           end
         end
       end

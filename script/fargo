@@ -1,22 +1,5 @@
 #!/usr/bin/env ruby
 
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'environment'))
+require File.expand_path('../../config/environment',  __FILE__)
 
-require 'daemons'
-
-options = {
-  :dir_mode => :normal,
-  :dir => File.dirname(__FILE__) + '/../log/',
-  :log_output => true,
-  :backtrace => true
-}
-
-Daemons.run_proc('fargo', options) do
-  PushServer.logger.info ''
-  PushServer.logger.info '====== STARTING FARGO ======='
-  PushServer.logger.info ''
-  # EventMachine::run {
-  #   EM.epoll
-  #   EM.start_server '127.0.0.1', '8081', PushServer
-  # }
-end
+Radio::FargoDaemon.new(ARGV).daemonize

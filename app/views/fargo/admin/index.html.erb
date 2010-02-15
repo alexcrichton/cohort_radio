@@ -1,0 +1,19 @@
+<% if @connected == 'error' %>
+	<p>
+		Fargo is currently not running most likely or we've just hit an error.
+	</p>
+	<p>
+		You prolly wanna start that up again.
+	</p>
+<% elsif @connected %>
+	<p>
+		Fargo is connected!
+	</p>
+<% else %>
+	<p>
+		Fargo is currently disconnected.
+	</p>
+	<p>
+		You may <%= link_to 'Connect it', :controller => 'fargo/commands', :action => 'connect' %>
+	</p>
+<% end %>

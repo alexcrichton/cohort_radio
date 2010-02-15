@@ -10,7 +10,8 @@ module Fargo
       end
 
       def receive(data)
-        publish parse_message(data)
+        message = parse_message data
+        publish message[:type], message
       end
   
       def supports

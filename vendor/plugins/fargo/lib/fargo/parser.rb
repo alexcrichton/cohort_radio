@@ -74,10 +74,10 @@ module Fargo
         when @@psr            then {:type => :search_result, :nick => $1, :file => $2, :size => $3.to_i, 
                                     :open_slots => $4.to_i, :slots => $5.to_i, :hub => $6, :address => $7, 
                                     :port => $8.to_i}
-        when @@psearch        then {:type => :passive_search, :searcher => $1, :restrict_size => $2,
-                                    :min_size => $3, :size => $4, :filetype => $5, :pattern => $6}
-        when @@search         then {:type => :active_search, :address => $1, :port => $2, :restrict_size => $3,
-                                    :min_size => $4, :size => $5, :filetype => $6, :pattern => $7}
+        when @@psearch        then {:type => :search, :searcher => $1, :restrict_size => $2,
+                                    :min_size => $3.to_i, :size => $4.to_i, :filetype => $5, :pattern => $6}
+        when @@search         then {:type => :search, :address => $1, :port => $2.to_i, :restrict_size => $3,
+                                    :min_size => $4.to_i, :size => $5.to_i, :filetype => $6, :pattern => $7}
         when @@oplist         then {:type => :op_list, :nicks => $1.split(/\$\$/)}
         when @@oplist         then {:type => :bot_list, :nicks => $1.split(/\$\$/)}
         when @@quit           then {:type => :quit, :who => $1}

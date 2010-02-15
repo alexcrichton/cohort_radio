@@ -11,6 +11,8 @@ gem 'delayed_job'
 gem 'exceptional'
 gem 'will_paginate'
 gem 'scrobbler'
+gem 'daemons'
+# Not compatible with rails 3 just yet...
 # gem 'thinking-sphinx', :require => 'thinking_sphinx', :source => 'http://gemcutter.org/'
 
 ## Bundle edge rails:
@@ -18,7 +20,7 @@ gem 'scrobbler'
 
 # ActiveRecord requires a database adapter. By default,
 # Rails has selected sqlite3.
-gem "sqlite3-ruby", :require => "sqlite3"
+gem "sqlite3-ruby", :require => 'sqlite3'
 
 ## Bundle the gems you use:
 # gem "bj"

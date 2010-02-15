@@ -1,0 +1,2 @@
+module Fargo::CommandsHelper
+end

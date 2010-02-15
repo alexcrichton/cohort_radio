@@ -6,19 +6,22 @@ module Fargo
       @@after_setup_callbacks << method
     end
     
+    include Fargo::Utils::Publisher
     include Fargo::Handler::Chat
     include Fargo::Handler::NickList
     include Fargo::Handler::Searches
     
     DEFAULTS = {:hub_port => 7314, :active_port => 7315, :hub_address => '127.0.0.1', :search_port => 7316,
-                :nick => 'cenphol2', :passive => true, :address => '128.2.152.87'}
+                :nick => 'cenphol2', :passive => true, :address => '128.2.152.87', 
+                :download_dir => '/tmp/fargo/downloads'}
   
     attr_accessor :options
 
     def initialize(opts = {})
       self.options = DEFAULTS.merge opts
-      self.downloading = Hash.new { |h, k| h[k] = []}
+      self.downloading = Hash.new { |h, k| h[k] = [] }
       self.version = '0.75'
+      FileUtils.mkdir_p options[:download_dir] unless File.directory? options[:download_dir]
     end
   
     # Don't do this in initialization so we have time to set all the options
@@ -27,10 +30,17 @@ module Fargo
       self.searcher = Fargo::Connection::Search.new options.merge(:client => self, :port => search_port, :address => '127.0.0.1') unless passive
       self.active_server = Fargo::ActiveServer.new options.merge(:client => self, :port => active_port, :address => '127.0.0.1') unless passive
       post_setup if respond_to? :post_setup
+      
+      hub.subscribe{ |*args| publish *args }
+      searcher.subscribe{ |*args| publish *args } unless passive
+      active_server.subscribe{ |*args| publish *args } unless passive
+            
       @@after_setup_callbacks.each{ |callback| send callback }
     end
   
     def download nick, file
+      raise ConnectionException.new "Not connected yet!" unless options[:hub]
+      raise ConnectionException.new "User #{nick} does not exist!" unless nicks.include? nick
       downloading[nick] << file
       if passive
         hub.write "$RevConnectToMe #{self.nick} #{nick}"
@@ -49,9 +59,11 @@ module Fargo
   
     def connect
       setup if options[:hub].nil?
+      Fargo.logger.info "Connecting to hub..."
       hub.connect
       searcher.connect unless passive
       active_server.connect unless passive
+      Fargo.logger.info "Connected to hub"
     end
     
     def connected?
@@ -60,6 +72,7 @@ module Fargo
   
     def disconnect
       return if options[:hub].nil?
+      Fargo.logger.info "Disconnecting from hub."
       hub.disconnect
       searcher.disconnect unless passive
       active_server.disconnect unless passive

@@ -7,6 +7,7 @@ module Fargo
       end
       
       def search_hub search
+        raise ConnectionException.new "Not connected yet!" unless connected?
         search = normalize search
         @searches[search.to_s] = []
         @search_objects[search.to_s] = search
@@ -37,15 +38,18 @@ module Fargo
       def subscribe_to_searches
         @searches = {}
         @search_objects = {}
-        hub.subscribe do |map|
-          if map.is_a?(Hash) && map[:type] == :search_result
+        hub.subscribe do |type, map|
+          if type == :search_result
             @searches.keys.each do |search|
               @searches[search] << map if @search_objects[search].matches_result?(map)
             end
+          elsif type == :hub_disconnected
+            @searches.clear
+            @search_objects.clear
           end
         end
-        
       end
+      
     end
   end
 end

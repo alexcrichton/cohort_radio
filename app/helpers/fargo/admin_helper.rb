@@ -1,0 +1,2 @@
+module Fargo::AdminHelper
+end

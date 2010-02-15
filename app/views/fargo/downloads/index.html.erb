@@ -1,0 +1,22 @@
+
+<table>
+	<tr>
+		<th>Nick</th>
+		<th>File</th>
+		<th>Last Run</th>
+		<th>Last Error</th>
+		<th>Attempts</th>
+	</tr>
+	<% @items.each do |item| %>
+		<tr>
+			<td><%= item.payload_object.nick %></td>
+			<td><%= item.payload_object.file %></td>
+			<td><%= item.run_at %></td>
+			<td><%= item.last_error.split("\n").first unless item.last_error.nil? %></td>
+			<td><%= item.attempts %></td>
+			<td>
+				<%= link_to "Remove", fargo_download_path(item.id), :method => :delete %>
+			</td>
+		</tr>
+	<% end %>
+</table>

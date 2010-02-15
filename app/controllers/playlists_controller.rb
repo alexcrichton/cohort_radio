@@ -11,6 +11,11 @@ class PlaylistsController < ApplicationController
     @playlist = Playlist.new
   end
   
+  def enqueue
+    @playlist.songs << @song
+    redirect_to @playlist
+  end
+  
   def create
     @playlist = Playlist.new(params[:playlist])
     if @playlist.save

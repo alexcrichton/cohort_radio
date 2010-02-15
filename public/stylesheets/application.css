@@ -80,3 +80,79 @@ a {
   font-size: 12px;
   list-style: disc;
 }
+
+pre {
+  background: #ccc;
+  font-size: 80%;
+  border: 1px solid black;
+}
+
+.song {
+  width: 100%;
+  overflow: auto;
+  border: 3px solid #ccc;
+  -webkit-border-radius: 20px;
+  -mozilla-border-radius: 20px;
+}
+
+.song div {
+  float: left;
+  margin: 10px;
+}
+
+.search div {
+  float: left;
+}
+.search form div {
+  float: right;
+}
+.search input[type=text] {
+  font-size: 150%;
+  width: 300px;
+}
+
+input[type=submit] {
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  padding: 0 8px;
+  border: 1px solid #999;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
+  background: -moz-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
+  font-size: 150%;
+  height: 30px;
+  margin: 0.5em;
+}
+
+input[type=submit]:active {
+  background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#ddd));
+  background: -moz-gradient(linear, left top, left bottom, from(#ccc), to(#ddd));
+}
+
+#search fieldset {
+  overflow: auto;
+  border: 5px solid #ccc;
+  -webkit-border-radius: 20px;
+  -mozilla-border-radius: 20px;
+}
+
+#search fieldset .nick {
+  width: 100px;
+  padding-right: 10px;
+}
+
+#search .size {
+  font-weight: bold;
+  width: 100px;
+}
+
+#search input[type=submit] {
+  font-size: 100%;
+  margin: 0 10px 0 0;
+  height: 20px;
+}
+
+#search fieldset div {
+  float: left;
+}

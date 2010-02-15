@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
     Exceptional.handle exception
     flash[:error] = 'Access denied.'
     store_location unless current_user
-    redirect_to current_user ? playlists_url : login_url
+    redirect_to current_user ? playlist_path('main') : login_url
   end
 
   private
@@ -56,12 +56,11 @@ class ApplicationController < ActionController::Base
     return nil if id.blank?
     klass = name.to_s.classify.constantize
     if klass.include? Acts::Slug::InstanceMethods
-      puts 'here'
       klass.find_by_slug id
     else
       klass.find(id.to_i)
     end
-  # rescue NameError => e # id doesn't mean for this controller
+  rescue NameError => e # id doesn't mean for this controller
   #   raise e
   end
 

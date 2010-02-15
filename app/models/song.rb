@@ -10,7 +10,7 @@ class Song < ActiveRecord::Base
   validates_attachment_content_type :audio, :content_type => ['audio/mpeg', 'application/x-mp3', 'audio/mp3']
   
   before_validation :set_metadata
-
+  
   private
   def set_metadata
     if new_record?
@@ -18,7 +18,7 @@ class Song < ActiveRecord::Base
     else
       file = audio.path
     end
-    return unless Mp3Info.hastag1?(file)
+    return unless Mp3Info.hastag1?(file) || Mp3Info.hastag2?(file)
     info = Mp3Info.new(file).tag
     self[:artist] = info['artist']
     self[:album] = info['album']
@@ -26,6 +26,8 @@ class Song < ActiveRecord::Base
     return if self[:album].blank? || self[:artist].blank?
     album = Scrobbler::Album.new(self[:artist], self[:album], :include_info => true)
     self[:album_image_url] = album.image_large
+  rescue => e
+    Rails.logger.error "Error setting metadata #{e}"
   end
   
 end

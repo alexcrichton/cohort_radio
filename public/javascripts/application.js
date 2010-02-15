@@ -15,6 +15,26 @@ $(function() {
   });
 });
 
+$(function(){
+  $("#song-search #q").autocomplete('/songs/search', {
+    matchContains: true,
+    extraParams: {
+      playlist_id:$('.search #playlist_id').attr('value'),
+    },
+    cacheLength: 50,
+    // multiple: false,
+    formatItem: function(row) {
+      return row[0].replace(/\(\d+\)/, '');
+    },
+    formatResult: function(arr) {
+      return arr[0].replace(/<img.*?\/>\s*/, '').replace(/\s*\(\d+\)$/, '');
+    }
+  }).result(function(event, data, formatted) {
+    var id = formatted.match(/\((\d+)\)/)[1];
+    $('<input type="hidden" value="' + id + '" name="song_id" />').insertAfter($(this));
+  });
+});
+
 function error() {
   $('img.loading').remove();
   alert('Server Error... Please try later');
