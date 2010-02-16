@@ -48,12 +48,15 @@ class Radio
       @song_thread.exit if @thread
       @song_thread = nil
 
+      @update_thread.exit if @update_thread
+      @update_thread = nil
+
       Process.kill 'USR1', @playing_pid if @playing_pid
       Process.wait @playing_pid if @playing_pid
       @playing_pid = nil
-
-      @update_thread.exit if @update_thread
-      @update_thread = nil
+      
+      @queue_items_to_update.clear
+      @next_song = nil
       
       super if connected?
     end
