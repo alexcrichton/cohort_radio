@@ -37,13 +37,15 @@ class Radio
           begin
             file.reopen File.join(::Rails.root, 'log', "#{daemon_name}.log"), 'w+'
             file.sync = true
-          rescue ::Exception
+          rescue ::Exception => e
+            Exceptional.handle e
           end
         end
         begin
           run
         rescue => e
           ::Rails.logger.fatal e
+          Exceptional.handle e
           STDERR.puts e.message
           exit 1
         end
@@ -51,13 +53,7 @@ class Radio
     end      
     
     def run
-      Playlist::Radio.logger = ::Rails.logger
-      
-      radio = Playlist::Radio::ManagementServer
-      mgmt.connect
-
-      sleep
-    rescue => e
+      raise "Not implemented yet!"
     end
     
     def daemon_name

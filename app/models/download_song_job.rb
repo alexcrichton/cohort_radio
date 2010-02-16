@@ -35,8 +35,12 @@ class DownloadSongJob < Struct.new(:nick, :file)
 
     # create the song and delete the downloaded file (it's copied by paperclip)
     raise @message unless @message.nil?
+
     Song.create! :audio => File.new(@file)
     File.delete @file
+  rescue => e
+    Exceptional.handle e
+    raise e
   end
   
 end

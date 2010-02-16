@@ -20,8 +20,10 @@ class Radio
       self.port         = options[:port]                        unless options[:port].nil?
       self.user         = options[:user]                        unless options[:user].nil?
       self.pass         = options[:password] || options[:pass]  unless options[:password].nil?
-      self.mount        = "/#{options[:playlist].slug}"
-      self.name         = options[:playlist].name
+      self.mount        = "/#{options[:playlist].slug}-development"
+      self.mount        = "/#{options[:playlist].slug}"         if Rails.env.production?
+      self.name         = "#{options[:playlist].name} - Development"
+      self.name         = options[:playlist].name               if Rails.env.production
       self.description  = options[:playlist].description        if options[:playlist].description
       self.format       = Shout::MP3
 
@@ -40,20 +42,21 @@ class Radio
 
           self.metadata = m
         
-          puts "Stream: #{name} - playing file #{song.audio.path}"
+          Rails.logger.debug "Stream: #{name} - playing file #{song.audio.path}"
         
           begin
             File.open(song.audio.path) do |file|
               while data = file.read(BLOCKSIZE)
                 break if @next
               	self.send data
-                puts "Stream: #{name} - Block sent"
+                Rails.logger.debug "Stream: #{name} - Block sent"
               	self.sync
               end
             end
             @next = false
           rescue => e
             Rails.logger.error "Stream: #{name} ERROR: #{e}"
+            Exceptional.handle e
             disconnect
           end
         

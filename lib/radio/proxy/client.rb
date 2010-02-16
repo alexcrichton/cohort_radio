@@ -15,7 +15,10 @@ class Radio
         socket << encode(things)
         obj = decode socket.gets(DELIM)
         socket.close
-        raise obj if obj.is_a?(Exception)
+        if obj.is_a?(Exception)
+          Exceptional.handle obj
+          raise obj
+        end
         obj
       end
       

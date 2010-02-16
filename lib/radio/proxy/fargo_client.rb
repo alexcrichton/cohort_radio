@@ -35,6 +35,7 @@ class Radio
         publish *args
       rescue => e
         Rails.logger.error "Error: client's subscription terminated #{e}"
+        Exceptional.handle e
         close_subscription
       end
       

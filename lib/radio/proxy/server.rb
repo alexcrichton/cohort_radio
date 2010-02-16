@@ -34,6 +34,7 @@ class Radio
         @server = @thread = nil
       rescue => e
         Rails.logger.error "Error disconnecting management server #{e}"
+        Exceptional.handle e
       end
       
       def answer socket, data

@@ -20,6 +20,7 @@ class Radio
                 socket << data
               rescue => e
                 Rails.logger.error "Error writing to subscription socket: #{type.inspect}, #{hash.inspect}"
+                Exceptional.handle e
                 socket.close rescue nil
                 @subscriptions.delete socket
               end
