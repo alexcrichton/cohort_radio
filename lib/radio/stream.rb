@@ -96,15 +96,14 @@ class Radio
       # We have to for because Shout's sync method freezes the entire process.
       # This is obviously undesireable for the entire process, but it'll work 
       # if we put it in its own process.
-      @playing_pid = fork { 
-        stream_song song, metadata, queue_item
-        @queue_items_to_update << queue_item unless queue_item.nil?
-      }
+      @playing_pid = fork { stream_song song, metadata, queue_item }
 
       set_next
 
       # wait for the process to exit. Once it's exited, we've finished playing this song.
       Process.wait @playing_pid
+
+      @queue_items_to_update << queue_item if queue_item
 
     end
     
