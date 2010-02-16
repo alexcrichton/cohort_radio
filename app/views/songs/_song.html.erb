@@ -4,7 +4,10 @@
 	</div>
 	<div class='content'>
 		<h3><%= song.title %></h3>
-		<h5><%= song.artist %> &mdash; <%= song.album %></h5>
+		<h5>
+			<%= song.artist %> 
+			<%= raw "&mdash; #{song.album}" unless song.album.blank? %>
+		</h5>
 		<p>
 			Play count: <%= song.play_count %>
 		</p>

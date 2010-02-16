@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100203033704) do
+ActiveRecord::Schema.define(:version => 20100216202555) do
 
   create_table "activations", :force => true do |t|
     t.integer  "user_id"
@@ -65,6 +65,7 @@ ActiveRecord::Schema.define(:version => 20100203033704) do
     t.datetime "audio_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "custom_set"
   end
 
   create_table "users", :force => true do |t|

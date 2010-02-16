@@ -21,20 +21,23 @@ class Song < ActiveRecord::Base
   
   private
   def set_metadata
-    if new_record?
-      file = audio.queued_for_write[:original].path # get the file paperclip is gonna copy
-    else
-      file = audio.path
+    unless custom_set
+      if new_record?
+        file = audio.queued_for_write[:original].path # get the file paperclip is gonna copy
+      else
+        file = audio.path
+      end
+      return unless Mp3Info.hastag1?(file) || Mp3Info.hastag2?(file)
+      info = Mp3Info.new(file).tag
+      self[:artist] = info['artist']
+      self[:album] = info['album']
+      self[:title] = info['title']
     end
-    return unless Mp3Info.hastag1?(file) || Mp3Info.hastag2?(file)
-    info = Mp3Info.new(file).tag
-    self[:artist] = info['artist']
-    self[:album] = info['album']
-    self[:title] = info['title']
     return if self[:album].blank? || self[:artist].blank?
     album = Scrobbler::Album.new(self[:artist], self[:album], :include_info => true)
     self[:album_image_url] = album.image_large
   rescue => e
+    Exceptional.handle e
     Rails.logger.error "Error setting metadata #{e}"
   end
   

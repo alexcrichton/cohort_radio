@@ -3,7 +3,7 @@ class PlaylistsController < ApplicationController
   authorize_resource
   
   def index
-    @playlists = Playlist.all.paginate :page => params[:page]
+    @playlists = Playlist.scoped.paginate :page => params[:page]
   end
   
   def show

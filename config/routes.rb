@@ -1,14 +1,11 @@
 CohortRadio::Application.routes.draw do |map|
   
   resources :songs do 
-    # get :load_locally, :on => :collection
-    # get :admin, :on => :collection
     get :search, :on => :collection
     get :download, :on => :member
   end
   
   namespace :fargo do
-    # match ':controller(/:action(/:id(.:format)))'
     resources :downloads
   end
 

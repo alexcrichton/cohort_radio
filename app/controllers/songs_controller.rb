@@ -17,7 +17,7 @@ class SongsController < ApplicationController
     @song = Song.new(params[:song])
     if @song.save
       flash[:notice] = "Successfully created song."
-      redirect_to playlist_path('main')
+      redirect_to playlists_path
     else
       render :action => 'new'
     end
@@ -27,6 +27,7 @@ class SongsController < ApplicationController
   end
   
   def update
+    puts params[:song].inspect
     if @song.update_attributes(params[:song])
       flash[:notice] = "Successfully updated song."
       redirect_to @song
@@ -42,7 +43,7 @@ class SongsController < ApplicationController
   def destroy
     @song.destroy
     flash[:notice] = "Successfully destroyed song."
-    redirect_to songs_url
+    redirect_to songs_path
   end
   
   def search

@@ -6,7 +6,7 @@ class Fargo::CommandsController < ApplicationController
     response = fargo.connect
     flash[:notice] = "Connected!"
 
-    redirect_to playlist_path('main')
+    redirect_to playlists_path
   end
   
   def disconnect
@@ -14,13 +14,13 @@ class Fargo::CommandsController < ApplicationController
     puts response.inspect
     flash[:notice] = "Disconnected!"
     
-    redirect_to playlist_path('main')
+    redirect_to playlists_path
   end
   
   def download
     Delayed::Job.enqueue DownloadSongJob.new(params[:nick], params[:file])
     flash[:notice] = "Song was queued for download."
-    redirect_to playlist_path('main')
+    redirect_to playlists_path
   end
   
 end

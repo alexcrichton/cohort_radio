@@ -1,4 +1,5 @@
-<% title "Playlists" %>
+<h1>Playlists</h1>
+
 <% paginated_section @playlists do %>
 	<table>
 	  <tr>
@@ -6,13 +7,17 @@
 	  </tr>
 	  <% for playlist in @playlists %>
 	    <tr>
-	      <td><%=h playlist.name %></td>
-	      <td><%= link_to "Show", playlist %></td>
-	      <td><%= link_to "Edit", edit_playlist_path(playlist) %></td>
-	      <td><%= link_to "Destroy", playlist, :confirm => 'Are you sure?', :method => :delete %></td>
+	      <td><%= link_to playlist.name, playlist %></td>
+	      <td>
+					<% if can? :manage, playlist %>
+		      	<%= link_to "Edit", edit_playlist_path(playlist) %>
+		      	<%= link_to "Destroy", playlist, :confirm => 'Are you sure?', :method => :delete %>
+					<% end %>
+				</td>
 	    </tr>
 	  <% end %>
 	</table>
 <% end %>
 
-<p><%= link_to "New Playlist", new_playlist_path %></p>
+
+<p><%= link_to "New Playlist", new_playlist_path if can? :create, Playlist %></p>

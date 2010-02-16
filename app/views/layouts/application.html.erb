@@ -11,8 +11,8 @@
   <body>
     <div id="container">
 			<div>
-				<%= link_to 'Home', playlist_path('main') %>
-				<%= link_to 'Songs', songs_path %>
+				<%= link_to 'Home', current_user ? playlists_path : login_path %>
+				<%= link_to 'Songs', songs_path if can? :read, Song%>
 				<% if can? :manage, Fargo %>
 					<% if fargo_running? %>
 						<% if fargo_connected? %>

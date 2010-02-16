@@ -1,8 +1,24 @@
 <% form_for @song, :html => {:multipart => true} do |f| %>
   <%= f.error_messages %>
-  <p>
-    <%= f.label :audio, 'Audio File' %><br />
-    <%= f.file_field :audio %>
-  </p>
+	<% if @song.new_record? %>
+	  <p>
+	    <%= f.label :audio, 'Audio File' %><br />
+	    <%= f.file_field :audio %>
+	  </p>
+	<% else %>
+		<div class='hide'><%= f.hidden_field :custom_set, :value => true %></div>
+		<p>
+	    <%= f.label :title, 'Title' %><br />
+	    <%= f.text_field :title %>
+	  </p>
+		<p>
+	    <%= f.label :artist, 'Artist' %><br />
+	    <%= f.text_field :artist %>
+	  </p>
+		<p>
+	    <%= f.label :album, 'Album' %><br />
+	    <%= f.text_field :album %>
+	  </p>
+	<% end %>
   <p><%= f.submit "Submit" %></p>
 <% end %>

@@ -34,7 +34,7 @@ class Radio::CommandsController < ApplicationController
     radio.disconnect
     flash[:notice] = "Disconnected!"
     
-    redirect_to playlist_path('main')
+    redirect_to :controller => 'radio/status'
   end
   
 end

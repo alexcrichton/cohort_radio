@@ -100,6 +100,10 @@ pre {
   margin: 10px;
 }
 
+.search {
+  overflow: auto;
+}
+
 .search div {
   float: left;
 }

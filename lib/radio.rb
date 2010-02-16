@@ -3,8 +3,8 @@ require 'queue_item'
 require 'song'
 
 class Radio
-    
-  DEFAULTS = {:user => 'source', :password => 'hackme', :host => 'localhost', :port => 8000}
+  
+  DEFAULTS = YAML.load_file("#{Rails.root}/config/radio.yml")['radio'].symbolize_keys! unless defined?(DEFAULTS)
   
   attr_accessor :options
   
