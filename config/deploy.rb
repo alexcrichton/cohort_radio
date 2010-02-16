@@ -34,6 +34,7 @@ namespace :db do
     run "ln -nsf #{shared_path}/config/database.yml #{release_path}/config/"
     run "ln -nsf #{shared_path}/config/fargo.yml #{release_path}/config/"
     run "ln -nsf #{shared_path}/config/radio.yml #{release_path}/config/"
+    run "ln -nsf #{shared_path}/config/exceptional.yml #{release_path}/config/"
     run "ln -nsf #{shared_path}/files #{latest_release}/private"
   end
 

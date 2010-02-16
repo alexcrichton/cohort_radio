@@ -4,6 +4,7 @@ tmp/**/*
 public/javascripts/cache
 public/stylesheets/cache
 config/database.yml
+config/exceptional.yml
 config/fargo.yml
 config/radio.yml
 db/*.sqlite3
