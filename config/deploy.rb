@@ -32,6 +32,8 @@ namespace :db do
   task :symlink do
     run "ln -nsf #{shared_path}/config/mail_auth.rb #{release_path}/config/initializers/"
     run "ln -nsf #{shared_path}/config/database.yml #{release_path}/config/"
+    run "ln -nsf #{shared_path}/config/fargo.yml #{release_path}/config/"
+    run "ln -nsf #{shared_path}/config/radio.yml #{release_path}/config/"
     run "ln -nsf #{shared_path}/files #{latest_release}/private"
   end
 

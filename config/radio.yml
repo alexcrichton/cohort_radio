@@ -1,7 +1,0 @@
-radio:
-  port: 8000
-  user: source
-  password: mightiest550@tendentiousness
-  host: music.alexcrichton.com
-proxy:
-  port: 38312
