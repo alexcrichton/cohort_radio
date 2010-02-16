@@ -23,7 +23,7 @@ class Radio
       self.mount        = "/#{options[:playlist].slug}-development"
       self.mount        = "/#{options[:playlist].slug}"         if Rails.env.production?
       self.name         = "#{options[:playlist].name} - Development"
-      self.name         = options[:playlist].name               if Rails.env.production
+      self.name         = options[:playlist].name               if Rails.env.production?
       self.description  = options[:playlist].description        if options[:playlist].description
       self.format       = Shout::MP3
 
