@@ -1,5 +1,6 @@
 class Radio
   module StreamHelper
+    
     def radio
       @radio_management_client ||= ::Radio::Proxy::Client.new :port => ProxyDaemon::DEFAULTS[:port]
     end
@@ -13,5 +14,6 @@ class Radio
     def radio_connected?
       radio_running? && radio.connected?
     end
+    
   end
 end

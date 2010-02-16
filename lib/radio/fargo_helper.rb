@@ -1,5 +1,6 @@
 class Radio
   module FargoHelper
+    
     def fargo
       @fargo_management_client ||= ::Radio::Proxy::FargoClient.new :port => FargoDaemon::DEFAULTS[:port]
     end
@@ -13,5 +14,6 @@ class Radio
     def fargo_connected?
       fargo_running? && fargo.connected?
     end
+    
   end
 end

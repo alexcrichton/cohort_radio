@@ -59,6 +59,7 @@ class Radio
     end
     
     def next
+      # See the stream_song method as to why
       Process.kill 'USR1', @playing_pid if @playing_pid
     end
     
@@ -90,15 +91,19 @@ class Radio
     def play_song
       set_next if @next_song.nil?
 
-      # stream the song which was set to the next
+      song, metadata, queue_item = @next_song
+
+      # We have to for because Shout's sync method freezes the entire process.
+      # This is obviously undesireable for the entire process, but it'll work 
+      # if we put it in its own process.
       @playing_pid = fork { 
-        song, metadata, queue_item = @next_song
         stream_song song, metadata, queue_item
         @queue_items_to_update << queue_item unless queue_item.nil?
       }
 
       set_next
 
+      # wait for the process to exit. Once it's exited, we've finished playing this song.
       Process.wait @playing_pid
 
     end
