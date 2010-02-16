@@ -11,6 +11,14 @@ class Song < ActiveRecord::Base
   
   before_validation :set_metadata
   
+  def display_title
+    if self[:title]
+      "#{self[:title]}"
+    else
+      File.basename audio.path
+    end
+  end
+  
   private
   def set_metadata
     if new_record?

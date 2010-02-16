@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
     @current = find_model params[:id]
     instance_variable_set "@#{controller_name.singularize}", @current
 
-    regex = /(.+)_id/
+    regex = /^(.+)_id$/
     params.keys.each do |key|
       next unless regex.match(key)
       @parent = find_model params[key], regex.match(key)[1]

@@ -1,5 +1,6 @@
 require 'playlist'
 require 'queue_item'
+require 'song'
 
 class Radio
     
@@ -39,6 +40,11 @@ class Radio
   def playing? playlist
     return false unless has? playlist
     @streaming[playlist.slug].playing?
+  end
+  
+  def current_song playlist
+    return false unless has? playlist
+    @streaming[playlist.slug].current_song
   end
     
   def has? playlist

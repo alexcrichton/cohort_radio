@@ -7,6 +7,7 @@ class Radio
     @@tag_recoder = Iconv.new("utf-8", 'windows-1251')
     
     attr_accessor :options
+    attr_reader :current_song
     
     def initialize options = {}
       super
@@ -52,11 +53,12 @@ class Radio
       @update_thread = nil
 
       Process.kill 'USR1', @playing_pid if @playing_pid
-      Process.wait @playing_pid if @playing_pid
+      Process.wait @playing_pid rescue nil
       @playing_pid = nil
       
       @queue_items_to_update.clear
       @next_song = nil
+      @current_song = nil
       
       super if connected?
     end
@@ -99,6 +101,8 @@ class Radio
       # We have to for because Shout's sync method freezes the entire process.
       # This is obviously undesireable for the entire process, but it'll work 
       # if we put it in its own process.
+      @current_song = song
+      
       @playing_pid = fork { stream_song song, metadata, queue_item }
 
       set_next

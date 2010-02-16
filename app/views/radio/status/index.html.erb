@@ -9,28 +9,21 @@
 <table>
 	<tr>
 		<th>Name</th>
-		<th>Streaming?</th>
-		<th>Playing?</th>
+		<th>On Radio?</th>
 		<th>Current Song</th>
 		<th>Actions</th>
 	</tr>
 	<% @playlists.each do |playlist| %>
 		<tr>
 			<td><%= playlist.name %></td>
-			<td><%= radio.has_playlist? playlist %></td>
-			<td><%= radio.playlist_playing? playlist %></td>
-			<td></td>
+			<td><%= radio.has? playlist %></td>
+			<td><%= radio.current_song(playlist).display_title if radio.playing? playlist %></td>
 			<td>
-				<% if radio.has_playlist? playlist %>
-					<% if radio.playlist_playing? playlist %>
-						<%= link_to 'Pause', '#' %>
-						<%= link_to 'Next', '#' %>
-					<% else %>
-						<%= link_to 'Play', '#' %>
-					<% end %>
-					<%= link_to 'Remove', '#' %>
+				<% if radio.has? playlist %>
+					<%= link_to 'Next Song', :controller => 'radio/commands', :action => 'next', :playlist_id => playlist.slug %>
+					<%= link_to 'Stop', :controller => 'radio/commands', :action => 'stop', :playlist_id => playlist.slug %>
 				<% else %>
-					<%= link_to 'Add', '#' %>
+					<%= link_to 'Add', :controller => 'radio/commands', :action => 'add', :playlist_id => playlist.slug %>
 				<% end %>
 			</td>
 		</tr>
