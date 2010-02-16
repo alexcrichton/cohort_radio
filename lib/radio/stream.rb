@@ -52,7 +52,7 @@ class Radio
       @update_thread.exit if @update_thread
       @update_thread = nil
 
-      Process.kill 'USR1', @playing_pid if @playing_pid
+      Process.kill 'USR1', @playing_pid rescue nil
       Process.wait @playing_pid rescue nil
       @playing_pid = nil
       
@@ -108,7 +108,7 @@ class Radio
       set_next
 
       # wait for the process to exit. Once it's exited, we've finished playing this song.
-      Process.wait @playing_pid
+      Process.wait @playing_pid if @playing_pid
 
       @queue_items_to_update << queue_item if queue_item
 
