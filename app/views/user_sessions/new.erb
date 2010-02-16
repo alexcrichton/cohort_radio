@@ -1,5 +1,5 @@
 <div class="login">
-  <% form_for @user_session, :url => user_session_path do |f| %>
+  <% form_for :user_session, :url => user_session_path do |f| %>
     <%= f.error_messages %>
     <dl class="pass">
       <dt><%= f.label :email, 'email' %></dt>

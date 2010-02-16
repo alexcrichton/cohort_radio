@@ -1,6 +1,6 @@
 class Notifier < ActionMailer::Base
   
-  default smtp_settings[:user_name]
+  default :from => smtp_settings[:user_name]
 
   def password_reset_instructions(user)
     @edit_password_reset_url = edit_password_reset_url(user.perishable_token)
@@ -8,8 +8,8 @@ class Notifier < ActionMailer::Base
   end
 
   def activation_instructions(user)
-    @account_activation_url = user_activate_url(user.perishable_token),
-    @resend_activation_url = new_activation_url(user.email)
+    @account_activation_url = activate_url(user.perishable_token)
+    @resend_activation_url = new_activation_url + '?' + {:email => user.email}.to_query
     mail :to => user.email, :subject => 'Cohort Radio Activation Instructions'
   end
 
