@@ -9,7 +9,6 @@ class Radio
     
     def run
       radio = Radio.new
-      Playlist.scoped.each { |p| radio.add_playlist p }
       
       proxy = Radio::Proxy::Server.new :for => radio, :port => @port || DEFAULTS[:port]
       proxy.connect

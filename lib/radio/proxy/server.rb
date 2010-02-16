@@ -20,6 +20,7 @@ class Radio
           @connections << Thread.start {
             data = socket.gets(DELIM) # get data 
             disconnect if data.nil?
+
             answer socket, decode(data)
             @connections.delete Thread.current
           }

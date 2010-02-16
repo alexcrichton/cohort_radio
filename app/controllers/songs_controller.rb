@@ -1,5 +1,7 @@
 class SongsController < ApplicationController
   
+  authorize_resource
+  
   def index
     @songs = Song.scoped.paginate :page => params[:page]
   end
@@ -34,8 +36,7 @@ class SongsController < ApplicationController
   end
   
   def download
-    puts @song.audio.path
-    send_file @song.audio.path
+    send_file @song.audio.path, :type => @song.audio_content_type
   end
   
   def destroy

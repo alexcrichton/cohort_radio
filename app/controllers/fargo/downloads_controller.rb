@@ -1,8 +1,10 @@
 class Fargo::DownloadsController < ApplicationController
 
+  before_filter { |c| c.unauthorized! if c.cannot? :manage, Fargo }
+  
   def index
-    @items = Delayed::Job.all
-    @items.reject! { |j| !j.payload_object.is_a?(DownloadSongJob) }
+    @jobs = Delayed::Job.all
+    @jobs.reject! { |j| !j.payload_object.is_a?(DownloadSongJob) }
   end
   
   def destroy
@@ -11,4 +13,5 @@ class Fargo::DownloadsController < ApplicationController
     flash[:notice] = "Download removed"
     redirect_to fargo_downloads_path
   end
+  
 end

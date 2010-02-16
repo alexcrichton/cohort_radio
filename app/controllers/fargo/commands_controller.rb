@@ -1,5 +1,7 @@
 class Fargo::CommandsController < ApplicationController
   
+  before_filter { |c| c.unauthorized! if c.cannot? :manage, Fargo }
+  
   def connect
     response = fargo.connect
     flash[:notice] = "Connected!"

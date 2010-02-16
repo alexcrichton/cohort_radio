@@ -7,15 +7,15 @@
 		<th>Last Error</th>
 		<th>Attempts</th>
 	</tr>
-	<% @items.each do |item| %>
+	<% @jobs.each do |job| %>
 		<tr>
-			<td><%= item.payload_object.nick %></td>
-			<td><%= item.payload_object.file %></td>
-			<td><%= item.run_at %></td>
-			<td><%= item.last_error.split("\n").first unless item.last_error.nil? %></td>
-			<td><%= item.attempts %></td>
+			<td><%= job.payload_object.nick %></td>
+			<td><%= job.payload_object.file %></td>
+			<td><%= job.run_at %></td>
+			<td><%= job.last_error.split("\n").first unless job.last_error.nil? %></td>
+			<td><%= job.attempts %></td>
 			<td>
-				<%= link_to "Remove", fargo_download_path(item.id), :method => :delete %>
+				<%= link_to "Remove", fargo_download_path(job.id), :method => :delete %>
 			</td>
 		</tr>
 	<% end %>

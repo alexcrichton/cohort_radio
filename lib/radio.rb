@@ -1,3 +1,5 @@
+require 'playlist'
+
 class Radio
     
   DEFAULTS = {:user => 'source', :password => 'hackme', :host => 'localhost', :port => 8000}
@@ -20,14 +22,31 @@ class Radio
     @connected = false
   end
   
-  def add_playlist playlist
+  def connected?
+    @connected
+  end
+  
+  def playlists
+    @streaming.each_value.map &:playlist
+  end
+  
+  def playing? playlist
+    return false unless has? playlist
+    @streaming[playlist.slug].playing?
+  end
+    
+  def has? playlist
+    @streaming.has_key? playlist.slug
+  end
+  
+  def add playlist
     return if @streaming[playlist.slug]
     stream = Radio::Stream.new options.merge(:playlist => playlist)
     @streaming[playlist.slug] = stream      
     stream.connect if @connected
   end
   
-  def remove_playlist playlist
+  def remove playlist
     return unless @streaming.has_key? playlist.slug
     @streaming.delete(playlist.slug).disconnect
   end

@@ -4,7 +4,7 @@ class Playlist < ActiveRecord::Base
   
   acts_with_slug
   
-  has_many :queue_items, :order => :priority
+  has_many :queue_items, :order => 'priority DESC, created_at ASC'
   has_many :songs, :through => :queue_items
   has_and_belongs_to_many :users
   

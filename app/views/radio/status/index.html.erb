@@ -1,0 +1,38 @@
+<h1>Playlists</h1>
+
+<% unless radio_connected? %>
+	<div id='flash_error'>
+		The radio is disconnected, the links below won't do anything.
+		You may, however, <%= link_to 'connect it', :controller => 'radio/commands', :action => 'connect' %>.
+	</div>
+<% end %>
+<table>
+	<tr>
+		<th>Name</th>
+		<th>Streaming?</th>
+		<th>Playing?</th>
+		<th>Current Song</th>
+		<th>Actions</th>
+	</tr>
+	<% @playlists.each do |playlist| %>
+		<tr>
+			<td><%= playlist.name %></td>
+			<td><%= radio.has_playlist? playlist %></td>
+			<td><%= radio.playlist_playing? playlist %></td>
+			<td></td>
+			<td>
+				<% if radio.has_playlist? playlist %>
+					<% if radio.playlist_playing? playlist %>
+						<%= link_to 'Pause', '#' %>
+						<%= link_to 'Next', '#' %>
+					<% else %>
+						<%= link_to 'Play', '#' %>
+					<% end %>
+					<%= link_to 'Remove', '#' %>
+				<% else %>
+					<%= link_to 'Add', '#' %>
+				<% end %>
+			</td>
+		</tr>
+	<% end %>
+</table>

@@ -1,5 +1,7 @@
 class Fargo::SearchController < ApplicationController
   
+  before_filter { |c| c.unauthorized! if c.cannot? :manage, Fargo }
+    
   def index
     if params[:q]
       params[:q] = "#{params[:q]} mp3" unless params[:q].index 'mp3'
@@ -13,9 +15,5 @@ class Fargo::SearchController < ApplicationController
       @results.each { |result| @result_map[result[:nick]] << result }
     end
   end
-  
-  def results
-  end
-  
-  
+    
 end

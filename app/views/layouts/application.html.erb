@@ -25,6 +25,18 @@
 						Fargo is not running.
 					<% end %>
 				<% end %>
+				<% if can? :manage, Radio %>
+					<% if radio_running? %>
+						<% if radio_connected? %>
+							<%= link_to 'Disconnect Radio', :controller => 'radio/commands', :action => 'disconnect' %>
+							<%= link_to "Status", :controller => 'radio/status' %>
+						<% else %>
+							<%= link_to 'Connect Radio', :controller => 'radio/commands', :action => 'connect' %>
+						<% end %>
+					<% else %>
+						Radio is not running.
+					<% end %>
+				<% end %>
 				<div style='float:right'>
 					<% if current_user %>
 						Logged in as: <%= current_user.email %> |
