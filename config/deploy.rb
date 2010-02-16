@@ -31,6 +31,8 @@ namespace :db do
   desc "Make symlink for database yaml" 
   task :symlink do
     run "ln -nsf #{shared_path}/config/mail_auth.rb #{release_path}/config/initializers/"
+    run "ln -nsf #{shared_path}/config/session_store.rb #{release_path}/config/initializers/"
+    run "ln -nsf #{shared_path}/config/cookie_verification_secret.rb #{release_path}/config/initializers/"
     run "ln -nsf #{shared_path}/config/database.yml #{release_path}/config/"
     run "ln -nsf #{shared_path}/config/fargo.yml #{release_path}/config/"
     run "ln -nsf #{shared_path}/config/radio.yml #{release_path}/config/"
