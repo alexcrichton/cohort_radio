@@ -45,20 +45,21 @@ class Radio
     
     def disconnect
       # Exit all threads we've got running
-      Process.kill 'TERM', @playing_pid if @playing_pid
+      @song_thread.exit if @thread
+      @song_thread = nil
+
+      Process.kill 'USR1', @playing_pid if @playing_pid
+      Process.wait @playing_pid if @playing_pid
       @playing_pid = nil
 
       @update_thread.exit if @update_thread
       @update_thread = nil
-
-      @song_thread.exit if @thread
-      @song_thread = nil
       
       super if connected?
     end
     
     def next
-      @next = true
+      Process.kill 'USR1', @playing_pid if @playing_pid
     end
     
     def playing?
@@ -69,22 +70,10 @@ class Radio
       !playing?
     end
     
-    # def play
-    #   return if playing? || !connected?
-    #   @song_thread.wakeup if @song_thread && @song_thread.stop?
-    #   true
-    # end
-    # 
-    # def pause
-    #   return if paused? || !connected?
-    #   @song_thread.stop
-    #   true
-    # end
-    
     def set_next
-      queue_item = playlist.queue_items.first
+      queue_item = playlist.queue_items.scoped.offset(@next_song ? 1 : 0).first
       song = queue_item.nil? ? random_song : queue_item.song
-      
+            
       m = ShoutMetadata.new
       m.add 'filename', @@tag_recoder.iconv(song.audio.path)
       if song.title
@@ -102,7 +91,11 @@ class Radio
       set_next if @next_song.nil?
 
       # stream the song which was set to the next
-      @playing_pid = fork { stream_song *@next_song }
+      @playing_pid = fork { 
+        song, metadata, queue_item = @next_song
+        stream_song song, metadata, queue_item
+        @queue_items_to_update << queue_item unless queue_item.nil?
+      }
 
       set_next
 
@@ -122,26 +115,26 @@ class Radio
       self.metadata = metadata
       begin
         File.open(song.audio.path) do |file|
-          while data = file.read(BLOCKSIZE)
-            break if @next
+          Signal.trap("USR1") { 
+            $pass = true
+          }
+          while !$pass && data = file.read(BLOCKSIZE)
           	self.send data
             Rails.logger.debug "Stream: #{name} - Block sent"
           	self.sync
           end
         end
-        @next = false
       rescue => e
         Rails.logger.error "Stream: #{name} ERROR: #{e}"
         Exceptional.handle e
         disconnect
       end
       
-      @queue_items_to_update << queue_item unless queue_item.nil?
     end
     
     def random_song
       ids = Song.select(:id).map &:id
-      Song.find(ids[rand(ids.size)])
+      Song.find ids[rand(ids.size)]
     end
     
   end

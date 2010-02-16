@@ -1,4 +1,5 @@
 require 'playlist'
+require 'queue_item'
 
 class Radio
     
