@@ -18,6 +18,10 @@ after "deploy:update_code", "db:symlink"
 # before "deploy:symlink", "push:restart"
 # before "deploy:symlink", "worker:restart"
 
+def script command
+  run "cd #{current_path}; RAILS_ENV=production script/#{command}"
+end
+
 namespace :db do
   task :default do
     run "mkdir -p #{shared_path}/config"
@@ -46,26 +50,38 @@ namespace :deploy do
   end
 end
 
-namespace :push do 
+namespace :radio do 
   task :restart, :roles => :app do
-    run "#{release_path}/script/push_server restart"
+    script 'radio restart'
   end
   task :start, :roles => :app do
-    run "#{release_path}/script/push_server start"
+    script 'radio start'
   end
   task :stop, :roles => :app do
-    run "#{release_path}/script/push_server stop"
+    script 'radio stop'
   end
 end
 
 namespace :worker do 
   task :restart, :roles => :app do
-    run "RAILS_ENV=production #{release_path}/script/delayed_job restart"
+    script 'delayed_job restart'
   end
   task :start, :roles => :app do
-    run "RAILS_ENV=production #{release_path}/script/delayed_job start"
+    script 'delayed_job start'
   end
   task :stop, :roles => :app do
-    run "RAILS_ENV=production #{release_path}/script/delayed_job stop"
+    script 'delayed_job stop'
+  end
+end
+
+namespace :fargo do 
+  task :restart, :roles => :app do
+    script 'fargo restart'
+  end
+  task :start, :roles => :app do
+    script 'fargo start'
+  end
+  task :stop, :roles => :app do
+    script 'fargo stop'
   end
 end

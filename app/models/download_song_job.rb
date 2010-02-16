@@ -1,6 +1,6 @@
 class DownloadSongJob < Struct.new(:nick, :file)
   
-  include Fargo::Rails::Helper
+  include Radio::FargoHelper
   
   def perform
     @thread = Thread.current
