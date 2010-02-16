@@ -125,9 +125,9 @@ class Radio
       begin
         File.open(song.audio.path) do |file|
           Signal.trap("USR1") { 
-            $pass = true
+            $_song_pass = true
           }
-          while !$pass && data = file.read(BLOCKSIZE)
+          while !$_song_pass && data = file.read(BLOCKSIZE)
           	self.send data
             Rails.logger.debug "Stream: #{name} - Block sent"
           	self.sync
