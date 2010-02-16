@@ -36,6 +36,7 @@ class Radio
       
       # play songs in a different thread
       @song_thread = Thread.start { loop { play_song } }
+      
       # when the songs are finished playing, update their attributes. Also remove
       # the queue_item from the playlist. Do this on a separate thread as to now slow down the
       # listeners.
@@ -44,8 +45,8 @@ class Radio
     
     def disconnect
       # Exit all threads we've got running
-      @playing_thread.exit if @playing_thread
-      @playing_thread = nil
+      Process.kill 'TERM', @playing_pid if @playing_pid
+      @playing_pid = nil
 
       @update_thread.exit if @update_thread
       @update_thread = nil
@@ -61,27 +62,24 @@ class Radio
     end
     
     def playing?
-      @playing_thread && @playing_thread.alive?
+      !@playing_pid.nil?
     end
     
     def paused?
       !playing?
     end
     
-    def play
-      return if playing? || !connected?
-      @playing_thread.wakeup if @playing_thread && @playing_thread.stop?
-      @song_thread.wakeup if @song_thread && @song_thread.stop?
-    end
-    
-    def pause
-      return if paused? || !connected?
-      if @playing_thread.alive? 
-        @playing_thread.stop
-      else 
-        @song_thread.stop
-      end
-    end
+    # def play
+    #   return if playing? || !connected?
+    #   @song_thread.wakeup if @song_thread && @song_thread.stop?
+    #   true
+    # end
+    # 
+    # def pause
+    #   return if paused? || !connected?
+    #   @song_thread.stop
+    #   true
+    # end
     
     def set_next
       queue_item = playlist.queue_items.first
@@ -104,16 +102,12 @@ class Radio
       set_next if @next_song.nil?
 
       # stream the song which was set to the next
-      stream_next
-      
-      # while streaming, set the next song. Don't want database calls slowing down
-      # listeners...
+      @playing_pid = fork { stream_song *@next_song }
+
       set_next
-      
-      # Wait for the song to finish streaming. It'll wake us up when it's done. If not...
-      # well we're screwed
-      sleep
-      
+
+      Process.wait @playing_pid
+
     end
     
     def update_song queue_item
@@ -121,33 +115,28 @@ class Radio
       playlist.queue_items.delete queue_item
     end
     
-    def stream_next
+    def stream_song song, metadata, queue_item
       # Get the song information, then set it to nil so we know to reset it.
-      song, metadata, queue_item = @next_song
-      @next_song = nil
+      Rails.logger.debug "Stream: #{name} - playing file #{song.audio.path}"
       
-      @playing_thread = Thread.start {
-        Rails.logger.debug "Stream: #{name} - playing file #{song.audio.path}"
-        
-        self.metadata = metadata
-        begin
-          File.open(song.audio.path) do |file|
-            while data = file.read(BLOCKSIZE)
-              break if @next
-            	self.send data
-              Rails.logger.debug "Stream: #{name} - Block sent"
-            	self.sync
-            end
+      self.metadata = metadata
+      begin
+        File.open(song.audio.path) do |file|
+          while data = file.read(BLOCKSIZE)
+            break if @next
+          	self.send data
+            Rails.logger.debug "Stream: #{name} - Block sent"
+          	self.sync
           end
-          @next = false
-        rescue => e
-          Rails.logger.error "Stream: #{name} ERROR: #{e}"
-          Exceptional.handle e
-          disconnect
         end
-        @queue_items_to_update << queue_item unless queue_item.nil?
-        @song_thread.wakeup
-      }
+        @next = false
+      rescue => e
+        Rails.logger.error "Stream: #{name} ERROR: #{e}"
+        Exceptional.handle e
+        disconnect
+      end
+      
+      @queue_items_to_update << queue_item unless queue_item.nil?
     end
     
     def random_song

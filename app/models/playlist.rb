@@ -2,6 +2,8 @@ require 'acts_as_slug'
 
 class Playlist < ActiveRecord::Base
   
+  include Acts::Slug # ugly, I know
+  
   acts_with_slug
   
   has_many :queue_items, :order => 'priority DESC, created_at ASC'

@@ -30,6 +30,11 @@ class Radio
     @streaming.each_value.map &:playlist
   end
   
+  def next playlist
+    return false unless has? playlist
+    @streaming[playlist.slug].next
+  end
+  
   def playing? playlist
     return false unless has? playlist
     @streaming[playlist.slug].playing?
@@ -44,6 +49,7 @@ class Radio
     stream = Radio::Stream.new options.merge(:playlist => playlist)
     @streaming[playlist.slug] = stream      
     stream.connect if @connected
+    true
   end
   
   def remove playlist
