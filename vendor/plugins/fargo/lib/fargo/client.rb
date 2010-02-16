@@ -11,9 +11,7 @@ module Fargo
     include Fargo::Handler::NickList
     include Fargo::Handler::Searches
     
-    DEFAULTS = {:hub_port => 7314, :active_port => 7315, :hub_address => '127.0.0.1', :search_port => 7316,
-                :nick => 'cenphol2', :passive => true, :address => '128.2.152.87', 
-                :download_dir => '/tmp/fargo/downloads'}
+    DEFAULTS = {:download_dir => '/tmp/fargo/downloads'}
   
     attr_accessor :options
 
