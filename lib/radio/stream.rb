@@ -101,7 +101,7 @@ class Radio
       # if we put it in its own process.
       @current_song = song
       
-      @playing_pid = fork { stream_song song, metadata, queue_item }
+      @playing_pid = Process.fork { stream_song song, metadata, queue_item }
 
       set_next
 

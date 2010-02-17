@@ -13,10 +13,12 @@ class Ability
       cannot :reset, 'password' # need to be logged out (don't want to mess with other users)
     elsif user.confirmed?
       can [:read, :enqueue], Playlist
-      can [:download, :create, :search], Song
+      can [:download, :create, :search, :update], Song
       can :manage, user
       can :read, User
+      can :logout, User
       can :read, :all
     end
+    
   end
 end
