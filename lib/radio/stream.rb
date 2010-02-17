@@ -153,7 +153,7 @@ class Radio
       rescue => e
         Rails.logger.error "Stream: #{name} ERROR: #{e}"
         Exceptional.handle e
-        disconnect
+        # disconnect
       end
       
     end

@@ -81,12 +81,12 @@ end
 
 namespace :fargo do 
   task :restart, :roles => :app do
-    script 'fargo restart', :env => 'development'
+    script 'fargo restart'
   end
   task :start, :roles => :app do
-    script 'fargo start', :env => 'development'
+    script 'fargo start'
   end
   task :stop, :roles => :app do
-    script 'fargo stop', :env => 'development'
+    script 'fargo stop'
   end
 end
