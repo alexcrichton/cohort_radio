@@ -6,8 +6,13 @@ class Radio
     def run
       Fargo.logger = ::Rails.logger
       
-      proxy = Radio::Proxy::FargoServer.new :client => Fargo::Client.new, :port => @port || DEFAULTS[:port]
+      client = Fargo::Client.new
+      
+      proxy = Radio::Proxy::FargoServer.new :client => client, :port => @port || DEFAULTS[:port]
       proxy.connect
+
+      trap("INT") { proxy.disconnect; client.disconnect; exit }
+      trap("TERM") { proxy.disconnect; client.disconnect; exit }      
 
       sleep
     end

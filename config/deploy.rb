@@ -18,8 +18,8 @@ after "deploy:update_code", "db:symlink"
 # before "deploy:symlink", "push:restart"
 # before "deploy:symlink", "worker:restart"
 
-def script command
-  run "cd #{current_path}; RAILS_ENV=production script/#{command}"
+def script command, opts = {}
+  run "cd #{current_path}; RAILS_ENV=#{opts[:env] || 'production'} script/#{command}"
 end
 
 namespace :db do
@@ -81,12 +81,12 @@ end
 
 namespace :fargo do 
   task :restart, :roles => :app do
-    script 'fargo restart'
+    script 'fargo restart', :env => 'development'
   end
   task :start, :roles => :app do
-    script 'fargo start'
+    script 'fargo start', :env => 'development'
   end
   task :stop, :roles => :app do
-    script 'fargo stop'
+    script 'fargo stop', :env => 'development'
   end
 end
