@@ -12,10 +12,8 @@
 				<td><%= song.artist %></td>
 				<td><%= song.album %></td>
 				<td>
-					<% if can? :manage, song %>
-						<%= link_to "Edit", edit_song_path(song) %>
-						<%= link_to "Delete", song, :confirm => 'are you sure?', :method => :delete %>
-					<% end %>
+					<%= link_to "Edit", edit_song_path(song) if can? :update, song %>
+					<%= link_to "Delete", song, :confirm => 'are you sure?', :method => :delete if can? :destroy, song %>
 				</td>
 			</tr>
 		<% end %>
