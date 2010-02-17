@@ -81,6 +81,8 @@ class Radio
     end
     
     def set_next
+
+      ActiveRecord::Base.verify_active_connections! 
       queue_item = playlist.queue_items.scoped.offset(@next_song ? 1 : 0).first
       song = queue_item.nil? ? random_song : queue_item.song
             
@@ -120,6 +122,7 @@ class Radio
     
     def update_song queue_item
       return if queue_item.nil?
+      ActiveRecord::Base.verify_active_connections! # 
       queue_item.song.update_attributes(:play_count => queue_item.song.play_count + 1)
       playlist.queue_items.delete queue_item
     end
