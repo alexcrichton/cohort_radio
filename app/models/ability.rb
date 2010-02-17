@@ -18,6 +18,7 @@ class Ability
       can :read, User
       can :logout, User
       can :read, :all
+      can [:search, :download], Fargo
     end
     
   end

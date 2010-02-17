@@ -1,6 +1,6 @@
 class Fargo::SearchController < ApplicationController
   
-  before_filter { |c| c.unauthorized! if c.cannot? :manage, Fargo }
+  before_filter { |c| c.unauthorized! if c.cannot? :search, Fargo }
     
   def index
     if params[:q]

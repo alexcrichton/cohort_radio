@@ -11,7 +11,7 @@
 	      <td>
 					<% if can? :manage, playlist %>
 		      	<%= link_to "Edit", edit_playlist_path(playlist) %>
-		      	<%= link_to "Destroy", playlist, :confirm => 'Are you sure?', :method => :delete %>
+		      	<%#= link_to "Destroy", playlist, :confirm => 'Are you sure?', :method => :delete %>
 					<% end %>
 				</td>
 	    </tr>

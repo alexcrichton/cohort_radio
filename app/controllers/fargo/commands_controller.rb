@@ -1,6 +1,7 @@
 class Fargo::CommandsController < ApplicationController
   
-  before_filter { |c| c.unauthorized! if c.cannot? :manage, Fargo }
+  before_filter(:except => :download){ |c| c.unauthorized! if c.cannot? :manage, Fargo }
+  before_filter(:only => :download){ |c| c.unauthorized! if c.cannot? :download, Fargo }  
   
   def connect
     response = fargo.connect
