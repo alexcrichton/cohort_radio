@@ -52,7 +52,7 @@ class Radio
   end
   
   def add playlist
-    return if @streaming[playlist.slug]
+    return if has? playlist
     stream = Radio::Stream.new options.merge(:playlist => playlist)
     @streaming[playlist.slug] = stream      
     stream.connect if @connected
@@ -60,8 +60,9 @@ class Radio
   end
   
   def remove playlist
-    return unless @streaming.has_key? playlist.slug
+    return unless has? playlist
     @streaming.delete(playlist.slug).disconnect
+    true
   end
   
 end

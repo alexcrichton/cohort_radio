@@ -33,24 +33,30 @@ class Radio
 
       super
       
+      @loop = true
+      
       # play songs in a different thread
-      @song_thread = Thread.start { loop { play_song } }
+      @song_thread = Thread.start { while @loop; play_song; end }
       
       # when the songs are finished playing, update their attributes. Also remove
       # the queue_item from the playlist. Do this on a separate thread as to now slow down the
       # listeners.
-      @update_thread = Thread.start { loop { update_song @queue_items_to_update.pop } }
+      @update_thread = Thread.start { while @loop; update_song @queue_items_to_update.pop; end }
     end
     
     def disconnect
       # Exit all threads we've got running
-      @song_thread.exit if @thread
+      
+      @loop = false
+      
+      Process.kill 'USR1', @playing_pid rescue nil
+      @song_thread.join if @song_thread
       @song_thread = nil
 
-      @update_thread.exit if @update_thread
+      @queue_items_to_update << nil unless @queue_items_to_update.empty?
+      @update_thread.join if @update_thread
       @update_thread = nil
 
-      Process.kill 'USR1', @playing_pid rescue nil
       Process.wait @playing_pid rescue nil
       @playing_pid = nil
       
@@ -108,11 +114,12 @@ class Radio
       # wait for the process to exit. Once it's exited, we've finished playing this song.
       Process.wait @playing_pid if @playing_pid
 
-      @queue_items_to_update << queue_item if queue_item
+      @queue_items_to_update << queue_item
 
     end
     
     def update_song queue_item
+      return if queue_item.nil?
       queue_item.song.update_attributes(:play_count => queue_item.song.play_count + 1)
       playlist.queue_items.delete queue_item
     end
