@@ -80,10 +80,16 @@ class Radio
       !playing?
     end
     
-    def set_next
-
+    def set_next delete = false
+      # was disconnected sometimes...
       ActiveRecord::Base.verify_active_connections! 
-      queue_item = playlist.queue_items.scoped.offset(@next_song ? 1 : 0).first
+      
+      playlist.queue_items true # force loading from the database
+      
+      playlist.queue_items.delete @next_song[2] if delete && @next_song && @next_song[2]
+      
+      # force loading from the database
+      queue_item = playlist.queue_items.first
       song = queue_item.nil? ? random_song : queue_item.song
             
       m = ShoutMetadata.new
@@ -111,7 +117,7 @@ class Radio
       
       @playing_pid = Process.fork { stream_song song, metadata, queue_item }
 
-      set_next
+      set_next true
 
       # wait for the process to exit. Once it's exited, we've finished playing this song.
       Process.wait @playing_pid if @playing_pid
