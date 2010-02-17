@@ -106,7 +106,9 @@ class Radio
     end
     
     def play_song
-      set_next if @next_song.nil?
+      # set_next if @next_song.nil?
+
+      set_next true
 
       song, metadata, queue_item = @next_song
 
@@ -117,7 +119,6 @@ class Radio
       
       @playing_pid = Process.fork { stream_song song, metadata, queue_item }
 
-      set_next true
 
       # wait for the process to exit. Once it's exited, we've finished playing this song.
       Process.wait @playing_pid if @playing_pid
