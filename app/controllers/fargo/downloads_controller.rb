@@ -11,8 +11,13 @@ class Fargo::DownloadsController < ApplicationController
   def retry
     @job = Delayed::Job.find params[:id]
     @job.update_attributes :run_at => Time.now + 1.second
-    flash[:notice] = "Retrying download. Give it a few seconds to update and/or propagate"
-    redirect_to fargo_downloads_path
+    
+    if request.xhr?
+      render :text => '<span class="notice">Queued</span>'
+    else
+      flash[:notice] = "Retrying download. Give it a few seconds to update and/or propagate"
+      redirect_to fargo_downloads_path
+    end
   end
   
   def destroy

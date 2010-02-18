@@ -16,18 +16,41 @@ $(function() {
 });
 
 $(function() {
-  $("#search .result input[type=submit]").live('click', function(){
-    $(this).replaceWith(smallAjax)
+  $('#downloads .download a.remove').click(function(){
+    var el = $(this).parents('.download');
+    $(this).replaceWith(smallAjax);
+    $.ajax({
+      type: 'DELETE',
+      url: $(this).attr('href'),
+      success: function(){
+        el.remove();
+      }
+    })
+    return false;
   });
-  // $("#search .result input[type=submit]").ajaxForm({
-  //   beforeSubmit: function(args, form){
-  //     $(form).find('input[type=submit]').replaceWith(smallAjax);      
-  //   },
-  //   error: error,
-  //   success: function() {
-  //     $()
-  //   }
-  // });
+  $('#downloads .download a.retry').click(function(){
+    var el;
+    $(this).replaceWith(el = $(smallAjax));
+    $.ajax({
+      url: $(this).attr('href'),
+      success: function(data){
+        el.replaceWith(data);
+      }
+    })
+    return false;
+  });
+});
+
+$(function() {
+  $("#search .result form").ajaxForm({
+    beforeSubmit: function(args, form){
+      $(form).find('input[type=submit]').replaceWith(smallAjax);      
+    },
+    error: error,
+    success: function(data) {
+      $('img.loading').replaceWith(data);
+    }
+  });
 });
 
 $(function(){

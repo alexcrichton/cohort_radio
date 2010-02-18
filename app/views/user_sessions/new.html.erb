@@ -3,9 +3,21 @@
   <% form_for :user_session, :url => user_session_path do |f| %>
     <dl>
       <dt><%= f.label :email, 'email' %></dt>
-      <dd><%= f.text_field :email, :autofocus => true %></dd>
+      <dd>
+				<% if @user_session.email.blank? %>
+					<%= f.text_field :email, :autofocus => true %>
+				<% else %>
+					<%= f.text_field :email %>
+				<% end %>
+			</dd>
       <dt><%= f.label :password, 'password' %></dt>
-      <dd><%= f.password_field :password %></dd>
+      <dd>
+				<% if @user_session.email.blank? %>
+					<%= f.password_field :password %>
+				<% else %>
+					<%= f.password_field :password, :autofocus => true %>
+				<% end %>
+			</dd>
       <dt><%= f.check_box :remember_me %></dt>
 			<dd><%= f.label :remember_me, 'remember' %></dt>
       <dd><%= f.submit "Login" %></dd>

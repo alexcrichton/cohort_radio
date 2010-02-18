@@ -28,14 +28,19 @@ a {
   overflow: auto;
 }
 
-#flash_notice, #flash_error {
+.flash {
   padding: 5px 8px;
   margin: 10px 0;
 }
 
-#flash_notice {
+#flash_notice, .notice {
   background-color: #CFC;
   border: solid 1px #6C6;
+}
+
+.notice {
+  padding: 2px 5px;
+  margin: 0;
 }
 
 #flash_error {
@@ -79,12 +84,6 @@ a {
 #errorExplanation ul li {
   font-size: 12px;
   list-style: disc;
-}
-
-pre {
-  background: #ccc;
-  font-size: 80%;
-  border: 1px solid black;
 }
 
 .song {

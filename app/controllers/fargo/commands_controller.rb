@@ -20,8 +20,14 @@ class Fargo::CommandsController < ApplicationController
   
   def download
     Delayed::Job.enqueue DownloadSongJob.new(params[:nick], params[:file])
-    flash[:notice] = "Song was queued for download."
-    redirect_to playlists_path
+
+    if request.xhr?
+      render :text => '<span class="notice">Queued</span>'
+    else
+      flash[:notice] = "Song was queued for download."
+      redirect_to fargo_downloads_path
+    end
+
   end
   
 end

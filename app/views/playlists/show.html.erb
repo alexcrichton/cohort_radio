@@ -27,7 +27,7 @@
 			Stream url: <%= raw auto_link(@playlist.stream_url) %><br/>
 			Current Song: <%= radio.current_song(@playlist).display_title %>
 		</p>
-		<!-- <audio src="<%= @playlist.stream_url %>" controls='controls'></audio> -->
+		<audio src="<%= @playlist.stream_url %>" controls='controls' autobuffer='autobuffer'></audio>
 	<% else %>
 		This playlist is not streaming
 	<% end %>

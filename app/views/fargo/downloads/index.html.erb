@@ -1,5 +1,5 @@
 
-<table>
+<table id='downloads'>
 	<tr>
 		<th>Nick</th>
 		<th>File</th>
@@ -9,7 +9,7 @@
 		<th>Attempts</th>
 	</tr>
 	<% @jobs.each do |job| %>
-		<tr>
+		<tr class='download'>
 			<td><%= job.payload_object.nick %></td>
 			<td><%= job.payload_object.file %></td>
 			<td><%= job.run_at %></td>
@@ -18,12 +18,12 @@
 				<%= truncate job.last_error.split("\n").first unless job.last_error.nil? %>
 			</td>
 			<td><%= job.attempts %></td>
-			<td>
+			<td class='links'>
 				<% if can?(:download, Fargo) && job.locked_at.nil? %>
-					<%= link_to 'Retry', retry_fargo_download_path(job.id) %>
+					<%= link_to 'Retry', retry_fargo_download_path(job.id), :class => 'retry' %>
 				<% end %>
 				<% if can? :manage, Fargo %>
-					<%= link_to "Remove", fargo_download_path(job.id), :method => :delete %>
+					<%= link_to "Remove", fargo_download_path(job.id), :method => :delete, :class => 'remove' %>
 				<% end %>
 			</td>
 		</tr>
