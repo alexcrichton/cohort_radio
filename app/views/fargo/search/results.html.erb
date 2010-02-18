@@ -1,0 +1,25 @@
+<div id='search'>
+	<% @result_map.each_pair do |nick, results| %>
+		<fieldset>
+			<legend><%= nick %> (<%= results.first[:open_slots] %> open slots)</legend>
+			<% results.each do |map| %>
+				<div class='result'>
+					<% form_tag({:controller => 'fargo/commands', :action => 'download'}, :remote => true) do %>
+						<div class='info'>
+							<%= hidden_field_tag :nick, nick %>
+							<%= hidden_field_tag :file, map[:file] %>
+							<div class='size'><%= number_to_human_size map[:size] %></div>
+							<div class='submit'><%= submit_tag 'Download'%></div>
+							<div class='file'>
+								<%= content_tag :span, truncate(map[:file].reverse, :length => 75).reverse, :title => map[:file] %>
+							</div>
+						</div>
+					<% end %>
+				</div>
+			<% end %>
+		</fieldset>
+	<% end %>
+	<% if @results.size == 0 %>
+		<h2>No results found!</h2>
+	<% end %>
+</div>

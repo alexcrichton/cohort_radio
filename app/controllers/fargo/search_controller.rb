@@ -1,19 +1,24 @@
 class Fargo::SearchController < ApplicationController
   
   before_filter { |c| c.unauthorized! if c.cannot? :search, Fargo }
+  before_filter :set_search
     
   def index
-    if params[:q]
-      params[:q] = "#{params[:q]} mp3" unless params[:q].index 'mp3'
-      search = Fargo::Search.new(:query => params[:q], :filetype => Fargo::Search::AUDIO)
-      
-      fargo.search_hub search
-      sleep 2
-      @results = fargo.search_results search
+    fargo.search_hub @search if @search
+  end
+  
+  def results
+    @results = fargo.search_results(@search) || []
 
-      @result_map = Hash.new{ |h, k| h[k] = [] }
-      @results.each { |result| @result_map[result[:nick]] << result }
-    end
+    @result_map = Hash.new{ |h, k| h[k] = [] }
+    @results.each { |result| @result_map[result[:nick]] << result }
+  end
+  
+  private
+  def set_search
+    return true unless params[:q]
+    params[:q] = "#{params[:q]} mp3" unless params[:q].index 'mp3'
+    @search = Fargo::Search.new(:query => params[:q], :filetype => Fargo::Search::AUDIO)
   end
     
 end
