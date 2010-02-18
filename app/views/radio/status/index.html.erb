@@ -15,7 +15,7 @@
 	</tr>
 	<% @playlists.each do |playlist| %>
 		<tr>
-			<td><%= playlist.name %></td>
+			<td><%= link_to playlist.name, playlist %></td>
 			<td><%= radio.has? playlist %></td>
 			<td><%= radio.current_song(playlist).display_title if radio.playing? playlist %></td>
 			<td>

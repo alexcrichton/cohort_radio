@@ -18,8 +18,13 @@ class Fargo::DownloadsController < ApplicationController
   def destroy
     @job = Delayed::Job.find(params[:id])
     @job.destroy
-    flash[:notice] = "Download removed"
-    redirect_to fargo_downloads_path
+
+    if request.xhr?
+      render :text => 'success'
+    else
+      flash[:notice] = "Download removed"
+      redirect_to fargo_downloads_path
+    end
   end
   
 end

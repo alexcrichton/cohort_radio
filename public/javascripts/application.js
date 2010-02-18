@@ -15,6 +15,21 @@ $(function() {
   });
 });
 
+$(function() {
+  $("#search .result input[type=submit]").live('click', function(){
+    $(this).replaceWith(smallAjax)
+  });
+  // $("#search .result input[type=submit]").ajaxForm({
+  //   beforeSubmit: function(args, form){
+  //     $(form).find('input[type=submit]').replaceWith(smallAjax);      
+  //   },
+  //   error: error,
+  //   success: function() {
+  //     $()
+  //   }
+  // });
+});
+
 $(function(){
   $("#song-search #q").autocomplete('/songs/search', {
     matchContains: true,
@@ -40,11 +55,6 @@ function error() {
   alert('Server Error... Please try later');
 }
 
-$.fn.extend({
-  bindActivationLinks: function() {
-    return $(this);
-  }
-});
 $(function() {
   if ($('#activations').length == 0) return;
   // send activation email

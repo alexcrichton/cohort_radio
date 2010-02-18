@@ -13,21 +13,21 @@ class Radio::CommandsController < ApplicationController
     radio.add @playlist
     
     flash[:notice] = "Playlist #{@playlist.name} added!"
-    redirect_to :controller => 'radio/status'
+    redirect_to @playlist
   end
   
   def stop
     radio.remove @playlist
     
     flash[:notice] = "Playlist #{@playlist.name} removed!"
-    redirect_to :controller => 'radio/status'
+    redirect_to @playlist
   end
   
   def next
     radio.next @playlist
     
     flash[:notice] = "Next sent."
-    redirect_to :controller => 'radio/status'
+    redirect_to @playlist
   end
   
   def disconnect

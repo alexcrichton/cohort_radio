@@ -9,6 +9,7 @@ CohortRadio::Application.routes.draw do |map|
     resources :downloads do
       get :retry, :on => :member
     end
+    resource :search
   end
 
   resources :playlists do

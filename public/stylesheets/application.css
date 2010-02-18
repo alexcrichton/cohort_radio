@@ -22,7 +22,7 @@ a {
   width: 75%;
   margin: 0 auto;
   background-color: #FFF;
-  padding: 20px 40px;
+/*  padding: 20px 40px;*/
   border: solid 1px black;
   margin-top: 20px;
   overflow: auto;
@@ -157,6 +157,90 @@ input[type=submit]:active {
   height: 20px;
 }
 
+#search .submit {
+  width: 90px;
+  text-align: center;
+}
+
 #search fieldset div {
   float: left;
 }
+
+#container {
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+}
+
+footer {
+  text-align: center;
+  height: 20px;
+  padding: 10px;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ccc));
+}
+
+section#content {
+  margin: 20px;
+}
+
+header {
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#FFFCFD), color-stop(0,#ccc),color-stop(.7,#CCCCCC));
+  overflow: auto;
+  height: 40px;
+  padding: 0 10px 0 0;
+}
+
+.login {
+  overflow: auto;
+  border: 3px solid #ccc;
+  -webkit-border-radius: 20px;
+  width: 500px;
+  margin: 0 auto;
+}
+
+.login input[type=submit] {
+  font-size: 120%;
+  height: 25px;
+}
+
+.login form {
+  float: left;
+  display: block;
+}
+
+.login .links {
+  float: left;
+  text-align: center;
+  border-left: #999 solid 1px;
+  overflow: auto;
+}
+
+dl {
+  overflow: auto;
+}
+
+dl dt {
+	clear: left;
+	float: left;
+  width: 100px;
+  text-align: right;
+	margin: 0;
+	padding: 5px;
+}
+dl dd {
+	float: left;
+	margin: 0;
+	padding: 5px;
+}
+
+.flash a {
+  float: right;
+}
+
+.flash p {
+  float: left;
+}
+
+.status {
+  float: right;
+}
+

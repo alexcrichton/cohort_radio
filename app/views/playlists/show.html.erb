@@ -1,7 +1,16 @@
 <div class="search">
 	<div>
-		<%= link_to 'Add your own', new_song_path %>
-		<%= link_to 'Find a new one', :controller => 'fargo/search' if fargo_connected? %>
+		<% if can? :update, @playlist %>
+			<%= link_to "[Edit playlist]", edit_playlist_path(@playlist) %>
+		<% end %>
+		<% if can?(:manage, Radio) && radio_connected? %>
+			<% if radio.playing? @playlist %>
+				<%= link_to "[Stop streaming]", :controller => 'radio/commands', :action => 'stop', :playlist_id => @playlist.slug %>
+				<%= link_to "[Next Song]", :controller => 'radio/commands', :action => 'next', :playlist_id => @playlist.slug %>
+			<% else %>
+				<%= link_to "[Start streaming]", :controller => 'radio/commands', :action => 'add', :playlist_id => @playlist.slug %>
+			<% end %>
+		<% end %>
 	</div>
 	<% form_tag enqueue_playlist_path(@playlist), :id => 'song-search' do %>
 		<div>
@@ -12,6 +21,17 @@
 	<% end %>
 </div>
 
-<h3>Stream url: <%= raw auto_link(@playlist.stream_url) %></h3>
+<div class='status'>
+	<% if radio_connected? && radio.playing?(@playlist) %>
+		<p>
+			Stream url: <%= raw auto_link(@playlist.stream_url) %><br/>
+			Current Song: <%= radio.current_song(@playlist).display_title %>
+		</p>
+		<!-- <audio src="<%= @playlist.stream_url %>" controls='controls'></audio> -->
+	<% else %>
+		This playlist is not streaming
+	<% end %>
+</div>
+<h2>Queue:</h2>
 
 <%= render @playlist.songs %>

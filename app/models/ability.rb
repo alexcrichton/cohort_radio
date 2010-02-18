@@ -2,7 +2,9 @@ class Ability
   include CanCan::Ability
   
   def initialize(user)
-        
+    
+    can :home, User  
+      
     if user.nil? || user.activation.nil? || user.activation.pending?
       can :login, User
       can :create, User
