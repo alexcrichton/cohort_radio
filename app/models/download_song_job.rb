@@ -34,7 +34,7 @@ class DownloadSongJob < Struct.new(:nick, :file)
     fargo.unsubscribe &block
 
     # create the song and delete the downloaded file (it's copied by paperclip)
-    raise @message unless @message.nil?
+    raise @message unless @message.blank?
 
     Song.create! :audio => File.new(@file)
     File.delete @file

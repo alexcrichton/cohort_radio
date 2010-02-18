@@ -6,7 +6,9 @@ CohortRadio::Application.routes.draw do |map|
   end
   
   namespace :fargo do
-    resources :downloads
+    resources :downloads do
+      get :retry, :on => :member
+    end
   end
 
   resources :playlists do

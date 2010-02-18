@@ -30,7 +30,7 @@ module Fargo
           publish :download_progress, :percent => @recvd.to_f / @length, :file => download_path, :nick => @other_nick, :remote_file => self[:file]
         end
       rescue IOError
-        Fargo.logger.warn "#{self}: IOError, disconnecting"
+        Fargo.logger.warn @last_error = "#{self}: IOError, disconnecting"
         disconnect
       end
   
@@ -45,11 +45,11 @@ module Fargo
               @other_nick = message[:nick]
               self[:file] = self[:client].downloading[@other_nick].shift
               if self[:file].nil?
-                Fargo.logger.warn "Nothing to download from:#{@other_nick}!"
+                Fargo.logger.warn @last_error = "Nothing to download from:#{@other_nick}!"
                 disconnect
               end
             else
-              Fargo.logger.warn "Premature disconnect when mynick received"
+              Fargo.logger.warn @last_error = "Premature disconnect when mynick received"
               disconnect
             end
           when :lock
@@ -61,7 +61,7 @@ module Fargo
               write "$Direction Download #{@my_num = rand(10000)}"
               write "$Key #{generate_key @remote_lock}"
             else
-              Fargo.logger.warn "Premature disconnect when lock received"
+              Fargo.logger.warn @last_error = "Premature disconnect when lock received"
               disconnect
             end
           when :supports
@@ -69,7 +69,7 @@ module Fargo
               @client_extensions = message[:extensions]
               @handshake_step = 3
             else
-              Fargo.logger.warn "Premature disconnect when supports received"
+              Fargo.logger.warn @last_error = "Premature disconnect when supports received"
               disconnect
             end
           when :direction
@@ -77,7 +77,7 @@ module Fargo
               @client_num = message[:number]
               @handshake_step = 4
             else
-              Fargo.logger.warn "Premature disconnect when direction received"
+              Fargo.logger.warn @last_error = "Premature disconnect when direction received"
               disconnect
             end
           when :key
@@ -94,7 +94,7 @@ module Fargo
               write "$Get #{self[:file]}$#{self[:offset] || 1}"
               @handshake_step = 5
             else
-              Fargo.logger.warn "Premature disconnect when key received"
+              Fargo.logger.warn @last_error = "Premature disconnect when key received"
               disconnect
             end
           when :file_length
@@ -105,7 +105,7 @@ module Fargo
               publish :download_started, :file => download_path, :remote_file => self[:file], :nick => @other_nick   
               write "$Send"
             else
-              Fargo.logger.warn "Premature disconnect when file_length received"
+              Fargo.logger.warn @last_error = "Premature disconnect when file_length received"
               disconnect
             end
         end
@@ -113,7 +113,7 @@ module Fargo
       
       def disconnect
         if @recvd.nil? || @recvd != @length
-          publish :download_failed, :nick => @other_nick, :remote_file => self[:file], :file => download_path 
+          publish :download_failed, :nick => @other_nick, :remote_file => self[:file], :file => download_path, :recvd => @recvd, :length => @length, :last_error => @last_error
           @file.close unless @file.nil? || @file.closed?
         end
         super

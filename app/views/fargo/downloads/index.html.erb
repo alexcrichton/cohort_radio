@@ -4,6 +4,7 @@
 		<th>Nick</th>
 		<th>File</th>
 		<th>Last Run</th>
+		<th>Running?</th>
 		<th>Last Error</th>
 		<th>Attempts</th>
 	</tr>
@@ -12,10 +13,18 @@
 			<td><%= job.payload_object.nick %></td>
 			<td><%= job.payload_object.file %></td>
 			<td><%= job.run_at %></td>
-			<td><%= job.last_error.split("\n").first unless job.last_error.nil? %></td>
+			<td><%= !job.locked_at.nil? %></td>
+			<td title="<%= job.last_error %>">
+				<%= truncate job.last_error.split("\n").first unless job.last_error.nil? %>
+			</td>
 			<td><%= job.attempts %></td>
 			<td>
-				<%= link_to "Remove", fargo_download_path(job.id), :method => :delete %>
+				<% if can?(:download, Fargo) && job.locked_at.nil? %>
+					<%= link_to 'Retry', retry_fargo_download_path(job.id) %>
+				<% end %>
+				<% if can? :manage, Fargo %>
+					<%= link_to "Remove", fargo_download_path(job.id), :method => :delete %>
+				<% end %>
 			</td>
 		</tr>
 	<% end %>

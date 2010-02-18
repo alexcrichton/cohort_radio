@@ -13,17 +13,17 @@
 			<div>
 				<%= link_to 'Home', current_user ? playlists_path : login_path %>
 				<%= link_to 'Songs', songs_path if can? :read, Song%>
-				<% if can? :manage, Fargo %>
-					<% if fargo_running? %>
+				<% if fargo_running? %>
+					<% if can? :manage, Fargo %>
 						<% if fargo_connected? %>
 							<%= link_to 'Disconnect Fargo', :controller => 'fargo/commands', :action => 'disconnect' %>
 						<% else %>
 							<%= link_to 'Connect Fargo', :controller => 'fargo/commands', :action => 'connect' %>
 						<% end %>
-						<%= link_to "Downloads", fargo_downloads_path %>
-					<% else %>
-						Fargo is not running.
 					<% end %>
+					<%= link_to "Downloads", fargo_downloads_path %>
+				<% else %>
+					Fargo is not running.
 				<% end %>
 				<% if can? :manage, Radio %>
 					<% if radio_running? %>
