@@ -6,10 +6,10 @@ class DownloadSongJob < Struct.new(:nick, :file)
     @thread = Thread.current
     @file = nil
   
-    # Wait for 5 seconds for the download to start
+    # Wait for 20 seconds for the download to start
     @stop_thread = Thread.start {
-      sleep 5
-      @message = 'Download didn\'t start within 5 seconds!'
+      sleep 20
+      @message = 'Download didn\'t start within 20 seconds!'
       @thread.wakeup
     }
     
