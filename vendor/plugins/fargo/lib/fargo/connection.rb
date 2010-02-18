@@ -84,7 +84,7 @@ module Fargo
       else
         data = @socket.gets "|"
         Fargo.logger.debug "#{self} Received: #{data.inspect}" 
-        receive data.chomp('|')
+        receive data.chomp('|') unless data.nil?
       end
     rescue => e
       Fargo.logger.warn "#{self}: Error reading data, disconnecting: #{e}"
