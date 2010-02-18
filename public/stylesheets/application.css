@@ -22,8 +22,7 @@ a {
   width: 75%;
   margin: 0 auto;
   background-color: #FFF;
-/*  padding: 20px 40px;*/
-  border: solid 1px black;
+  border: solid 2px black;
   margin-top: 20px;
   overflow: auto;
 }
@@ -215,6 +214,9 @@ footer {
   height: 20px;
   padding: 10px;
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ccc));
+  -webkit-border-bottom-right-radius: 20px;
+  -webkit-border-bottom-left-radius: 20px;
+
 }
 
 section#content {
@@ -223,6 +225,9 @@ section#content {
 
 header {
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#FFFCFD), color-stop(0,#ccc),color-stop(.7,#CCCCCC));
+  -webkit-border-top-right-radius: 20px;
+  -webkit-border-top-left-radius: 20px;
+  
   overflow: auto;
   height: 40px;
   padding: 0 10px 0 0;
