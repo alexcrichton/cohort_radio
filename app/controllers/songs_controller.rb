@@ -47,8 +47,19 @@ class SongsController < ApplicationController
   end
   
   def search
-    @songs = Song.limit(params[:limit]).where('title LIKE ?', "%#{params[:q]}%")
-    render :text => @songs.map { |s| "<img src='#{s.album_image_url}' height='30px'/> #{s.title} - #{s.artist} (#{s.id})\n" }
+    @songs = params[:q].blank? ? [] : Song.search(params[:q]).limit(params[:limit])
+    
+    if request.xhr?
+      if params[:completion].blank?
+        if @songs.size == 0
+          render :text => "<h4>No results found!</h4>"
+        else
+          render @songs
+        end
+      else
+        render :text => @songs.map { |s| "<img src='#{s.album_image_url}' height='30px'/> #{s.title} - #{s.artist} (#{s.id})\n" }
+      end
+    end
   end
   
 end

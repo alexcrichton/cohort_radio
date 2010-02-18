@@ -15,6 +15,13 @@ class PlaylistsController < ApplicationController
   
   def enqueue
     @playlist.songs << @song unless @song.nil?
+    flash[:notice] = "#{@song.display_title} queued!" unless @song.nil?
+    redirect_to @playlist
+  end
+  
+  def dequeue
+    @playlist.songs.delete @song unless @song.nil?
+    flash[:notice] = "#{@song.display_title} dequeued!" unless @song.nil?
     redirect_to @playlist
   end
   

@@ -13,6 +13,23 @@
 		</p>
 	</div>
 	<div class='links'>
-		<%= link_to '[download]', download_song_path(song) %>
+		<p>
+			<%= link_to '[download]', download_song_path(song) %>
+			<% if @playlist && can?(:manage, song) %>
+				<br/><%= link_to '[remove]', dequeue_playlist_path(@playlist) + "?" + {:song_id => song.id}.to_query %>
+			<% end %>
+		</p>
+		<% if @playlist.nil? %>
+			<div class='add'>
+				<%= link_to "[add to playlist]", '#' %>
+				<ul>
+					<% Playlist.all.each do |playlist| %>
+						<li>
+							<%= link_to playlist.name, enqueue_playlist_path(playlist) + '?' + {:song_id => song.id}.to_query %>
+						</li>
+					<% end %>
+				</ul>
+			</div>
+		<% end %>
 	</div>
 </div>

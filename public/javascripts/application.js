@@ -15,12 +15,29 @@ $(function() {
   });
 });
 
+$(function() {
+  if($('#songs-search').length == 0) return;
+  
+  $('#songs-search form').ajaxForm({
+    beforeSubmit: function(){
+      $('#search-holder').show();
+      $('#search-response').hide();
+    },
+    success: function(data){
+      $('#search-response').html(data).show();
+      $('#search-holder').hide();
+    },
+    error: error
+  })
+});
+
 $(function(){
   if($('#fargo-search').length == 0) return;
   
   var timeoutId;
   
   $('#fargo-search form').ajaxForm({
+    error: error,
     success: function() {
       $('#query').text($('#q').val());
       $('#search-holder').show();
@@ -90,6 +107,7 @@ $(function(){
     matchContains: true,
     extraParams: {
       playlist_id:$('.search #playlist_id').attr('value'),
+      completion:'true',
     },
     cacheLength: 50,
     // multiple: false,

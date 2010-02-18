@@ -1,0 +1,17 @@
+<h1>Searching Songs</h1>
+
+<div class='search' id='songs-search'>
+	<% form_tag search_songs_path, :method => :get do %>
+		<p>
+			<%= text_field_tag :q, params[:q] %>
+			<%= submit_tag 'Search' %>
+		</p>
+	<% end %>
+</div>
+<div id='search-holder' class='hide'>
+	<%= image_tag 'ajax-huge.gif' %>
+</div>
+
+<div id='search-response'>
+	<%= render @songs %>
+</div>

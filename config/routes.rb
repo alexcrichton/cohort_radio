@@ -14,6 +14,8 @@ CohortRadio::Application.routes.draw do |map|
 
   resources :playlists do
     post :enqueue, :on => :member
+    get :enqueue, :on => :member
+    get :dequeue, :on => :member
   end
 
   resource :user, :except => [:show, :destroy] do

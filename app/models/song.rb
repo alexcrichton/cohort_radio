@@ -11,6 +11,8 @@ class Song < ActiveRecord::Base
   
   before_validation :set_metadata
   
+  scope :search, Proc.new{ |query| where('title LIKE :q or artist LIKE :q or album LIKE :q', :q => "%#{query}%")}
+  
   def display_title
     if self[:title]
       "#{self[:title]}"

@@ -99,6 +99,44 @@ a {
   margin: 10px;
 }
 
+.song .links {
+  float: right;
+  text-align: right;
+}
+
+.song .add:hover > a {
+  display: none;
+}
+
+.song .add ul {
+  list-style: none;
+  display: none;
+  background: #ccc;
+  padding: 0;
+  width: 100px;
+  border: 1px solid black;
+}
+
+.song .add ul li {
+  width: 100%;
+  display: block;
+}
+
+.song .add ul li:hover {
+  background: #aaa;
+}
+
+.song .add ul li a {
+  display: inline-block;
+  text-decoration: none;
+  color: black;
+  width: 100%;
+}
+
+.song .add:hover ul {
+  display: block;
+}
+
 .search {
   overflow: auto;
 }
@@ -106,9 +144,11 @@ a {
 .search div {
   float: left;
 }
+
 .search form div {
   float: right;
 }
+
 .search input[type=text] {
   font-size: 150%;
   width: 300px;
@@ -225,6 +265,7 @@ dl dt {
 	margin: 0;
 	padding: 5px;
 }
+
 dl dd {
 	float: left;
 	margin: 0;
@@ -243,3 +284,6 @@ dl dd {
   float: right;
 }
 
+#search-holder {
+  text-align: center;
+}
