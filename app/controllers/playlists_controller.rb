@@ -14,7 +14,7 @@ class PlaylistsController < ApplicationController
   end
   
   def enqueue
-    @playlist.songs << @song
+    @playlist.songs << @song unless @song.nil?
     redirect_to @playlist
   end
   
