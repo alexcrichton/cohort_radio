@@ -3,7 +3,7 @@
 <div class='search' id='songs-search'>
 	<% form_tag search_songs_path, :method => :get do %>
 		<p>
-			<%= text_field_tag :q, params[:q] %>
+			<%= text_field_tag :q, params[:q], :placeholder => "Search query" %>
 			<%= submit_tag 'Search' %>
 		</p>
 	<% end %>

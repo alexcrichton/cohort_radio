@@ -14,7 +14,7 @@ module Fargo
       
       # TODO: actually support some of these
       def supports
-        "$Supports MiniSlots XmlBZList ADCGet TTHL TTHF ZLIG" # ???
+        "$Supports MiniSlots XmlBZList ADCGet TTHL TTHF ZLIG " # ???
       end
       
       def read_data

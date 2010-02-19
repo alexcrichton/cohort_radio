@@ -13,6 +13,7 @@ require File.dirname(__FILE__) + '/fargo/search/result'
 require File.dirname(__FILE__) + '/fargo/handler/chat'
 require File.dirname(__FILE__) + '/fargo/handler/searches'
 require File.dirname(__FILE__) + '/fargo/handler/nick_list'
+require File.dirname(__FILE__) + '/fargo/handler/download_manager'
 
 require File.dirname(__FILE__) + '/fargo/connection'
 require File.dirname(__FILE__) + '/fargo/connection/download'

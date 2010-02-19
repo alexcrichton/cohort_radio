@@ -24,9 +24,10 @@ module Fargo
     def connect
       raise Fargo::ConnectionError.new("There's no receive method!") unless respond_to? :receive
       pre_connect if respond_to? :pre_connect
-      open_socket  
+      open_socket
       listen
       post_connect if respond_to? :post_connect
+      publish :connection, :connection => self
     end
   
     def open_socket

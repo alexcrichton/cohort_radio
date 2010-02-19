@@ -66,7 +66,7 @@ module Fargo
         when @@hello          then {:type => :hello, :who  => $1}
         when @@myinfo         then {:type => :myinfo, :nick => $1, :interest => $2, :speed => $3,
                                     :email => $4, :sharesize => $5.to_i}
-        when @@myinfo2        then {:type=>:myinfo, :nick=> $1, :interest => $2, :sharesize=> 0}
+        when @@myinfo2        then {:type => :myinfo, :nick=> $1, :interest => $2, :sharesize=> 0}
         when @@to             then {:type => :privmsg, :to => $1, :from => $2, :text => $3}
         when @@hubto          then {:type => :privmsg, :to => $1, :from => "Hub", :text => $2}
         when @@ctm            then {:type => :connect_to_me, :nick => $1, :address => $2, :port => $3.to_i}

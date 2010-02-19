@@ -64,4 +64,7 @@
 			</ul>
 		</li>
 	<% end %>
+	<% if can? :manage, Activation %>
+		<li><%= link_to 'Activations', edit_activation_path %></li>
+	<% end %>
 </ul>

@@ -10,6 +10,7 @@ module Fargo
     include Fargo::Handler::Chat
     include Fargo::Handler::NickList
     include Fargo::Handler::Searches
+    include Fargo::Handler::DownloadManager
     
     DEFAULTS = {:download_dir => '/tmp/fargo/downloads'}
   
@@ -17,9 +18,7 @@ module Fargo
 
     def initialize(opts = {})
       self.options = DEFAULTS.merge opts
-      self.downloading = Hash.new { |h, k| h[k] = [] }
       self.version = '0.75'
-      FileUtils.mkdir_p options[:download_dir] unless File.directory? options[:download_dir]
     end
   
     # Don't do this in initialization so we have time to set all the options
@@ -36,23 +35,20 @@ module Fargo
       @@after_setup_callbacks.each{ |callback| send callback }
     end
   
-    def download nick, file
-      raise ConnectionException.new "Not connected yet!" unless options[:hub]
-      raise ConnectionException.new "User #{nick} does not exist!" unless nicks.include? nick
-      downloading[nick] << file
-      if passive
-        hub.write "$RevConnectToMe #{self.nick} #{nick}"
-      else
-        hub.write "$ConnectToMe #{nick} #{address}:#{active_port}"
-      end
-    end
-  
     def num_open_slots
       0
     end
     
     def get_info nick
       hub.write "$GetINFO #{nick} #{self.nick}"
+    end
+    
+    def connect_with nick
+      if passive
+        hub.write "$RevConnectToMe #{self.nick} #{nick}"
+      else
+        hub.write "$ConnectToMe #{nick} #{address}:#{active_port}"
+      end
     end
   
     def connect
@@ -76,9 +72,9 @@ module Fargo
       active_server.disconnect unless passive
     end
   
-    def search search
+    def search query
       raise ConnectionError.new("Not connected Yet!") if options[:hub].nil?
-      hub.write "$Search #{passive ? "Hub:#{nick}" : "#{address}:#{search_port}"} #{search}"
+      hub.write "$Search #{passive ? "Hub:#{nick}" : "#{address}:#{search_port}"} #{query}"
     end
   
     # see hub/parser#@@search for what's passed in
@@ -94,7 +90,7 @@ module Fargo
     end
     
     def description
-      "<++ V:#{version},M:#{passive ? 'P' : 'A'},H:0/1/0,S:#{num_open_slots},Dt:1.2.0/W>"
+      "<++ V:#{version},M:#{passive ? 'P' : 'A'},H:1/0/0,S:#{num_open_slots},Dt:1.2.0/W>"
     end
   end
 end

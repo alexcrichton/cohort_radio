@@ -24,7 +24,14 @@ class Playlist < ActiveRecord::Base
   end
   
   def stream_url
-    "http://#{Radio::DEFAULTS[:host]}#{ice_mount_point}"
+    url = "http://"
+    url << Radio::DEFAULTS[:stream_user]
+    url << ':'
+    url << Radio::DEFAULTS[:stream_password]
+    url << '@'
+    url << Radio::DEFAULTS[:host]
+    url << ice_mount_point
+    url
   end
   
 end

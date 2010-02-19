@@ -15,7 +15,7 @@
 	<% form_tag enqueue_playlist_path(@playlist), :id => 'song-search' do %>
 		<div>
 			<%= hidden_field_tag :playlist_id, @playlist.slug %>
-			<%= text_field_tag :q, '', :autocomplete => 'off' %>
+			<%= text_field_tag :q, '', :autocomplete => 'off', :placeholder => 'Add a song to this queue' %>
 			<%= submit_tag "Add" %>
 		</div>
 	<% end %>

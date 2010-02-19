@@ -26,6 +26,7 @@ namespace :db do
   task :default do
     run "mkdir -p #{shared_path}/config"
     run "mkdir -p #{shared_path}/files"
+    run "mkdir -p #{shared_path}/fargo"
   end
 
   desc "Make symlink for database yaml" 
@@ -38,6 +39,7 @@ namespace :db do
     run "ln -nsf #{shared_path}/config/radio.yml #{release_path}/config/"
     run "ln -nsf #{shared_path}/config/exceptional.yml #{release_path}/config/"
     run "ln -nsf #{shared_path}/files #{latest_release}/private"
+    run "ln -nsf #{shared_path}/fargo #{latest_release}/tmp/fargo"
   end
 
 end

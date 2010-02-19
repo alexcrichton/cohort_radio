@@ -3,7 +3,7 @@
 <div class='search' id='fargo-search'>
 	<% form_tag({:controller => 'fargo/search', :action => 'index'}, :method => :get) do %>
 		<p>
-			<%= text_field_tag :q, params[:q] %>
+			<%= text_field_tag :q, params[:q], :placeholder => 'Search query' %>
 			<%= submit_tag 'Submit' %>
 		</p>
 	<% end %>

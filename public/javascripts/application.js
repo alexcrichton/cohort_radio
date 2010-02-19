@@ -3,19 +3,6 @@ var bigAjax = '<img src="/images/ajax-big.gif" alt="Loading..." class="loading"/
 var hugeAjax = '<img src="/images/ajax-huge.gif" alt="Loading..." class="loading"/>';
 
 $(function() {
-  $("input[type=text], textarea").focus(function(src) {
-    if ($(this).val() == $(this).attr('title'))
-      $(this).removeClass("defaultTextActive").val("");
-  }).blur(function() {
-    if ($(this).val() == "")
-      $(this).addClass("defaultTextActive").val($(this).attr('title'));
-  }).change(function() {
-    if ($(this).val() != $(this).attr('title'))
-      $(this).removeClass('defaultTextActive');
-  });
-});
-
-$(function() {
   if($('#songs-search').length == 0) return;
   
   $('#songs-search form').ajaxForm({
@@ -156,7 +143,7 @@ $(function() {
             parent.parents('tr').fadeOut(function() {
               $(this).remove();
             });
-            $('#' + other + ' table').append($(response).hide().fadeIn()).parents('#activations');
+            $('#' + other).append($(response).hide().fadeIn()).parents('#activations');
           });
         } else {
           err(element);
