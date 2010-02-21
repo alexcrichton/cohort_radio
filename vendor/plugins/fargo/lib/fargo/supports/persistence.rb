@@ -13,7 +13,7 @@ module Fargo
       def connection_for nick
         if @connection_cache
           c = @connection_cache[nick]
-          return c if c.connected?
+          return c if c.nil? || c.connected?
           @connection_cache.delete nick
         end
         nil

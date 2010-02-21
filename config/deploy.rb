@@ -7,7 +7,7 @@ set :use_sudo, false
 set :rake, "/opt/ruby1.8/bin/rake"
 
 set :scm, :git
-set :repository, "git://eve.alexcrichton.com/public/cohort_radio.git"
+set :repository, "git://github.com/alexcrichton/cohort_radio.git"
 set :branch, "master"
 set :deploy_via, :remote_cache
 
