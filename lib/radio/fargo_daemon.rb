@@ -11,6 +11,10 @@ class Radio
       
       proxy = Radio::Proxy::FargoServer.new :client => client, :port => @port || DEFAULTS[:port]
       proxy.connect
+      
+      client.subscribe { |type, hash|
+        Delayed::Job.enqueue CreateSongJob.new(hash[:file]) if type == :download_finished
+      }
 
       trap("INT") { proxy.disconnect; client.disconnect; exit }
       trap("TERM") { proxy.disconnect; client.disconnect; exit }      

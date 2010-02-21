@@ -1,17 +1,17 @@
 module Fargo
-  module Handler
+  module Supports
     module Searches
       
       def self.included(base)
         base.after_setup :subscribe_to_searches
       end
       
-      def search_hub search
+      def search search
         raise ConnectionException.new "Not connected yet!" unless connected?
         search = normalize search
         @searches[search.to_s] = []
         @search_objects[search.to_s] = search
-        self.search search
+        search_hub search
       end
       
       def searches
@@ -38,7 +38,7 @@ module Fargo
       def subscribe_to_searches
         @searches = {}
         @search_objects = {}
-        hub.subscribe do |type, map|
+        subscribe do |type, map|
           if type == :search_result
             @searches.keys.each do |search|
               @searches[search] << map if @search_objects[search].matches_result?(map)

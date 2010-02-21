@@ -4,22 +4,22 @@ class Fargo::CommandsController < ApplicationController
   before_filter(:only => :download){ |c| c.unauthorized! if c.cannot? :download, Fargo }  
   
   def connect
-    response = fargo.connect
+    fargo.connect
     flash[:notice] = "Connected!"
 
     redirect_to playlists_path
   end
   
   def disconnect
-    response = fargo.disconnect
-    puts response.inspect
+    fargo.disconnect
     flash[:notice] = "Disconnected!"
     
     redirect_to playlists_path
   end
   
   def download
-    Delayed::Job.enqueue DownloadSongJob.new(params[:nick], params[:file])
+    # Delayed::Job.enqueue DownloadSongJob.new(params[:nick], params[:file])
+    fargo.download params[:nick], params[:file]
 
     if request.xhr?
       render :text => '<span class="notice">Queued</span>'

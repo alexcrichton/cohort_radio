@@ -4,13 +4,16 @@ class Fargo::DownloadsController < ApplicationController
   before_filter(:only => :index){ |c| c.unauthorized! if c.cannot? :download, Fargo }
     
   def index
+    @current_downloads = fargo.current_downloads
+    @queued_downloads = fargo.queued_downloads
+    @failed_downloads = fargo.failed_downloads
+    
     @jobs = Delayed::Job.all
-    @jobs.reject! { |j| !j.payload_object.is_a?(DownloadSongJob) }
+    @jobs.reject!{ |j| !j.payload_object.is_a?(CreateSongJob) }
   end
   
   def retry
-    @job = Delayed::Job.find params[:id]
-    @job.update_attributes :run_at => Time.now + 1.second
+    fargo.retry_download params[:nick], params[:file]
     
     if request.xhr?
       render :text => '<span class="notice">Queued</span>'
@@ -21,8 +24,7 @@ class Fargo::DownloadsController < ApplicationController
   end
   
   def destroy
-    @job = Delayed::Job.find(params[:id])
-    @job.destroy
+    fargo.remove_download params[:nick], params[:file]
 
     if request.xhr?
       render :text => 'success'

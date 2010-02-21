@@ -4,7 +4,7 @@ module Fargo
 
       attr_accessor :options
 
-      # Needs :file, :filesize, :client, :target (if passive), :passive (if passive)
+      # Needs :file, :filesize, :client, :target (if passive)
       def initialize(opts = {})
         self.options = opts
       end
@@ -16,11 +16,11 @@ module Fargo
         else
           s = "#{file}\005#{options[:filesize]}"
         end
-        s << sprintf(" %d/%d\005%s (%s:%d)", options[:client].num_open_slots,
-                                                     options[:client].num_slots,
-                                                     options[:client].hub[:hubname],
-                                                     options[:client].hub[:ip],
-                                                     options[:client].hub[:port])
+        s << sprintf(" %d/%d\005%s (%s:%d)", options[:client].open_slots,
+                                             options[:client].slots,
+                                             options[:client].hub[:hubname],
+                                             options[:client].hub[:ip],
+                                             options[:client].hub[:port])
         s << "\005#{options[:target]}" if options[:passive]
       end
 

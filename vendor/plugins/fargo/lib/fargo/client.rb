@@ -7,15 +7,30 @@ module Fargo
     end
     
     include Fargo::Utils::Publisher
-    include Fargo::Handler::Chat
-    include Fargo::Handler::NickList
-    include Fargo::Handler::Searches
-    include Fargo::Handler::DownloadManager
+    include Fargo::Supports::Chat
+    include Fargo::Supports::Uploads
+    include Fargo::Supports::NickList
+    include Fargo::Supports::Searches
+    include Fargo::Supports::Downloads
+    include Fargo::Supports::Persistence
     
     DEFAULTS = {:download_dir => '/tmp/fargo/downloads'}
   
     attr_accessor :options
-
+    
+    # Options
+    #   :hub_port
+    #   :hub_address
+    #   :search_port
+    #   :active_port
+    #   :nick
+    #   :password
+    #   :email
+    #   :speed
+    #   :passive
+    #   :download_slots
+    #   :download_dir
+    #   :slots
     def initialize(opts = {})
       self.options = DEFAULTS.merge opts
       self.version = '0.75'
@@ -35,12 +50,13 @@ module Fargo
       @@after_setup_callbacks.each{ |callback| send callback }
     end
   
-    def num_open_slots
-      0
-    end
-    
     def get_info nick
       hub.write "$GetINFO #{nick} #{self.nick}"
+    end
+    
+    def get_ip *nicks
+      nicks.flatten!
+      hub.write "$UserIP #{nicks.join '$$'}"
     end
     
     def connect_with nick
@@ -72,7 +88,7 @@ module Fargo
       active_server.disconnect unless passive
     end
   
-    def search query
+    def search_hub query
       raise ConnectionError.new("Not connected Yet!") if options[:hub].nil?
       hub.write "$Search #{passive ? "Hub:#{nick}" : "#{address}:#{search_port}"} #{query}"
     end
@@ -90,7 +106,7 @@ module Fargo
     end
     
     def description
-      "<++ V:#{version},M:#{passive ? 'P' : 'A'},H:1/0/0,S:#{num_open_slots},Dt:1.2.0/W>"
+      "<++ V:#{version},M:#{passive ? 'P' : 'A'},H:1/0/0,S:#{open_slots},Dt:1.2.0/W>"
     end
   end
 end

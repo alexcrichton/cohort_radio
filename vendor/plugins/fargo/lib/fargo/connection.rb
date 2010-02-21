@@ -11,6 +11,7 @@ module Fargo
     def initialize(opts = {})
       @outgoing = Queue.new
       @options = opts
+      self[:quit_on_disconnect] = true
     end
   
     def [](key)
@@ -27,7 +28,9 @@ module Fargo
       open_socket
       listen
       post_connect if respond_to? :post_connect
-      publish :connection, :connection => self
+      
+      connection_type = self.class.name.split("::").last.downcase
+      publish :"#{connection_type}_connection_opened"
     end
   
     def open_socket
@@ -53,7 +56,7 @@ module Fargo
   
     def disconnect
       Fargo.logger.debug "#{self}: Disconnecting connection"
-      write "$Quit #{self[:nick]}"
+      write "$Quit #{self[:nick]}" if self[:quit_on_disconnect]
       if @threads
         @threads.each &:exit
         @threads.clear
@@ -84,8 +87,9 @@ module Fargo
         disconnect
       else
         data = @socket.gets "|"
+        raise ConnectionError.new("Received nil data!") if data.nil?
         Fargo.logger.debug "#{self} Received: #{data.inspect}" 
-        receive data.chomp('|') unless data.nil?
+        receive data.chomp('|')
       end
     rescue => e
       Fargo.logger.warn "#{self}: Error reading data, disconnecting: #{e}"

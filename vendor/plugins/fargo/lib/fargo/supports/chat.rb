@@ -1,5 +1,5 @@
 module Fargo
-  module Handler
+  module Supports
     module Chat
       
       def self.included(base)
@@ -18,7 +18,7 @@ module Fargo
         @public_chats = []
         @chats = Hash.new{ |h, k| h[k] = [] }
 
-        hub.subscribe do |type, map|
+        subscribe do |type, map|
           if type == :chat
             @public_chats << map
           elsif type == :privmsg

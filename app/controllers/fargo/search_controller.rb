@@ -4,7 +4,7 @@ class Fargo::SearchController < ApplicationController
   before_filter :set_search
     
   def index
-    fargo.search_hub @search if @search
+    fargo.search @search if @search
   end
   
   def results

@@ -18,7 +18,7 @@ module Fargo
       # pk = ''
       # 16.times { pk << encode_char(rand(94) + 33) }
       # [lock, pk]
-      [lock + ('ABC' * 6), 'DTELLA']
+      [lock + ('ABC' * 6), 'ABCD' * 4]
     end
   
     # Watch out for those special ones...
