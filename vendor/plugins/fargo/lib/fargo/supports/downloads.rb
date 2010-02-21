@@ -3,7 +3,7 @@ module Fargo
     module Downloads
       
       attr_reader :current_downloads, :finished_downloads, :queued_downloads, :failed_downloads,
-                  :open_download_slots
+                  :open_download_slots, :trying
       
       def self.included(base)
         base.after_setup :initialize_queues

@@ -23,7 +23,6 @@ module Fargo
         @connection_cache = {}
       end
       
-      
     end
   end
 end

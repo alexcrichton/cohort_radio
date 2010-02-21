@@ -5,6 +5,7 @@ class Radio
     
     def run
       Fargo.logger = ::Rails.logger
+      Fargo.logger = RAILS_DEFAULT_LOGGER if defined?(RAILS_DEFAULT_LOGGER)
       Fargo.logger.level = 0
       
       client = Fargo::Client.new
@@ -16,7 +17,7 @@ class Radio
         Delayed::Job.enqueue CreateSongJob.new(hash[:file]) if type == :download_finished
       }
 
-      trap("INT") { proxy.disconnect; client.disconnect; exit }
+      trap("INT")  { proxy.disconnect; client.disconnect; exit }
       trap("TERM") { proxy.disconnect; client.disconnect; exit }      
 
       sleep
