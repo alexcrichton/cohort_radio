@@ -8,6 +8,8 @@
 						<div class='info'>
 							<%= hidden_field_tag :nick, nick %>
 							<%= hidden_field_tag :file, map[:file] %>
+							<%= hidden_field_tag :tth, map[:hub] %>
+							<%= hidden_field_tag :size, map[:size] %>
 							<div class='size'><%= number_to_human_size map[:size] %></div>
 							<div class='submit'><%= submit_tag 'Download'%></div>
 							<div class='file'>

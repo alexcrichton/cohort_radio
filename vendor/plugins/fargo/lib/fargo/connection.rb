@@ -19,6 +19,7 @@ module Fargo
     end
   
     def []=(key, value)
+      Fargo.logger.debug "#{self}: setting #{key} to #{value}"
       options[key] = value
     end
   

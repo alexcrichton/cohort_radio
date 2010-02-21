@@ -19,7 +19,7 @@ class Fargo::CommandsController < ApplicationController
   
   def download
     # Delayed::Job.enqueue DownloadSongJob.new(params[:nick], params[:file])
-    fargo.download params[:nick], params[:file]
+    fargo.download params[:nick], params[:file], params[:tth], params[:size].to_i
 
     if request.xhr?
       render :text => '<span class="notice">Queued</span>'

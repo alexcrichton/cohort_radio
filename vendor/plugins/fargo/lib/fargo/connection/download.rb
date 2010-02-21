@@ -131,22 +131,30 @@ module Fargo
             write "$ADCGET file #{self[:download].tth.gsub ':', '/'} #{self[:offset]} -1"
           end
         else
-          write "$Get #{self[:file]}$#{self[:offset] + 1}"
+          write "$Get #{self[:download].file}$#{self[:offset] + 1}"
         end
-        
         @handshake_step = 5
         @socket.sync = true
         
+        Fargo.logger.debug "#{self}: Beginning download of #{self[:download]}"
       end
       
       def download_finished!
+        Fargo.logger.debug "#{self}: Finished download of #{self[:download]}"
+        
         @file.close
         @socket.sync = false
-        publish :download_finished, :file => download_path, :download => self[:download], 
-                                    :nick => @other_nick
+        
+        path, download = download_path, self[:download]
+        
         self[:offset] = nil
-        @file_path = self[:download] = @length = @recvd = nil
+        @file_path = nil
+        self[:download] = nil
+        @length = nil
+        @recvd = nil
         @handshake_step = 5
+        
+        publish :download_finished, :file => path, :download => download, :nick => @other_nick
       end
       
       def disconnect

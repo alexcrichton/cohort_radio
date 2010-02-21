@@ -56,6 +56,7 @@ module Fargo
           @current_downloads[user] = download 
           @trying.delete user
         }
+        Fargo.logger.debug "#{self}: Locking download: #{download}"
         
         block = Proc.new{ |type, map|
           if type == :download_progress
@@ -107,7 +108,7 @@ module Fargo
         return false if arr.nil? || arr.size == 0
         
         if connection_for arr[0]
-          Fargo.logger.debug "Requesting previous connection downloads: #{arr[1]}"
+          Fargo.logger.debug "Requesting previous connection downloads: #{arr[1].first}"
           download = lock_next_download! arr[0], connection_for(arr[0])
           connection_for(arr[0])[:download] = download
           connection_for(arr[0]).begin_download!
