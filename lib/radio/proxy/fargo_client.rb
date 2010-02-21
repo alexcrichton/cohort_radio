@@ -26,15 +26,15 @@ class Radio
       
       def read_subscription
         if @subscription_socket.closed?
-          Rails.logger.warn "Managment client tried to read after it's subscription was closed..."
+          Fargo.logger.warn "Managment client tried to read after it's subscription was closed..."
           return close_subscription
         end
         data = @subscription_socket.gets DELIM
         args = decode data
-        Rails.logger.debug "Client subscription received: #{args.inspect}"
+        Fargo.logger.debug "Client subscription received: #{args.inspect}"
         publish *args
       rescue => e
-        Rails.logger.error "Error: client's subscription terminated #{e}"
+        Fargo.logger.error "Error: client's subscription terminated #{e}"
         Exceptional.handle e
         close_subscription
       end

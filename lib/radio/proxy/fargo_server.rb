@@ -10,7 +10,7 @@ class Radio
 
         @subscriptions = []
         @client.subscribe { |type, hash|
-          Rails.logger.debug "#{self} publishing: #{type.inspect}, #{hash.inspect}"
+          Fargo.logger.debug "#{self} publishing: #{type.inspect}, #{hash.inspect}"
           data = encode [type, hash]
           @subscriptions.each{ |socket| 
             if socket.closed?
@@ -19,7 +19,7 @@ class Radio
               begin
                 socket << data
               rescue => e
-                Rails.logger.error "Error writing to subscription socket: #{type.inspect}, #{hash.inspect}"
+                Fargo.logger.error "Error writing to subscription socket: #{type.inspect}, #{hash.inspect}"
                 Exceptional.handle e
                 socket.close rescue nil
                 @subscriptions.delete socket
