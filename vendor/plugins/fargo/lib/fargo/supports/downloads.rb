@@ -70,6 +70,8 @@ module Fargo
       def get_next_download_with_lock! user, connection
         raise "No open slots!" if @open_download_slots <= 0
         
+        raise "Already downloading from #{user}!" if @current_downloads[user]
+        
         download = @queued_downloads[user].shift
         raise "Don't have anything in the queue for #{user}!" if download.nil?
         
