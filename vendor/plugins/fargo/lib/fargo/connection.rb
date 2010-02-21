@@ -46,6 +46,7 @@ module Fargo
     
     def listen
       return unless @threads.nil? || @threads.size == 0
+      pre_listen if respond_to? :pre_listen
       @threads = []
       # Start a thread to read the socket
       @threads << Thread.start { loop { read_data } }

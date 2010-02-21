@@ -5,7 +5,6 @@ class Radio
     
     def run
       Fargo.logger = ::Rails.logger
-      Fargo.logger = RAILS_DEFAULT_LOGGER if defined?(RAILS_DEFAULT_LOGGER)
       Fargo.logger.level = 0
       
       client = Fargo::Client.new

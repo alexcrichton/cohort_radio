@@ -5,13 +5,17 @@ module Fargo
       include Fargo::Utils
       include Fargo::Parser
         
-      def post_listen
+      def pre_listen
         self[:quit_on_disconnect] = false
         @lock, @pk = generate_lock
         @handshake_step = 0
         @buffer_size = (2 << 12).freeze
+      end
+      
+      def post_listen
         write "$MyNick #{self[:nick]}|$Lock #{@lock} Pk=#{@pk}" if self[:first]
       end
+      
       
       def read_data
         return super if @handshake_step != 6
