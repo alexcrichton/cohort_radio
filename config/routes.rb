@@ -8,6 +8,7 @@ CohortRadio::Application.routes.draw do |map|
   namespace :fargo do
     resources :downloads do
       get :retry, :on => :member
+      get :remove, :on => :member
     end
     resource :search
   end

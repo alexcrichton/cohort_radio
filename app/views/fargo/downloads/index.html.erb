@@ -1,77 +1,71 @@
-<table id='downloads'>	
-	<tr>
-		<th>Nick</th>
-		<th>File</th>
-		<th>Progress</th>
-		<th>Started?</th>
-	</tr>
-
-	<tbody id='current'>
-		<tr><td colspan='5' class='header'>Current Downloads</td></tr>
-		<% @current_downloads.each do |download| %>
+<div class='tabs'>
+	<ul>
+		<li><a href="#queued">Queued</a></li>
+		<li><a href="#current">Current</a></li>
+		<li><a href="#finished">Finished</a></li>
+		<li><a href="#failed">Failed</a></li>
+		<li><a href="#waiting">Awaiting Conversion</a></li>
+	</ul>
+	
+	<div id='queued'>
+		<%= render 'download_list', :downloads => @queued_downloads %>
+	</div>
+	
+	<div id='finished'>
+		<%= link_to "[Clear these]", :controller => 'fargo/commands', :action => "clear_finished_downloads" if can? :manage, Fargo %>
+		<%= render 'download_list', :downloads => @finished_downloads %>
+	</div>
+	
+	<div id='failed'>
+		<%= link_to "[Clear these]", :controller => 'fargo/commands', :action => "clear_failed_downloads" if can? :manage, Fargo %>
+		<%= render 'download_list', :downloads => @failed_downloads %>
+	</div>
+	
+	<div id='waiting'>
+		<table>
 			<tr>
-				<td><%= download[:nick] %></td>
-				<td><%= download[:file] %></td>
-				<td><%= download[:progress] %>% of <%= download[:size] %></td>
-				<td><%= download[:started] %></td>
+				<th>File</th>
+				<th>Next Run</th>
+				<th>Running?</th>
+				<th>Last Error</th>
+				<th>Attempts</th>
 			</tr>
-		<% end %>
-	</tbody>
-
-	<tbody id='queued'>
-		<tr><td colspan='5' class='header'>Queued Downloads</td></tr>
-		<% @queued_downloads.each do |download| %>
+			<% @jobs.each do |job| %>
+				<tr class='download'>
+					<td><%= File.basename job.payload_object.file %></td>
+					<td><%= job.run_at %></td>
+					<td><%= !job.locked_at.nil? %></td>
+					<td title="<%= job.last_error %>">
+						<%= truncate job.last_error.split("\n").first unless job.last_error.nil? %>
+					</td>
+					<td><%= job.attempts %></td>
+					<td class='links'>
+						<% if can? :manage, Fargo %>
+							<%= link_to "Remove", remove_fargo_download_path(job.id), :method => :delete, :class => 'remove' %>
+						<% end %>
+					</td>
+				</tr>
+			<% end %>
+		</table>	
+	</div>
+	
+	<div id='current'>
+		<table>
 			<tr>
-				<td><%= download[0] %></td>
-				<td><%= download[1] %></td>
+				<th>Nick</th>
+				<th>File</th>
+				<th>Size</th>
+				<th>Progress</th>
 			</tr>
-		<% end %>
-	</tbody>
-
-	<tbody id='failed'>
-		<tr><td colspan='5' class='header'>Failed Downloads</td></tr>
-		<% @failed_downloads.each do |download| %>
-			<tr>
-				<td><%= download[:nick] %></td>
-				<td><%= download[:file] %></td>
-				<td><%= download[:progress] %>% of <%= download[:size] %></td>
-				<td><%= download[:started] %></td>
-			</tr>
-		<% end %>
-	</tbody>
-
-</table>
-
-<!-- <table id='downloads'>
-	<tr><td colspan='5' class='header'>Conversions</td></tr>
-	<tr>
-		<th>File</th>
-		<th>Last Run</th>
-		<th>Running?</th>
-		<th>Last Error</th>
-		<th>Attempts</th>
-	</tr>
-	<tbody id='conversions'>
+			<% @current_downloads.each_pair do |nick, download| %>
+				<tr>
+					<td><%= nick %></td>
+					<td><%= download.file %></td>
+					<td><%= number_to_human_size download.size %></td>
+					<td><%= number_to_percentage download.percent * 100 %></td>
+				</tr>
+			<% end %>
+		</table>
 		
-		<% @jobs.each do |job| %>
-			<tr class='download'>
-				<td><%= job.payload_object.file %></td>
-				<td><%= job.run_at %></td>
-				<td><%= !job.locked_at.nil? %></td>
-				<td title="<%= job.last_error %>">
-					<%= truncate job.last_error.split("\n").first unless job.last_error.nil? %>
-				</td>
-				<td><%= job.attempts %></td>
-				<td class='links'>
-					<% if can?(:download, Fargo) && job.locked_at.nil? %>
-						<%= link_to 'Retry', retry_fargo_download_path(job.id), :class => 'retry' %>
-					<% end %>
-					<% if can? :manage, Fargo %>
-						<%= link_to "Remove", fargo_download_path(job.id), :method => :delete, :class => 'remove' %>
-					<% end %>
-				</td>
-			</tr>
-		<% end %>
-	</tbody>
-	<tbody>
-</table> -->
+	</div>
+</div>

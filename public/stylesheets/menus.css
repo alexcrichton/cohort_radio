@@ -29,6 +29,7 @@ nav li.selected > a, nav li.selected > span {
 }
 
 nav ul {
+  z-index: 10;
   padding: 0;
   font-size: 10pt;
   list-style: none;

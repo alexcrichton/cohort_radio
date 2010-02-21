@@ -1,12 +1,28 @@
 module Fargo
   module Supports
     module Downloads
+
+      class Download < Struct.new(:nick, :file, :tth, :size)
+        attr_accessor :percent, :status
+
+        def file_list?
+          file == 'files.xml.bz2'
+        end
+      end
       
       attr_reader :current_downloads, :finished_downloads, :queued_downloads, :failed_downloads,
                   :open_download_slots, :trying
       
       def self.included(base)
         base.after_setup :initialize_queues
+      end
+      
+      def clear_failed_downloads
+        failed_downloads.clear
+      end
+      
+      def clear_finished_downloads
+        finished_downloads.clear
       end
 
       def download nick, file, tth, size
@@ -46,16 +62,20 @@ module Fargo
       
       def lock_next_download! user, connection
         @downloading_lock.synchronize {
-          raise "No open slots!" if @open_download_slots <= 0
+          return get_next_download_with_lock! user, connection
         }
-        download = nil
-        @downloading_lock.synchronize { download = @queued_downloads[user].shift }
+      end
+      
+      private
+      def get_next_download_with_lock! user, connection
+        raise "No open slots!" if @open_download_slots <= 0
+        
+        download = @queued_downloads[user].shift
         raise "Don't have anything in the queue for #{user}!" if download.nil?
         
-        @downloading_lock.synchronize { 
-          @current_downloads[user] = download 
-          @trying.delete user
-        }
+        @current_downloads[user] = download 
+        @trying.delete user
+
         Fargo.logger.debug "#{self}: Locking download: #{download}"
         
         block = Proc.new{ |type, map|
@@ -80,7 +100,6 @@ module Fargo
         download
       end
       
-      private
       def download_finished! user, failed
         download = nil
         @downloading_lock.synchronize{ 
@@ -109,7 +128,7 @@ module Fargo
 
           if connection_for arr[0]
             Fargo.logger.debug "Requesting previous connection downloads: #{arr[1].first}"
-            download = lock_next_download! arr[0], connection_for(arr[0])
+            download = get_next_download_with_lock! arr[0], connection_for(arr[0])
             connection_for(arr[0])[:download] = download
             connection_for(arr[0]).begin_download!
           else
@@ -141,13 +160,6 @@ module Fargo
       
     end
     
-    class Download < Struct.new(:nick, :file, :tth, :size)
-      attr_accessor :percent, :status
-      
-      def file_list?
-        file == 'files.xml.bz2'
-      end
-    end
   
   end
 end

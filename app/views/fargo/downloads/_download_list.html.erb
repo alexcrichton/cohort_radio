@@ -1,0 +1,18 @@
+<% downloads.each_pair do |nick, nick_downloads| %>
+	<% next if nick_downloads.size == 0 %>
+	<fieldset>
+		<legend><%= nick %></legend>
+		<table>
+			<tr>
+				<th>File</th>
+				<th>Size</th>
+			</tr>
+			<% nick_downloads.each do |download| %>
+				<tr>
+					<td><%= download.file %></td>
+					<td><%= number_to_human_size download.size %></td>
+				</tr>
+			<% end %>
+		</table>
+	</fieldset>
+<% end %>

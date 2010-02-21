@@ -17,8 +17,31 @@ class Fargo::CommandsController < ApplicationController
     redirect_to playlists_path
   end
   
+  def clear_finished_downloads
+    fargo.clear_finished_downloads
+
+    if request.xhr?
+      render :text => '<span class="notice">Cleared</span>'
+    else
+      flash[:notice] = "Finished downloads were cleared."
+      redirect_to fargo_downloads_path
+    end
+    
+  end
+  
+  def clear_failed_downloads
+    fargo.clear_failed_downloads
+
+    if request.xhr?
+      render :text => '<span class="notice">Cleared</span>'
+    else
+      flash[:notice] = "Failed downloads were cleared."
+      redirect_to fargo_downloads_path
+    end
+    
+  end
+  
   def download
-    # Delayed::Job.enqueue DownloadSongJob.new(params[:nick], params[:file])
     fargo.download params[:nick], params[:file], params[:tth], params[:size].to_i
 
     if request.xhr?

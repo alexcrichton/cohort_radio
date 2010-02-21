@@ -2,6 +2,10 @@ var smallAjax = '<img src="/images/ajax-small.gif" alt="Loading..." class="loadi
 var bigAjax = '<img src="/images/ajax-big.gif" alt="Loading..." class="loading"/>';
 var hugeAjax = '<img src="/images/ajax-huge.gif" alt="Loading..." class="loading"/>';
 
+$(function(){
+  $('.tabs').tabs();
+});
+
 $(function() {
   if($('#songs-search').length == 0) return;
   
@@ -45,29 +49,40 @@ $(function(){
 });
 
 $(function() {
-  $('#downloads .download a.remove').click(function(){
+  $('#waiting .links .remove').click(function(){
     var el = $(this).parents('.download');
     $(this).replaceWith(smallAjax);
-    $.ajax({
-      type: 'DELETE',
-      url: $(this).attr('href'),
-      success: function(){
-        el.remove();
-      }
-    })
-    return false;
+      $.ajax({
+        url: $(this).attr('href'),
+        success: function(){
+          el.remove();
+        }
+      })
+      return false;
   });
-  $('#downloads .download a.retry').click(function(){
-    var el;
-    $(this).replaceWith(el = $(smallAjax));
-    $.ajax({
-      url: $(this).attr('href'),
-      success: function(data){
-        el.replaceWith(data);
-      }
-    })
-    return false;
-  });
+  // $('#downloads .download a.remove').click(function(){
+  //   var el = $(this).parents('.download');
+  //   $(this).replaceWith(smallAjax);
+  //   $.ajax({
+  //     type: 'DELETE',
+  //     url: $(this).attr('href'),
+  //     success: function(){
+  //       el.remove();
+  //     }
+  //   })
+  //   return false;
+  // });
+  // $('#downloads .download a.retry').click(function(){
+  //   var el;
+  //   $(this).replaceWith(el = $(smallAjax));
+  //   $.ajax({
+  //     url: $(this).attr('href'),
+  //     success: function(data){
+  //       el.replaceWith(data);
+  //     }
+  //   })
+  //   return false;
+  // });
 });
 
 $.fn.extend({

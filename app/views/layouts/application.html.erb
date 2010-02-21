@@ -4,8 +4,8 @@
   <head>
 		<%= csrf_meta_tag %>
     <title><%= content_for?(:title) ? yield(:title) : "Cohort Radio" %></title>
-    <%= stylesheet_link_tag 'blueprint/screen', 'application', 'autocomplete', 'menus', :cache => 'cache/all' %>
-    <%= javascript_include_tag 'jquery', 'rails', 'jquery.form', 'jquery.validate', 'jquery.autocomplete', 'application', :cache => 'cache/all' %>
+    <%= stylesheet_link_tag 'blueprint/screen', 'jquery-ui', 'application', 'autocomplete', 'menus', :cache => 'cache/all' %>
+    <%= javascript_include_tag 'jquery', 'rails', 'jquery.form', 'jquery-ui', 'jquery.validate', 'jquery.autocomplete', 'application', :cache => 'cache/all' %>
     <%= yield(:head) %>
   </head>
   <body>
@@ -16,7 +16,7 @@
 				</nav>
 				<div style='float:right'>
 					<% if current_user %>
-						Logged in as: <%= current_user.email %> |
+						Logged in as: <%= current_user.name %> |
 						<%= link_to 'Logout', logout_path %>
 					<% else %>
 						<%= link_to "Login", login_path %>
