@@ -104,19 +104,20 @@ module Fargo
           arr = @queued_downloads.reject{ |k, v| 
             v.size == 0 || @current_downloads.has_key?(k) || @trying.include?(k)
           }.shift
+
+          return false if arr.nil? || arr.size == 0
+
+          if connection_for arr[0]
+            Fargo.logger.debug "Requesting previous connection downloads: #{arr[1].first}"
+            download = lock_next_download! arr[0], connection_for(arr[0])
+            connection_for(arr[0])[:download] = download
+            connection_for(arr[0]).begin_download!
+          else
+            Fargo.logger.debug "Requesting connection with: #{arr[0]} for downloading"
+            @trying << arr[0]
+            connect_with arr[0]
+          end
         }
-        return false if arr.nil? || arr.size == 0
-        
-        if connection_for arr[0]
-          Fargo.logger.debug "Requesting previous connection downloads: #{arr[1].first}"
-          download = lock_next_download! arr[0], connection_for(arr[0])
-          connection_for(arr[0])[:download] = download
-          connection_for(arr[0]).begin_download!
-        else
-          Fargo.logger.debug "Requesting connection with: #{arr[0]} for downloading"
-          @trying << arr[0]
-          connect_with arr[0]
-        end
         
       end
       

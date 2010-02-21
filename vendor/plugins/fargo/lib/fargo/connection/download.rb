@@ -105,9 +105,10 @@ module Fargo
               @length = message[:size]
               @recvd = 0
               @handshake_step = 6
+              write "$Send" unless @client_extensions.include? 'ADCGet'
+
               publish :download_started, :file => download_path, :download => self[:download], 
                                          :nick => @other_nick   
-              write "$Send" unless @client_extensions.include? 'ADCGet'
             else
               Fargo.logger.warn @last_error = "Premature disconnect when #{message[:type]} received"
               disconnect
@@ -158,6 +159,8 @@ module Fargo
       end
       
       def disconnect
+        super
+
         if !@recvd.nil? || @recvd != @length
           publish :download_failed, :nick => @other_nick, :download => self[:download], 
                                     :file => download_path, :recvd => @recvd, 
@@ -165,8 +168,6 @@ module Fargo
         end
         
         @file.close unless @file.nil? || @file.closed?
-
-        super
       end
   
       def download_path
