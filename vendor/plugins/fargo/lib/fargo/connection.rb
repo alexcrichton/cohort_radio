@@ -8,17 +8,17 @@ module Fargo
   
     attr_accessor :options, :socket
       
-    def initialize(opts = {})
+    def initialize opts = {}
       @outgoing = Queue.new
       @options = opts
       self[:quit_on_disconnect] = true
     end
   
-    def [](key)
+    def [] key
       options[key]
     end
   
-    def []=(key, value)
+    def []= key, value
       Fargo.logger.debug "#{self}: setting #{key} to #{value}"
       options[key] = value
     end

@@ -2,7 +2,7 @@ module Fargo
   module Supports
     module Searches
       
-      def self.included(base)
+      def self.included base
         base.after_setup :subscribe_to_searches
       end
       

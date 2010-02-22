@@ -9,7 +9,7 @@ module Fargo
         @socket
       end
 
-      def receive(data)
+      def receive data
         message = parse_message data
         publish message[:type], message
       end

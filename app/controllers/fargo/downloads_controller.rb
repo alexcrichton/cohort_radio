@@ -9,6 +9,11 @@ class Fargo::DownloadsController < ApplicationController
     @failed_downloads = fargo.failed_downloads
     @finished_downloads = fargo.finished_downloads
     
+    if can? :manage, Fargo
+      @timed_out = fargo.timed_out
+      @connections = fargo.nicks_connected_with
+    end
+    
     @jobs = Delayed::Job.all
     @jobs.reject!{ |j| !j.payload_object.is_a?(CreateSongJob) }
   end

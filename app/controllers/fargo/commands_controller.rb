@@ -11,7 +11,12 @@ class Fargo::CommandsController < ApplicationController
   end
   
   def disconnect
-    fargo.disconnect
+    if params[:nick]
+      fargo.disconnect_from params[:nick]
+    else
+      fargo.disconnect
+    end
+
     flash[:notice] = "Disconnected!"
     
     redirect_to playlists_path

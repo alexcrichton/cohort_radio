@@ -1,5 +1,4 @@
 require 'socket'
-require 'base64'
 require 'thread'
 require 'logger'
 require 'fileutils'
@@ -23,8 +22,8 @@ require File.dirname(__FILE__) + '/fargo/connection/hub'
 require File.dirname(__FILE__) + '/fargo/connection/search'
 require File.dirname(__FILE__) + '/fargo/connection/upload'
 
-require File.dirname(__FILE__) + '/fargo/client'
 require File.dirname(__FILE__) + '/fargo/active_server'
+require File.dirname(__FILE__) + '/fargo/client'
 
 Thread.abort_on_exception = true
 

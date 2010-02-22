@@ -11,9 +11,9 @@ module Fargo
       end
       
       attr_reader :current_downloads, :finished_downloads, :queued_downloads, :failed_downloads,
-                  :open_download_slots, :trying
+                  :open_download_slots, :trying, :timed_out
       
-      def self.included(base)
+      def self.included base
         base.after_setup :initialize_queues
       end
       
@@ -66,6 +66,34 @@ module Fargo
         }
       end
       
+      def clear_timed_out
+        @timed_out.clear
+      end
+      
+      def start_download
+        return false if open_download_slots == 0
+        arr = nil
+        @downloading_lock.synchronize {
+          arr = @queued_downloads.reject{ |k, v| 
+            v.size == 0 || @current_downloads.has_key?(k) || @trying.include?(k) || @timed_out.include?(k)
+          }.shift
+
+          return false if arr.nil? || arr.size == 0
+
+          if connection_for arr[0]
+            Fargo.logger.debug "Requesting previous connection downloads: #{arr[1].first}"
+            download = get_next_download_with_lock! arr[0], connection_for(arr[0])
+            connection_for(arr[0])[:download] = download
+            connection_for(arr[0]).begin_download!
+          else
+            Fargo.logger.debug "Requesting connection with: #{arr[0]} for downloading"
+            @trying << arr[0]
+            connect_with arr[0]
+          end
+        }
+        
+      end
+      
       private
       def get_next_download_with_lock! user, connection
         raise "No open slots!" if @open_download_slots <= 0
@@ -116,32 +144,13 @@ module Fargo
         end
 
         start_download
-      end
+      end 
       
-      def start_download
-        return false if open_download_slots == 0
-        arr = nil
-        @downloading_lock.synchronize {
-          arr = @queued_downloads.reject{ |k, v| 
-            v.size == 0 || @current_downloads.has_key?(k) || @trying.include?(k)
-          }.shift
-
-          return false if arr.nil? || arr.size == 0
-
-          if connection_for arr[0]
-            Fargo.logger.debug "Requesting previous connection downloads: #{arr[1].first}"
-            download = get_next_download_with_lock! arr[0], connection_for(arr[0])
-            connection_for(arr[0])[:download] = download
-            connection_for(arr[0]).begin_download!
-          else
-            Fargo.logger.debug "Requesting connection with: #{arr[0]} for downloading"
-            @trying << arr[0]
-            connect_with arr[0]
-          end
-        }
-        
+      def connection_failed_with! nick
+        @trying.delete nick
+        @timed_out << nick
+        start_download
       end
-      
       
       def initialize_queues
         self.download_slots = 4 if options[:download_slots].nil?
@@ -156,8 +165,15 @@ module Fargo
         @failed_downloads = {}
         @finished_downloads = {}
         @trying = []
+        @timed_out = []
         
         @open_download_slots = download_slots
+        
+        subscribe { |type, hash|
+          if type == :connection_timeout
+            connection_failed_with! hash[:nick] if @trying.include?(hash[:nick])
+          end
+        }
       end
       
     end

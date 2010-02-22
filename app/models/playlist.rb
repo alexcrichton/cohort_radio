@@ -29,7 +29,7 @@ class Playlist < ActiveRecord::Base
     url << ':'
     url << Radio::DEFAULTS[:stream_password]
     url << '@'
-    url << Radio::DEFAULTS[:host]
+    url << Radio::DEFAULTS[:remote_host]
     url << ice_mount_point
     url
   end

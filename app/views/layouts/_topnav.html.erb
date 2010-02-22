@@ -36,8 +36,8 @@
 							<li><%= link_to 'Connect', :controller => 'fargo/commands', :action => 'connect' %></li>
 						<% end %>
 					<% end %>
-					<li><%= link_to "Downloads", fargo_downloads_path %></li>
 					<% if fargo_connected? %>
+						<li><%= link_to "Downloads", fargo_downloads_path %></li>
 						<li><%= link_to "Search", fargo_search_path %></li>
 					<% end %>
 				<% else %>

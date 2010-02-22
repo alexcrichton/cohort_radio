@@ -11,7 +11,7 @@ module Fargo
   
     attr_accessor :size_restricted, :is_minimum_size, :size, :filetype, :pattern
   
-    def initialize(opts = {})
+    def initialize opts = {}
       self.size_restricted = opts[:size_restricted]
       self.is_minimum_size = opts[:is_minimum_size]
       self.size = opts[:size]
@@ -23,7 +23,7 @@ module Fargo
       end
     end
   
-    def query=(query)
+    def query= query
       self.pattern = query.split(' ').join('$')
     end
     

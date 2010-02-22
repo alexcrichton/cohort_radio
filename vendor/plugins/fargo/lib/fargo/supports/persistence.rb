@@ -2,7 +2,7 @@ module Fargo
   module Supports
     module Persistence
       
-      def self.included(base)
+      def self.included base
         base.after_setup :setup_connection_cache
       end
       
@@ -26,6 +26,13 @@ module Fargo
         end
         false
       end 
+      
+      def disconnect_from nick
+        if @connection_cache
+          c = @connection_cache.delete nick
+          c.disconnect unless c.nil?
+        end
+      end
       
       def nicks_connected_with
         return [] if @connection_cache.nil?

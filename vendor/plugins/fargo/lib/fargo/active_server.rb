@@ -3,7 +3,7 @@ module Fargo
     
     include Fargo::Utils::Publisher
   
-    def initialize(options = {})
+    def initialize options = {}
       @options = options
       @peers = []
     end

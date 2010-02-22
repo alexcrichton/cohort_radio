@@ -47,7 +47,7 @@ module Fargo
     @@ugetblock     = /^UGetBlock (.*?) (.*?) (.*)$/
     @@adcsnd        = /^ADCSND (.*?) (.*?) (.*?) (.*?)$/
   
-    def parse_message(text)
+    def parse_message text
       case text
         when @@commandmatch then parse_command_message $1
         when @@messagematch then {:type => :chat, :from => $1, :text => $2}
@@ -56,7 +56,7 @@ module Fargo
       end
     end
 
-    def parse_command_message(text)
+    def parse_command_message text
       case text
         when @@validatedenied then {:type => :denide}
         when @@getpass        then {:type => :getpass}

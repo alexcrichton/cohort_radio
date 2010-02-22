@@ -31,9 +31,10 @@ module Fargo
     #   :download_slots
     #   :download_dir
     #   :slots
-    def initialize(opts = {})
+    def initialize opts = {}
       self.options = DEFAULTS.merge opts
       self.version = '0.75'
+      @connection_timeout_threads = {}
     end
   
     # Don't do this in initialization so we have time to set all the options
@@ -43,7 +44,12 @@ module Fargo
       self.active_server = Fargo::ActiveServer.new options.merge(:client => self, :port => active_port, :address => '127.0.0.1') unless passive
       post_setup if respond_to? :post_setup
       
-      hub.subscribe{ |*args| publish *args }
+      hub.subscribe{ |type, hash| 
+        if type == :connect_with_me && @connection_timeout_threads.has_key?(nick)
+          @connection_timeout_threads.delete(nick).exit
+        end
+        publish type, hash 
+      }
       searcher.subscribe{ |*args| publish *args } unless passive
       active_server.subscribe{ |*args| publish *args } unless passive
             
@@ -60,6 +66,8 @@ module Fargo
     end
     
     def connect_with nick
+      @connection_timeout_threads[nick] = Thread.start{ sleep 10; connection_timeout! nick }
+      
       if passive
         hub.write "$RevConnectToMe #{self.nick} #{nick}"
       else
@@ -99,7 +107,7 @@ module Fargo
       []
     end
     
-    def method_missing(name, *args)
+    def method_missing name, *args
       return @options[name.to_s.gsub('=', '').to_sym] = args.shift if name.to_s =~ /=$/
       return @options[name] if args.size == 0 && options.has_key?(name)
       super
@@ -108,5 +116,12 @@ module Fargo
     def description
       "<++ V:#{version},M:#{passive ? 'P' : 'A'},H:1/0/0,S:#{open_slots},Dt:1.2.0/W>"
     end
+    
+    private
+    def connection_timeout! nick
+      @connection_timeout_threads.delete nick
+      publish :connection_timeout, :nick => nick
+    end
+    
   end
 end

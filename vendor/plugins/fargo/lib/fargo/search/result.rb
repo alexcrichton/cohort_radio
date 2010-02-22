@@ -5,7 +5,7 @@ module Fargo
       attr_accessor :options
 
       # Needs :file, :filesize, :client, :target (if passive)
-      def initialize(opts = {})
+      def initialize opts = {}
         self.options = opts
       end
 

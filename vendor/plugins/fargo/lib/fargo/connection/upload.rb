@@ -15,7 +15,7 @@ module Fargo
         "$Supports BZList TTHL TTHF" # ???
       end
       
-      def receive(data)
+      def receive data
         message = parse_message data
         publish message[:type], message
         case message[:type]

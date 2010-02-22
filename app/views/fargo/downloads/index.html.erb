@@ -5,6 +5,9 @@
 		<li><a href="#finished">Finished</a></li>
 		<li><a href="#failed">Failed</a></li>
 		<li><a href="#waiting">Awaiting Conversion</a></li>
+		<% if can? :manage, Fargo %>
+			<li><a href="#connections">Persistent Connections</a></li>
+		<% end %>
 	</ul>
 	
 	<div id='queued'>
@@ -68,4 +71,41 @@
 		</table>
 		
 	</div>
+	
+	<% if can? :manage, Fargo %>
+		<div id='connections'>
+			<table>
+				<tr>
+					<th>Nick</th>
+					<th>Action</th>
+				</tr>
+				<tr>
+					<td colspan='2' class='header'>
+						Persistent
+					</td>
+				</tr>
+				<% @connections.each do |nick| %>
+					<tr>
+						<td><%= nick %></td>
+						<td>
+							<%= link_to "Disconnect", :controller => 'fargo/commands', :action => :disconnect, :nick => nick %>
+						</td>
+					</tr>
+				<% end %>
+				<tr>
+					<td colspan='2' class='header'>
+						Timed Out
+					</td>
+				</tr>
+				<% @timed_out.each do |nick| %>
+					<tr>
+						<td><%= nick %></td>
+						<td>
+							<%#= link_to "Disconnect", :controller => 'fargo/commands', :action => :disconnect, :nick => nick %>
+						</td>
+					</tr>
+				<% end %>
+			</table>
+		</div>
+	<% end %>
 </div>
