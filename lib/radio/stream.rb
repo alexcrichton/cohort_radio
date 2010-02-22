@@ -50,6 +50,9 @@ class Radio
       @loop = false
       
       Process.kill 'USR1', @playing_pid rescue nil
+      Process.wait @playing_pid rescue nil
+      @playing_pid = nil
+      
       @song_thread.join if @song_thread
       @song_thread = nil
 
@@ -57,9 +60,6 @@ class Radio
       @update_thread.join if @update_thread
       @update_thread = nil
 
-      Process.wait @playing_pid rescue nil
-      @playing_pid = nil
-      
       @queue_items_to_update.clear
       @next_song = nil
       @current_song = nil

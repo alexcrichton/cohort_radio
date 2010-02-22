@@ -15,7 +15,7 @@ class Radio
       proxy = Radio::Proxy::Server.new :for => radio, :port => @port || DEFAULTS[:port]
       proxy.connect
 
-      trap("INT") { proxy.disconnect; radio.disconnect; exit }
+      trap("INT")  { proxy.disconnect; radio.disconnect; exit }
       trap("TERM") { proxy.disconnect; radio.disconnect; exit }
       
       sleep

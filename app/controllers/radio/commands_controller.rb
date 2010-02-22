@@ -6,7 +6,7 @@ class Radio::CommandsController < ApplicationController
     radio.connect
     flash[:notice] = "Connected!"
 
-    redirect_to playlist_path('main')
+    redirect_to :controller => 'radio/status'
   end
   
   def add
