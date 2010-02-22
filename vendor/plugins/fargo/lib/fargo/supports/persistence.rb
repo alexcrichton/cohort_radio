@@ -42,6 +42,12 @@ module Fargo
       
       def setup_connection_cache
         @connection_cache = {}
+        
+        subscribe { |type, hash|
+          if type == :hub_disconnected
+            nicks_connected_with.each{ |n| disconnect_from n }
+          end
+        }
       end
       
     end
