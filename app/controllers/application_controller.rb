@@ -20,8 +20,8 @@ class ApplicationController < ActionController::Base
   end
 
   private
-  def require_fargo_running
-    return true if fargo_running?
+  def require_fargo_connected
+    return true if fargo_connected?
     flash[:error] = "Fargo is not running!"
     redirect_to playlists_path
   end

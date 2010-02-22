@@ -56,7 +56,21 @@ $(function() {
         url: $(this).attr('href'),
         success: function(){
           el.remove();
-        }
+        },
+        error: error
+      })
+      return false;
+  });
+  
+  $('#connections .disconnect').click(function(){
+    var el = $(this).parents('tr');
+    $(this).replaceWith(smallAjax);
+      $.ajax({
+        url: $(this).attr('href'),
+        success: function(){
+          el.remove();
+        }, 
+        error: error
       })
       return false;
   });
