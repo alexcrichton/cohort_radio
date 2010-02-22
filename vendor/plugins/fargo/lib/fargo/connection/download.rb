@@ -171,7 +171,7 @@ module Fargo
       def disconnect
         super
 
-        if !@recvd.nil? && @recvd != @length
+        if self[:download]
           publish :download_failed, :nick => @other_nick, :download => self[:download], 
                                     :file => download_path, :recvd => @recvd, 
                                     :length => @length, :last_error => @last_error
