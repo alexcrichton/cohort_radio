@@ -19,6 +19,7 @@ module Fargo
       
       def read_data
         return super if @handshake_step != 6
+        @exit_thread.exit
 
         data = @socket.read [@buffer_size, @length - @recvd].min
 
@@ -27,7 +28,6 @@ module Fargo
 
         if @recvd == @length
           download_finished!
-          # disconnect
         else
           publish :download_progress, :percent => @recvd.to_f / @length, :file => download_path, 
                                       :nick => @other_nick, :download => self[:download],
@@ -110,7 +110,9 @@ module Fargo
               @recvd = 0
               @handshake_step = 6
               write "$Send" unless @client_extensions.include? 'ADCGet'
-
+              
+              @exit_thread = Thread.start { sleep 10; download_timeout! }
+              
               publish :download_started, :file => download_path, :download => self[:download], 
                                          :nick => @other_nick   
             else
@@ -144,20 +146,24 @@ module Fargo
         Fargo.logger.debug "#{self}: Beginning download of #{self[:download]}"
       end
       
+      def download_timeout!
+        Fargo.logger.debug "#{self}: Timeout of #{self[:download]}"
+        
+        path, download = download_path, self[:download]
+
+        reset_download
+        
+        publish :download_failed, :nick => @other_nick, :download => self[:download], 
+                                  :file => download_path, :recvd => @recvd, 
+                                  :length => @length, :last_error => @last_error
+      end
+      
       def download_finished!
         Fargo.logger.debug "#{self}: Finished download of #{self[:download]}"
         
-        @file.close
-        @socket.sync = false
-        
         path, download = download_path, self[:download]
         
-        self[:offset] = nil
-        @file_path = nil
-        self[:download] = nil
-        @length = nil
-        @recvd = nil
-        @handshake_step = 5
+        reset_download
         
         publish :download_finished, :file => path, :download => download, :nick => @other_nick
       end
@@ -172,6 +178,19 @@ module Fargo
         end
         
         @file.close unless @file.nil? || @file.closed?
+      end
+     
+      private
+      def reset_download
+        @file.close
+        @socket.sync = false
+                
+        self[:offset] = nil
+        @file_path = nil
+        self[:download] = nil
+        @length = nil
+        @recvd = nil
+        @handshake_step = 5
       end
   
       def download_path

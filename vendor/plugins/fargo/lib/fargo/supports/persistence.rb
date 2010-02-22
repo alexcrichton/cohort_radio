@@ -19,6 +19,20 @@ module Fargo
         nil
       end
       
+      def connected_with? nick
+        if @connection_cache
+          c = @connection_cache[nick]
+          return c.connected? unless c.nil?
+        end
+        false
+      end 
+      
+      def nicks_connected_with
+        return [] if @connection_cache.nil?
+        nicks = @connection_cache.keys
+        nicks.reject{ |n| !connected_with? n } 
+      end
+      
       def setup_connection_cache
         @connection_cache = {}
       end
