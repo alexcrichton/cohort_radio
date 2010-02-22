@@ -19,7 +19,8 @@ module Fargo
       
       def read_data
         return super if @handshake_step != 6
-        @exit_thread.exit
+        
+        @exit_thread.exit if @exit_thread.alive?
 
         data = @socket.read [@buffer_size, @length - @recvd].min
 
@@ -153,9 +154,8 @@ module Fargo
 
         reset_download
         
-        publish :download_failed, :nick => @other_nick, :download => self[:download], 
-                                  :file => download_path, :recvd => @recvd, 
-                                  :length => @length, :last_error => @last_error
+        publish :download_failed, :nick => @other_nick, :download => download, 
+                                  :file => path, :last_error => "Download timeout!"
       end
       
       def download_finished!
@@ -171,19 +171,19 @@ module Fargo
       def disconnect
         super
 
-        if !@recvd.nil? || @recvd != @length
+        if !@recvd.nil? && @recvd != @length
           publish :download_failed, :nick => @other_nick, :download => self[:download], 
                                     :file => download_path, :recvd => @recvd, 
                                     :length => @length, :last_error => @last_error
         end
         
-        @file.close unless @file.nil? || @file.closed?
+        reset_download
       end
      
       private
       def reset_download
-        @file.close
-        @socket.sync = false
+        @file.close unless @file.nil? || @file.closed?
+        @socket.sync = false if @socket
                 
         self[:offset] = nil
         @file_path = nil
