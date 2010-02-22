@@ -2,6 +2,8 @@ class Fargo::SearchController < ApplicationController
   
   before_filter { |c| c.unauthorized! if c.cannot? :search, Fargo }
   before_filter :set_search
+  
+  before_filter :require_fargo_running
     
   def index
     fargo.search @search if @search

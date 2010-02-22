@@ -3,6 +3,8 @@ class Fargo::CommandsController < ApplicationController
   before_filter(:except => :download){ |c| c.unauthorized! if c.cannot? :manage, Fargo }
   before_filter(:only => :download){ |c| c.unauthorized! if c.cannot? :download, Fargo }  
   
+  before_filter :require_fargo_running, :except => :connect
+  
   def connect
     fargo.connect
     flash[:notice] = "Connected!"

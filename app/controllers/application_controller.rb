@@ -20,7 +20,18 @@ class ApplicationController < ActionController::Base
   end
 
   private
+  def require_fargo_running
+    return true if fargo_running?
+    flash[:error] = "Fargo is not running!"
+    redirect_to playlists_path
+  end
 
+  def require_radio_running
+    return true if radio_running?
+    flash[:error] = "Radio is not running!"
+    redirect_to playlists_path
+  end
+  
   def current_user_session
     return @current_user_session if defined?(@current_user_session)
     @current_user_session = UserSession.find

@@ -3,6 +3,8 @@ class Fargo::DownloadsController < ApplicationController
   before_filter(:except => :index){ |c| c.unauthorized! if c.cannot? :manage, Fargo }
   before_filter(:only => :index){ |c| c.unauthorized! if c.cannot? :download, Fargo }
     
+  before_filter :require_fargo_running
+    
   def index
     @current_downloads = fargo.current_downloads
     @queued_downloads = fargo.queued_downloads
