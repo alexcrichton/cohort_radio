@@ -74,9 +74,10 @@ module Fargo
         return false if open_download_slots == 0
         arr = nil
         @downloading_lock.synchronize {
-          arr = @queued_downloads.reject{ |k, v| 
-            v.size == 0 || @current_downloads.has_key?(k) || @trying.include?(k) || @timed_out.include?(k)
-          }.shift
+          arr = @queued_downloads.to_a.detect{ |arr|
+            nick, downloads = arr
+            downloads.size > 0 && !@current_downloads.has_key?(nick) && !@trying.include?(nick) && !@timed_out.include?(nick) && has_slot?(nick)
+          }
 
           return false if arr.nil? || arr.size == 0
 

@@ -33,7 +33,6 @@ class Fargo::CommandsController < ApplicationController
       flash[:notice] = "Finished downloads were cleared."
       redirect_to fargo_downloads_path
     end
-    
   end
   
   def clear_failed_downloads
@@ -44,8 +43,17 @@ class Fargo::CommandsController < ApplicationController
     else
       flash[:notice] = "Failed downloads were cleared."
       redirect_to fargo_downloads_path
+    end  
+  end
+  
+  def clear_timed_out
+    fargo.clear_timed_out
+    if request.xhr?
+      render :text => '<span class="notice">Cleared</span>'
+    else
+      flash[:notice] = "Timed out connections were cleared."
+      redirect_to fargo_downloads_path
     end
-    
   end
   
   def download
@@ -57,7 +65,6 @@ class Fargo::CommandsController < ApplicationController
       flash[:notice] = "Song was queued for download."
       redirect_to fargo_downloads_path
     end
-
   end
   
 end

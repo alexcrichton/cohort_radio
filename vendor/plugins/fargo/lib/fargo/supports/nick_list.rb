@@ -27,6 +27,17 @@ module Fargo
         @nick_info[nick]
       end
       
+      def has_slot? nick
+        return false if @nick_info.nil?
+        @nick_info.delete nick
+        info = info nick
+        return false if info.nil?
+        return true if info[:interest].nil?
+        match = info[:interest].match /.*?<.*? V:.*?,M:[AP],H:\d*\/\d*\/\d*,S:(\d)+>/
+        return true if match.nil?
+        return match[1].to_i > 0
+      end
+      
       # def ip nick
       #   info nick
       #   return nil if @nick_info.nil? || !@nicks.include?(nick)
