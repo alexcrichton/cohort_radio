@@ -11,6 +11,7 @@ class Radio
       end
       
       def decode data
+        return nil if data.nil?
         data = data.chomp DELIM
         Marshal.load Base64.decode64(data)
       rescue TypeError

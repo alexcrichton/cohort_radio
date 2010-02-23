@@ -6,7 +6,7 @@
 		You may, however, <%= link_to 'connect it', :controller => 'radio/commands', :action => 'connect' %>.
 	</div>
 <% end %>
-<table>
+<table id='radio-status'>
 	<tr>
 		<th>Name</th>
 		<th>On Radio?</th>
@@ -14,18 +14,6 @@
 		<th>Actions</th>
 	</tr>
 	<% @playlists.each do |playlist| %>
-		<tr>
-			<td><%= link_to playlist.name, playlist %></td>
-			<td><%= radio.has? playlist %></td>
-			<td><%= radio.current_song(playlist).display_title if radio.playing? playlist %></td>
-			<td>
-				<% if radio.has? playlist %>
-					<%= link_to 'Next Song', :controller => 'radio/commands', :action => 'next', :playlist_id => playlist.slug %>
-					<%= link_to 'Stop', :controller => 'radio/commands', :action => 'stop', :playlist_id => playlist.slug %>
-				<% else %>
-					<%= link_to 'Add', :controller => 'radio/commands', :action => 'add', :playlist_id => playlist.slug %>
-				<% end %>
-			</td>
-		</tr>
+		<%= render 'radio/status/playlist', :playlist => playlist %>
 	<% end %>
 </table>

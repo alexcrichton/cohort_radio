@@ -51,6 +51,7 @@ class Radio
       
       Process.kill 'USR1', @playing_pid rescue nil
       Process.wait @playing_pid rescue nil
+      
       @playing_pid = nil
       
       @song_thread.join if @song_thread

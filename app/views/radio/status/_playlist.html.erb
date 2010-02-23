@@ -1,0 +1,13 @@
+		<tr>
+			<td><%= link_to playlist.name, playlist %></td>
+			<td><%= radio.has? playlist %></td>
+			<td><%= radio.current_song(playlist).display_title if radio.playing? playlist %></td>
+			<td class='links'>
+				<% if radio.has? playlist %>
+					<%= link_to 'Next Song', :controller => 'radio/commands', :action => 'next', :playlist_id => playlist.slug %>
+					<%= link_to 'Stop', :controller => 'radio/commands', :action => 'stop', :playlist_id => playlist.slug %>
+				<% else %>
+					<%= link_to 'Add', :controller => 'radio/commands', :action => 'add', :playlist_id => playlist.slug %>
+				<% end %>
+			</td>
+		</tr>

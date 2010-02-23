@@ -7,6 +7,17 @@ $(function() {
 });
 
 $(function() {
+  $('#radio-status .links a').live('click', function(){
+    var par = $(this).parents('tr');
+    $.get($(this).attr('href'), function(data) {
+      par.replaceWith(data);
+    });
+    $(this).replaceWith(smallAjax);
+    return false;
+  });
+});
+
+$(function() {
   $('.pagination-container .pagination a').live('click', function() {
     $(this).parents('.pagination-container:first').html(hugeAjax).load($(this).attr('href'));
     return false;
