@@ -146,8 +146,14 @@ $(function(){
 });
 
 function error() {
+  $('.ui-dialog-content').dialog('close');
   $('img.loading').remove();
-  alert('Server Error... Please try later');
+  $('<p>Server Error... Please Try later</p>').dialog({
+    modal:true,
+    close: function() {
+      $('.ui-dialog').remove();
+    }
+  });
 }
 
 $(function() {
@@ -199,3 +205,5 @@ $(function() {
 function err(span) {
   span.html('error').css('color', 'red');
 }
+
+
