@@ -4,7 +4,7 @@
 			<%= link_to 'Home', login_path %>
 		<% else %>
 			<%= link_to "Playlists", playlists_path %>
-			<ul>
+			<ul style='width:180px'>
 				<% Playlist.all.each do |playlist| %>
 					<li><%= link_to playlist.name, playlist %></li>
 				<% end %>
@@ -41,7 +41,7 @@
 						<li><%= link_to "Search", fargo_search_path %></li>
 					<% end %>
 				<% else %>
-					<li><span>Fargo is not running.</span></li>
+					<li style='width:180px'><span>Fargo is not running.</span></li>
 				<% end %>
 			</ul>
 		</li>
@@ -59,7 +59,7 @@
 						<li><%= link_to 'Connect', :controller => 'radio/commands', :action => 'connect' %></li>
 					<% end %>
 				<% else %>
-					<li><span>Radio is not running.</span></li>
+					<li style='width: 180px'><span>Radio is not running.</span></li>
 				<% end %>
 			</ul>
 		</li>
