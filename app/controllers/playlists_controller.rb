@@ -20,7 +20,7 @@ class PlaylistsController < ApplicationController
     @playlist.enqueue @song, current_user unless @song.nil?
     
     if request.xhr?
-      render @song ? @song : {:text => ''}
+      render :text => "<span class='notice'>Queued.</span>"
     else
       flash[:notice] = "#{@song.display_title} queued!" unless @song.nil?
       redirect_to @playlist

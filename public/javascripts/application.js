@@ -9,6 +9,23 @@ $(function() {
 });
 
 $(function() {
+  $('.song .add ul li a').live('click', function() {
+    var par = $(this).parents('li:first');
+
+    $.ajax({
+      url: $(this).attr('href'),
+      success: function(data) {
+        par.html(data);
+      }
+    });
+    
+    par.html(smallAjax);
+    
+    return false;
+  });
+});
+
+$(function() {
   $('#radio-status .links a').live('click', function(){
     var par = $(this).parents('tr');
     $.ajax({
