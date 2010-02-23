@@ -52,12 +52,11 @@ $(function(){
     error: error,
     success: function() {
       $('#query').text($('#q').val());
-      $('#search-holder, #search-response').toggle();
+      $('#search-response').html(hugeAjax);
       $('#q, input[type=submit]').attr('disabled', 'disabled');
       if(timeoutId != null) clearTimeout(timeoutId);
       timeoutId = setTimeout(function(){ 
         $('#search-response').load("/fargo/search/results?q=" + escape($('#q').val()), function(){
-          $('#search-holder, #search-response').toggle();
           $('#q, input[type=submit]').removeAttr('disabled');
           $('#search .result').bindSearchForms();
         });
