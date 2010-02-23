@@ -9,6 +9,20 @@ $(function() {
 });
 
 $(function() {
+  $('.song .links .remove').live('click', function() {
+    var par = $(this).parents('.song');
+    $.ajax({
+      url: $(this).attr('href'),
+      success: function() {
+        par.remove();
+      }
+    });
+    $(this).replaceWith(smallAjax);
+    return false;
+  });
+});
+
+$(function() {
   $('.song .add ul li a').live('click', function() {
     var par = $(this).parents('li:first');
 

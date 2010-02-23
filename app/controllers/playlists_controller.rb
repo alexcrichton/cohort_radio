@@ -28,9 +28,14 @@ class PlaylistsController < ApplicationController
   end
   
   def dequeue
-    @playlist.songs.delete @song unless @song.nil?
-    flash[:notice] = "#{@song.display_title} dequeued!" unless @song.nil?
-    redirect_to @playlist
+    @playlist.queue_items.delete @queue_item unless @queue_item.nil?
+    
+    if request.xhr?
+      render :text => "<span class='notice'>Dequeued</span>"
+    else
+      flash[:notice] = "#{@queue_item.song.display_title} dequeued!" unless @queue_item.nil?
+      redirect_to @playlist
+    end
   end
   
   def create
