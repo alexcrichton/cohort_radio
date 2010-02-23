@@ -17,7 +17,7 @@
 			
 			<%= link_to '[download]', download_song_path(song) %>
 			<% if can? :manage, song %>
-				<%= link_to '[destroy]', @song, :method => :delete, :confirm => 'are you sure?' %>
+				<%= link_to '[destroy]', song, :method => :delete, :confirm => 'are you sure?' %>
 			<% end %>
 			<% if @playlist && can?(:manage, @playlist) %>
 				<br/><%= link_to '[remove]', dequeue_playlist_path(@playlist) + "?" + {:song_id => song.id}.to_query %>
