@@ -159,7 +159,7 @@ function error() {
 $(function() {
   if ($('#activations').length == 0) return;
   // send activation email
-  $('#pending a').live('click', function() {
+  $('#pending a.activate').live('click', function() {
     var span = $(this).parent();
     span.html(smallAjax);
     span.parents('form').ajaxSubmit({
