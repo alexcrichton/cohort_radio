@@ -5,7 +5,14 @@ class SongsController < ApplicationController
   respond_to :html
   
   def index
-    respond_with(@songs = Song.paginate(:page => params[:page]))
+    @songs = Song.paginate :page => params[:page]
+    
+    # Hack a solution for now. This doesn't work with just respond_with in production for some reason...
+    if request.xhr?
+      render :inline => "<% paginated_section @songs do %><%= render @songs %><% end %>"
+    else
+      respond_with @songs
+    end
   end
   
   def show
