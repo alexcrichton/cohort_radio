@@ -15,7 +15,7 @@
 	<div class='links'>
 		<p>
 			<%= link_to '[download]', download_song_path(song) %>
-			<% if @playlist && can?(:manage, song) %>
+			<% if @playlist && can?(:manage, @playlist) %>
 				<br/><%= link_to '[remove]', dequeue_playlist_path(@playlist) + "?" + {:song_id => song.id}.to_query %>
 			<% end %>
 		</p>

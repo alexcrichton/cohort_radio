@@ -1,21 +1,23 @@
-<% paginated_section @songs do %>
-	<table>
-		<tr>
-			<th>Title/File</th>
-			<th>Artist</th>
-			<th>Album</th>
-			<th></th>
-		</tr>
-		<% @songs.each do |song| %>
+<div class='pagination-container'>
+	<% paginated_section @songs do %>
+		<table>
 			<tr>
-				<td><%= link_to song.display_title, song %></td>
-				<td><%= song.artist %></td>
-				<td><%= song.album %></td>
-				<td>
-					<%= link_to "Edit", edit_song_path(song) if can? :update, song %>
-					<%= link_to "Delete", song, :confirm => 'are you sure?', :method => :delete if can? :destroy, song %>
-				</td>
+				<th>Title/File</th>
+				<th>Artist</th>
+				<th>Album</th>
+				<th></th>
 			</tr>
-		<% end %>
-	</table>
-<% end %>
+			<% @songs.each do |song| %>
+				<tr>
+					<td><%= link_to song.display_title, song %></td>
+					<td><%= song.artist %></td>
+					<td><%= song.album %></td>
+					<td>
+						<%= link_to "Edit", edit_song_path(song) if can? :update, song %>
+						<%= link_to "Delete", song, :confirm => 'are you sure?', :method => :delete if can? :destroy, song %>
+					</td>
+				</tr>
+			<% end %>
+		</table>
+	<% end %>
+</div>

@@ -9,7 +9,7 @@ gem 'ruby-mp3info', :require => 'mp3info'
 gem 'ruby-shout', :require => 'shout'
 gem 'delayed_job'
 gem 'exceptional'
-gem 'will_paginate'
+gem 'will_paginate', '3.0.pre'
 gem 'scrobbler'
 gem 'daemons'
 

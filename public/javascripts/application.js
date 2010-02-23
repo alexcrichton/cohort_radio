@@ -1,20 +1,26 @@
 var smallAjax = '<img src="/images/ajax-small.gif" alt="Loading..." class="loading"/>';
 var bigAjax = '<img src="/images/ajax-big.gif" alt="Loading..." class="loading"/>';
-var hugeAjax = '<img src="/images/ajax-huge.gif" alt="Loading..." class="loading"/>';
+var hugeAjax = '<div style="text-align:center"><img src="/images/ajax-huge.gif" alt="Loading..." class="loading"/></div>';
 
-$(function(){
+$(function() {
   $('.tabs').tabs();
+});
+
+$(function() {
+  $('.pagination-container .pagination a').live('click', function() {
+    $(this).parents('.pagination-container:first').html(hugeAjax).load($(this).attr('href'));
+    return false;
+  });
 });
 
 $(function() {
   if($('#songs-search').length == 0) return;
   
   $('#songs-search form').ajaxForm({
-    beforeSubmit: function(){
-      $('#search-holder').show();
-      $('#search-response').hide();
+    beforeSubmit: function() {
+      $('#search-holder, #search-response').toggle();
     },
-    success: function(data){
+    success: function(data) {
       $('#search-response').html(data).show();
       $('#search-holder').hide();
     },
