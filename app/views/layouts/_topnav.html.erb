@@ -31,7 +31,7 @@
 				<% if fargo_running? %>
 					<% if can? :manage, Fargo %>
 						<% if fargo_connected? %>
-							<li><%= link_to 'Disconnect', :controller => 'fargo/commands', :action => 'disconnect' %></li>
+							<li><%= link_to 'Disconnect', {:controller => 'fargo/commands', :action => 'disconnect'}, :confirm => "Are you sure?" %></li>
 						<% else %>
 							<li><%= link_to 'Connect', :controller => 'fargo/commands', :action => 'connect' %></li>
 						<% end %>
@@ -53,7 +53,7 @@
 			<ul>
 				<% if radio_running? %>
 					<% if radio_connected? %>
-						<li><%= link_to 'Disconnect', :controller => 'radio/commands', :action => 'disconnect' %></li>
+						<li><%= link_to 'Disconnect', {:controller => 'radio/commands', :action => 'disconnect'}, :confirm => "Are you sure?" %></li>
 						<li><%= link_to "Status", :controller => 'radio/status' %></li>
 					<% else %>
 						<li><%= link_to 'Connect', :controller => 'radio/commands', :action => 'connect' %></li>

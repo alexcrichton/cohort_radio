@@ -2,6 +2,7 @@ body {
   background-color: #4B7399;
   font-family: Verdana, Helvetica, Arial;
   font-size: 14px;
+  height: 100%;
 }
 
 a img {
@@ -22,7 +23,7 @@ a {
   width: 75%;
   margin: 0 auto;
   background-color: #FFF;
-  border: solid 2px black;
+  border: solid 3px black;
   margin-top: 20px;
   overflow: auto;
 }
@@ -160,16 +161,16 @@ input[type=submit] {
   border: 1px solid #999;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
-  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
-  background: -moz-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
+  background-image: -moz-linear-gradient(-90deg, #fff, #ddd);
   font-size: 150%;
   height: 30px;
   margin: 0.5em;
 }
 
 input[type=submit]:active {
-  background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#ddd));
-  background: -moz-gradient(linear, left top, left bottom, from(#ccc), to(#ddd));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#ddd));
+  background-image: -moz-linear-gradient(-90deg, #ccc, #ddd);
 }
 
 #search fieldset {
@@ -214,9 +215,12 @@ footer {
   height: 20px;
   padding: 10px;
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ccc));
+  background-image: -moz-linear-gradient(-90deg, #fff, #ccc);
   -webkit-border-bottom-right-radius: 20px;
   -webkit-border-bottom-left-radius: 20px;
-
+  -moz-border-radius-bottomright: 20px;
+  -moz-border-radius-bottomleft: 20px;
+  
 }
 
 section#content {
@@ -226,8 +230,12 @@ section#content {
 
 header {
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#FFFCFD), color-stop(0,#ccc),color-stop(.7,#CCCCCC));
+  background-image: -moz-linear-gradient(-90deg, #ccc, #ccc 70%, #fff);
+  
   -webkit-border-top-right-radius: 20px;
   -webkit-border-top-left-radius: 20px;
+  -moz-border-radius-topright: 20px;
+  -moz-border-radius-topleft: 20px;
   
   overflow: auto;
   height: 40px;
@@ -238,6 +246,7 @@ header {
   overflow: auto;
   border: 3px solid #ccc;
   -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
   width: 500px;
   margin: 0 auto;
 }
