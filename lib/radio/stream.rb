@@ -124,7 +124,7 @@ class Radio
 
 
       # wait for the process to exit. Once it's exited, we've finished playing this song.
-      Process.wait @playing_pid if @playing_pid
+      Process.wait @playing_pid rescue nil if @playing_pid
 
       @queue_items_to_update << queue_item
 
