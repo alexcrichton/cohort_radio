@@ -2,4 +2,7 @@
   <%= f.hidden_field :id, :id => id + '_id' %>
   <%= hidden_field_tag :op, op, :id => id + "op" %>
 </div>
-<div><%= link_to link, '#' %></div>
+<div>
+	<%= link_to link, '#' %>
+	<%= link_to "[destroy]", user_path + '?' + {:user_id => f.object.id}.to_query, :method => :delete, :confirm => "Are you sure?" %>
+</div>

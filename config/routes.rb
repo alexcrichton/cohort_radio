@@ -19,7 +19,7 @@ CohortRadio::Application.routes.draw do |map|
     get :dequeue, :on => :member
   end
 
-  resource :user, :except => [:show, :destroy] do
+  resource :user, :except => [:show] do
     get :search
     match 'adminize/:id' => 'users#adminize', :as => 'adminize'
     match 'activate/:token' => 'activations#activate', :as => 'activate'
