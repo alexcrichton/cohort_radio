@@ -34,4 +34,8 @@
 </div>
 <h2>Queue:</h2>
 
-<%= render @playlist.songs %>
+<section id='songs'>
+	<% @playlist.queue_items.each do |queue_item| %>
+		<%= render queue_item.song, :item => queue_item %>
+	<% end %>
+</section>

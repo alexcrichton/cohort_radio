@@ -14,7 +14,11 @@
 	</div>
 	<div class='links'>
 		<p>
-			
+			<% if defined?(item) %>
+				<p>
+					Queued by: <%= item.user.name if item.user %>
+				</p>
+			<% end %>
 			<%= link_to '[download]', download_song_path(song) %>
 			<% if can? :manage, song %>
 				<%= link_to '[destroy]', song, :method => :delete, :confirm => 'are you sure?' %>

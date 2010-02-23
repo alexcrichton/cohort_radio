@@ -17,7 +17,7 @@ class PlaylistsController < ApplicationController
   end
   
   def enqueue
-    @playlist.enqueue @song unless @song.nil?
+    @playlist.enqueue @song, current_user unless @song.nil?
     
     if request.xhr?
       render @song ? @song : {:text => ''}

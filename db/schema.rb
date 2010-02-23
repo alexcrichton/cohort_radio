@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100216202555) do
+ActiveRecord::Schema.define(:version => 20100223161837) do
 
   create_table "activations", :force => true do |t|
     t.integer  "user_id"
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(:version => 20100216202555) do
     t.integer  "song_id"
     t.integer  "playlist_id"
     t.integer  "user_id"
-    t.integer  "priority"
+    t.float    "priority"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
