@@ -2,6 +2,8 @@ var smallAjax = '<img src="/images/ajax-small.gif" alt="Loading..." class="loadi
 var bigAjax = '<img src="/images/ajax-big.gif" alt="Loading..." class="loading"/>';
 var hugeAjax = '<div style="text-align:center"><img src="/images/ajax-huge.gif" alt="Loading..." class="loading"/></div>';
 
+$.ajaxSetup({error: error});
+
 $(function() {
   $('.tabs').tabs();
 });
@@ -13,8 +15,7 @@ $(function() {
       url: $(this).attr('href'), 
       success: function(data) {
         par.replaceWith(data);
-      },
-      error: error
+      }
     });
     $(this).replaceWith(smallAjax);
     return false;
@@ -38,9 +39,8 @@ $(function() {
     success: function(data) {
       $('#search-response').html(data).show();
       $('#search-holder').hide();
-    },
-    error: error
-  })
+    }
+  });
 });
 
 $(function(){
@@ -49,7 +49,6 @@ $(function(){
   var timeoutId;
   
   $('#fargo-search form').ajaxForm({
-    error: error,
     success: function() {
       $('#query').text($('#q').val());
       $('#search-response').html(hugeAjax);
@@ -73,8 +72,7 @@ $(function() {
       url: $(this).attr('href'),
       success: function(){
         el.remove();
-      },
-      error: error
+      }
     });
     return false;
   });
@@ -86,8 +84,7 @@ $(function() {
       url: $(this).attr('href'),
       success: function(){
         el.remove();
-      }, 
-      error: error
+      }
     });
     return false;
   });
@@ -99,7 +96,6 @@ $.fn.extend({
       beforeSubmit: function(args, form){
         $(form).find('input[type=submit]').replaceWith(smallAjax);      
       },
-      error: error,
       success: function(data) {
         $('img.loading').replaceWith(data);
       }

@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   # nil for AJAX
-  layout proc { |controller| controller.request.xhr? ? nil : 'application' }
+  layout Proc.new { |controller| controller.request.xhr? ? nil : 'application' }
 
   before_filter :load_models
 
