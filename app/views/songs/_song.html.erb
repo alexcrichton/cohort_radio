@@ -3,7 +3,7 @@
 		<%= image_tag song.album_image_url if song.album_image_url %>
 	</div>
 	<div class='content'>
-		<h3><%= song.title %></h3>
+		<h3><%= song.display_title %></h3>
 		<h5>
 			<%= song.artist %> 
 			<%= raw "&mdash; #{song.album}" unless song.album.blank? %>
@@ -21,6 +21,7 @@
 			<% end %>
 			<%= link_to '[download]', download_song_path(song) %>
 			<% if can? :manage, song %>
+				<%= link_to '[edit]', edit_song_path(song) %>
 				<%= link_to '[destroy]', song, :method => :delete, :confirm => 'are you sure?' %>
 			<% end %>
 			<% if defined?(item) && can?(:manage, @playlist) %>

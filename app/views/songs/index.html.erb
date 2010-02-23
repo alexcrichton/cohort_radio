@@ -1,6 +1,7 @@
 <div class='pagination-container'>
 	<% paginated_section @songs do %>
-		<table>
+		<%= render @songs %>
+		<!-- <table>
 			<tr>
 				<th>Title/File</th>
 				<th>Artist</th>
@@ -18,6 +19,6 @@
 					</td>
 				</tr>
 			<% end %>
-		</table>
+		</table> -->
 	<% end %>
 </div>
