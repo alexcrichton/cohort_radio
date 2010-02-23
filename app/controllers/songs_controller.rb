@@ -2,48 +2,42 @@ class SongsController < ApplicationController
   
   authorize_resource
   
+  respond_to :html
+  
   def index
-    @songs = Song.scoped.paginate :page => params[:page]
+    respond_with(@songs = Song.paginate(:page => params[:page]))
   end
   
   def show
   end
   
   def new
-    @song = Song.new
+    respond_with @song = Song.new
   end
   
   def create
     @song = Song.new(params[:song])
-    if @song.save
-      flash[:notice] = "Successfully created song."
-      redirect_to playlists_path
-    else
-      render :action => 'new'
-    end
+    flash[:notice] = 'Song created!' if @song.save
+    respond_with @song
   end
   
   def edit
+    respond_with @song
   end
   
   def update
-    puts params[:song].inspect
-    if @song.update_attributes(params[:song])
-      flash[:notice] = "Successfully updated song."
-      redirect_to @song
-    else
-      render :action => 'edit'
-    end
+    flash[:notice] = "Song updated!" if @song.update_attributes params[:song]
+    respond_with @song
   end
   
   def download
-    send_file @song.audio.path, :type => @song.audio_content_type
+    puts @song.audio.path, @song.audio_content_type
+    send_file @song.audio.path, :type => @song.audio_content_type, :stream => false
   end
   
   def destroy
     @song.destroy
-    flash[:notice] = "Successfully destroyed song."
-    redirect_to songs_path
+    redirect_to songs_path, :notice => "Successfully destroyed song."
   end
   
   def search

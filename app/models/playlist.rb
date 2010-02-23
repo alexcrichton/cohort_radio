@@ -6,7 +6,7 @@ class Playlist < ActiveRecord::Base
   
   acts_with_slug
   
-  has_many :queue_items, :order => 'priority DESC, created_at ASC'
+  has_many :queue_items, :order => 'priority ASC, created_at ASC'
   has_many :songs, :through => :queue_items
   has_and_belongs_to_many :users
   
@@ -32,6 +32,16 @@ class Playlist < ActiveRecord::Base
     url << Radio::DEFAULTS[:remote_host]
     url << ice_mount_point
     url
+  end
+  
+  def enqueue song, user
+    items = self.queue_items
+    # ids = items.map &:user_id
+    # last = 0
+    # for i in 1..ids.length-1 do
+    #   last = i if ids[i] == user.id
+    # end
+    items.create :song => song, :user => user
   end
   
 end
