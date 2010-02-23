@@ -70,6 +70,8 @@ class Radio
     
     def next
       # See the stream_song method as to why
+      # We don't want to wait for the pid to exit because that would slow down lots of things
+      #   which is bad...
       Process.kill 'USR1', @playing_pid if @playing_pid
     end
     

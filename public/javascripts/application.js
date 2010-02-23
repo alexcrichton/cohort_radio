@@ -9,8 +9,12 @@ $(function() {
 $(function() {
   $('#radio-status .links a').live('click', function(){
     var par = $(this).parents('tr');
-    $.get($(this).attr('href'), function(data) {
-      par.replaceWith(data);
+    $.ajax({
+      url: $(this).attr('href'), 
+      success: function(data) {
+        par.replaceWith(data);
+      },
+      error: error
     });
     $(this).replaceWith(smallAjax);
     return false;
@@ -48,17 +52,14 @@ $(function(){
     error: error,
     success: function() {
       $('#query').text($('#q').val());
-      $('#search-holder').show();
-      $('#search-response').hide();
+      $('#search-holder, #search-response').toggle();
       $('#q, input[type=submit]').attr('disabled', 'disabled');
       if(timeoutId != null) clearTimeout(timeoutId);
       timeoutId = setTimeout(function(){ 
         $('#search-response').load("/fargo/search/results?q=" + escape($('#q').val()), function(){
-          $('#search-holder').hide();
-          $('#search-response').show();
+          $('#search-holder, #search-response').toggle();
           $('#q, input[type=submit]').removeAttr('disabled');
           $('#search .result').bindSearchForms();
-          
         });
       }, 1000)
     }
@@ -69,51 +70,28 @@ $(function() {
   $('#waiting .links .remove').click(function(){
     var el = $(this).parents('.download');
     $(this).replaceWith(smallAjax);
-      $.ajax({
-        url: $(this).attr('href'),
-        success: function(){
-          el.remove();
-        },
-        error: error
-      })
-      return false;
+    $.ajax({
+      url: $(this).attr('href'),
+      success: function(){
+        el.remove();
+      },
+      error: error
+    });
+    return false;
   });
   
   $('#connections .disconnect').click(function(){
     var el = $(this).parents('tr');
     $(this).replaceWith(smallAjax);
-      $.ajax({
-        url: $(this).attr('href'),
-        success: function(){
-          el.remove();
-        }, 
-        error: error
-      })
-      return false;
+    $.ajax({
+      url: $(this).attr('href'),
+      success: function(){
+        el.remove();
+      }, 
+      error: error
+    });
+    return false;
   });
-  // $('#downloads .download a.remove').click(function(){
-  //   var el = $(this).parents('.download');
-  //   $(this).replaceWith(smallAjax);
-  //   $.ajax({
-  //     type: 'DELETE',
-  //     url: $(this).attr('href'),
-  //     success: function(){
-  //       el.remove();
-  //     }
-  //   })
-  //   return false;
-  // });
-  // $('#downloads .download a.retry').click(function(){
-  //   var el;
-  //   $(this).replaceWith(el = $(smallAjax));
-  //   $.ajax({
-  //     url: $(this).attr('href'),
-  //     success: function(data){
-  //       el.replaceWith(data);
-  //     }
-  //   })
-  //   return false;
-  // });
 });
 
 $.fn.extend({
