@@ -19,12 +19,21 @@ module Fargo
       
       def read_data
         return super if @handshake_step != 6
+
+        @exit_time = 20
         
-        @exit_thread.exit if @exit_thread.alive?
-        @exit_thread = Thread.start { sleep 10; download_timeout! }
-
-        data = @socket.read [@buffer_size, @length - @recvd].min
-
+        if @reader.nil?
+          @reader = @socket
+          if @client_extensions.include?("ZLIG") 
+            Fargo.logger.debug "#{self} Creating GzipReader from @socket"
+            @reader = Zlib::GzipReader.new @socket 
+          end
+        end
+        
+        data = @reader.read [@buffer_size, @length - @recvd].min
+        
+        # data = Zlib::Inflate.inflate data if @client_extensions.include?("ZLIG")
+        
         @file << data
         @recvd += data.length
 
@@ -67,7 +76,7 @@ module Fargo
               out = ''
               out << "$MyNick #{self[:nick]}|" unless self[:first]
               out << "$Lock #{@lock} Pk=#{@pk}|" unless self[:first]
-              out << "$Supports ADCGet|"
+              out << "$Supports TTHF ADCGet ZLIG|"
               out << "$Direction Download #{@my_num = rand(10000)}|"
               out << "$Key #{generate_key @remote_lock}|"
               write out
@@ -112,8 +121,14 @@ module Fargo
               @recvd = 0
               @handshake_step = 6
               write "$Send" unless @client_extensions.include? 'ADCGet'
-              
-              @exit_thread = Thread.start { sleep 10; download_timeout! }
+              @exit_time = 20
+              @exit_thread = Thread.start { 
+                while @exit_time > 0
+                  sleep 1
+                  @exit_time -= 1
+                end
+                download_timeout! 
+              }
               
               publish :download_started, :file => download_path, :download => self[:download], 
                                          :nick => @other_nick   
@@ -121,7 +136,20 @@ module Fargo
               Fargo.logger.warn @last_error = "Premature disconnect when #{message[:type]} received"
               disconnect
             end
-            
+          when :noslots
+            if self[:download]
+              Fargo.logger.debug "#{self}: No Slots for #{self[:download]}"
+
+              path, download = download_path, self[:download]
+
+              reset_download
+
+              publish :download_failed, :nick => @other_nick, :download => download, 
+                                        :file => path, :last_error => "No slots!"
+            end
+          when :error
+            Fargo.logger.error "#{self}: Error! #{message[:message]}"
+            disconnect
         end
       end
       
@@ -134,11 +162,16 @@ module Fargo
         @file.sync = true
         
         if @client_extensions.include? 'ADCGet'
-          if self[:download].file_list?
-            write "$ADCGET file #{self[:download].file} 0 -1"
-          else
-            write "$ADCGET file #{self[:download].tth.gsub ':', '/'} #{self[:offset]} -1"
+          download_query = self[:download].file
+          if !self[:download].file_list? && @client_extensions.include?('TTHF')
+            download_query = self[:download].tth.gsub ':', '/'
           end
+          zlig = ''
+          if @client_extensions.include?("ZLIG") 
+            zlig = "ZL1"
+            Fargo.logger.debug "#{self} Enabling zlib compression on: #{self[:download].file}"
+          end
+          write "$ADCGET file #{download_query} 0 -1 #{zlig}"
         else
           write "$Get #{self[:download].file}$#{self[:offset] + 1}"
         end
@@ -161,6 +194,8 @@ module Fargo
       
       def download_finished!
         Fargo.logger.debug "#{self}: Finished download of #{self[:download]}"
+        
+        @exit_thread.exit if @exit_thread.alive?
         
         path, download = download_path, self[:download]
         

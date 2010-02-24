@@ -35,6 +35,7 @@ module Fargo
         return true if info[:interest].nil?
         match = info[:interest].match /.*?<.*S:(\d+).*>/
         return true if match.nil?
+        Fargo.logger.debug "#{self} User: #{nick} has #{match[1]} open slots"
         return match[1].to_i > 0
       end
       
