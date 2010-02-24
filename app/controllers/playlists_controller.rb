@@ -15,29 +15,7 @@ class PlaylistsController < ApplicationController
   def new
     respond_with @playlist = Playlist.new
   end
-  
-  def enqueue
-    @playlist.enqueue @song, current_user unless @song.nil?
     
-    if request.xhr?
-      render :text => "<span class='notice'>Queued.</span>"
-    else
-      flash[:notice] = "#{@song.display_title} queued!" unless @song.nil?
-      redirect_to @playlist
-    end
-  end
-  
-  def dequeue
-    @playlist.queue_items.delete @queue_item unless @queue_item.nil?
-    
-    if request.xhr?
-      render :text => "<span class='notice'>Dequeued</span>"
-    else
-      flash[:notice] = "#{@queue_item.song.display_title} dequeued!" unless @queue_item.nil?
-      redirect_to @playlist
-    end
-  end
-  
   def create
     @playlist = Playlist.new(params[:playlist])
     flash[:notice] = "Successfully created playlist." if @playlist.save

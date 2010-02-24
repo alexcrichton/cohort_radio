@@ -12,6 +12,7 @@ $(function() {
   $('.song .links .remove').live('click', function() {
     var par = $(this).parents('.song');
     $.ajax({
+      type: 'DELETE',
       url: $(this).attr('href'),
       success: function() {
         par.remove();
