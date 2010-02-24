@@ -44,7 +44,7 @@ module Fargo
         else
           publish :download_progress, :percent => @recvd.to_f / @length, :file => download_path, 
                                       :nick => @other_nick, :download => self[:download],
-                                      :size => @length
+                                      :size => @length, :compressed => @zlib
         end
       rescue IOError => e
         Fargo.logger.warn @last_error = "#{self}: IOError, disconnecting #{e}"
@@ -60,8 +60,11 @@ module Fargo
             if @handshake_step == 0              
               @handshake_step = 1 
               @other_nick = message[:nick]
+
+              self[:client].connected_with! @other_nick
               self[:client].lock_connection_with! @other_nick, self
               self[:download] = self[:client].lock_next_download! @other_nick, self
+
               if self[:download].nil? || self[:download].file.nil?
                 Fargo.logger.warn @last_error = "Nothing to download from:#{@other_nick}!"
                 disconnect
@@ -119,13 +122,11 @@ module Fargo
             end
           when :file_length, :adcsnd
             if @handshake_step == 5
-              
               @recvd = 0
               @handshake_step = 6
+              
               @zlib = message[:zlib]
               @length = message[:size]
-              
-              write "$Send" unless @client_extensions.include? 'ADCGet'
               
               @exit_time = 20
               @exit_thread = Thread.start { 
@@ -135,6 +136,8 @@ module Fargo
                 end
                 download_timeout! 
               }
+
+              write "$Send" unless @client_extensions.include? 'ADCGet'
               
               publish :download_started, :file => download_path, :download => self[:download], 
                                          :nick => @other_nick   
@@ -201,8 +204,6 @@ module Fargo
       def download_finished!
         Fargo.logger.debug "#{self}: Finished download of #{self[:download]}"
         
-        @exit_thread.exit if @exit_thread.alive?
-        
         path, download = download_path, self[:download]
         
         reset_download
@@ -226,6 +227,8 @@ module Fargo
       def reset_download
         @file.close unless @file.nil? || @file.closed?
         @socket.sync = false if @socket
+        
+        @exit_thread.exit if @exit_thread.alive?
         
         @zs = self[:offset] = @file_path = @zlib = self[:download] = @length = @recvd = nil        
 
