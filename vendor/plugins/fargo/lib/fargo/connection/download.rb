@@ -22,19 +22,13 @@ module Fargo
 
         @exit_time = 20
         
-        data = @socket.read [@buffer_size, @length - @recvd].min
+        length = @buffer_size < @length - @recvd ? @buffer_size : @length - @recvd
+        data = @socket.read length
         
         if @zlib
-          # Fargo.logger.debug "#{self} Creating GzipReader from @socket"
           @zs = Zlib::Inflate.new if @zs.nil?
           data = @zs.inflate data
         end
-        
-        # if @reader.is_a? Zlib::Inflate
-        #   @reader.sync(string)
-        # end        
-        
-        # data = Zlib::Inflate.inflate data if @client_extensions.include?("ZLIG")
         
         @file << data
         @recvd += data.length
