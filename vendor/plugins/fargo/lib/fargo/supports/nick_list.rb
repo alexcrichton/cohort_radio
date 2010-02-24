@@ -33,7 +33,7 @@ module Fargo
         info = info nick
         return false if info.nil?
         return true if info[:interest].nil?
-        match = info[:interest].match /.*?<.*? V:.*?,M:[AP],H:\d*\/\d*\/\d*,S:(\d)+>/
+        match = info[:interest].match /.*?<.*S:(\d+).*>/
         return true if match.nil?
         return match[1].to_i > 0
       end

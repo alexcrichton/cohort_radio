@@ -21,6 +21,7 @@ module Fargo
         return super if @handshake_step != 6
         
         @exit_thread.exit if @exit_thread.alive?
+        @exit_thread = Thread.start { sleep 10; download_timeout! }
 
         data = @socket.read [@buffer_size, @length - @recvd].min
 

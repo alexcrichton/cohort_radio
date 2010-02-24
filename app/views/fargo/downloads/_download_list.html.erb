@@ -9,7 +9,10 @@
 			</tr>
 			<% nick_downloads.each do |download| %>
 				<tr>
-					<td><%= download.file %></td>
+					<td>
+						<%= link_to "[retry]", :controller => 'fargo/downloads', :action => 'retry', :file => download.file, :nick => nick if defined?(failed) %>
+						<%= truncate(download.file.reverse, 60).reverse %>
+					</td>
 					<td><%= number_to_human_size download.size %></td>
 				</tr>
 			<% end %>

@@ -24,7 +24,7 @@ class Fargo::DownloadsController < ApplicationController
     fargo.retry_download params[:nick], params[:file]
     
     if request.xhr?
-      render :text => '<span class="notice">Queued</span>'
+      render :text => '<span class="notice">Retried</span>'
     else
       flash[:notice] = "Retrying download. Give it a few seconds to update and/or propagate"
       redirect_to fargo_downloads_path
@@ -42,6 +42,17 @@ class Fargo::DownloadsController < ApplicationController
       redirect_to fargo_downloads_path
     end
     
+  end
+  
+  def try
+    fargo.try_again params[:nick]
+    puts 'here'
+    if request.xhr?
+      render :text => '<span class="notice">Trying</span>'
+    else
+      flash[:notice] = "Trying #{params[:nick]} again"
+      redirect_to fargo_downloads_path
+    end
   end
   
   def destroy

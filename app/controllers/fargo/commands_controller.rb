@@ -46,16 +46,6 @@ class Fargo::CommandsController < ApplicationController
     end  
   end
   
-  def clear_timed_out
-    fargo.clear_timed_out
-    if request.xhr?
-      render :text => '<span class="notice">Cleared</span>'
-    else
-      flash[:notice] = "Timed out connections were cleared."
-      redirect_to fargo_downloads_path
-    end
-  end
-  
   def download
     fargo.download params[:nick], params[:file], params[:tth], params[:size].to_i
 

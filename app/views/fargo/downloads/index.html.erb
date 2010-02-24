@@ -21,7 +21,7 @@
 	
 	<div id='failed'>
 		<%= link_to "[Clear these]", :controller => 'fargo/commands', :action => "clear_failed_downloads" if can? :manage, Fargo %>
-		<%= render 'download_list', :downloads => @failed_downloads %>
+		<%= render 'download_list', :downloads => @failed_downloads, :failed => true %>
 	</div>
 	
 	<div id='waiting'>
@@ -98,10 +98,10 @@
 					</td>
 				</tr>
 				<% @timed_out.each do |nick| %>
-					<tr>
+					<tr class='timeout'>
 						<td><%= nick %></td>
 						<td>
-							<%#= link_to "Disconnect", :controller => 'fargo/commands', :action => :disconnect, :nick => nick %>
+							<%= link_to "Try again", :controller => 'fargo/downloads', :action => :try, :nick => nick %>
 						</td>
 					</tr>
 				<% end %>

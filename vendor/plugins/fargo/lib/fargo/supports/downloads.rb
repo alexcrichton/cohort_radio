@@ -33,11 +33,15 @@ module Fargo
         download = Download.new nick, file, tth, size
         download.percent = 0
         download.status = 'idle'
-        
-        @downloading_lock.synchronize { 
-          (@queued_downloads[nick] ||= []) << download
-        }
-        start_download
+        if @timed_out.include? nick
+          download.status = 'timeout'
+          (@failed_downloads[nick] ||= []) << download
+        else
+          @downloading_lock.synchronize { 
+            (@queued_downloads[nick] ||= []) << download
+          }
+          start_download
+        end
       end
       
       def retry_download nick, file
@@ -68,6 +72,15 @@ module Fargo
       
       def clear_timed_out
         @timed_out.clear
+      end
+      
+      def try_again nick
+        return false unless @timed_out.include? nick
+        @timed_out.delete nick
+        downloads = @failed_downloads[nick].dup
+        @failed_downloads[nick].clear
+        downloads.each { |d| download nick, d.file, d.tth, d.size }
+        true
       end
       
       def start_download
@@ -150,6 +163,11 @@ module Fargo
       def connection_failed_with! nick
         @trying.delete nick
         @timed_out << nick
+        @downloading_lock.synchronize {
+          @queued_downloads[nick].each{ |d| d.status = 'timeout' }
+          @failed_downloads[nick] = (@failed_downloads[nick] || []) | @queued_downloads[nick]
+          @queued_downloads[nick].clear
+        }
         start_download
       end
       

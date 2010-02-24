@@ -108,8 +108,19 @@ $(function() {
     });
     return false;
   });
+  $('#connections tr.timeout a').live('click', function(){
+    var par = $(this).parents('td:first');
+    $.ajax({
+      url: $(this).attr('href'), 
+      success: function(data) {
+        par.html(data);
+      }
+    });
+    $(this).html(smallAjax);
+    return false;
+  });
   
-  $('#connections .disconnect').click(function(){
+  $('#connections .disconnect, #failed tr a').click(function(){
     var el = $(this).parents('tr');
     $(this).replaceWith(smallAjax);
     $.ajax({
