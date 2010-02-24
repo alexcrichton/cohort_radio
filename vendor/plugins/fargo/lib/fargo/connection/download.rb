@@ -22,15 +22,17 @@ module Fargo
 
         @exit_time = 20
         
-        if @reader.nil?
-          @reader = @socket
-          if @client_extensions.include?("ZLIG") 
-            Fargo.logger.debug "#{self} Creating GzipReader from @socket"
-            @reader = Zlib::GzipReader.new @socket 
-          end
+        data = @socket.read [@buffer_size, @length - @recvd].min
+        
+        if @zlib
+          # Fargo.logger.debug "#{self} Creating GzipReader from @socket"
+          @zs = Zlib::Inflate.new if @zs.nil?
+          data = @zs.inflate data
         end
         
-        data = @reader.read [@buffer_size, @length - @recvd].min
+        # if @reader.is_a? Zlib::Inflate
+        #   @reader.sync(string)
+        # end        
         
         # data = Zlib::Inflate.inflate data if @client_extensions.include?("ZLIG")
         
@@ -117,10 +119,14 @@ module Fargo
             end
           when :file_length, :adcsnd
             if @handshake_step == 5
-              @length = message[:size]
+              
               @recvd = 0
               @handshake_step = 6
+              @zlib = message[:zlib]
+              @length = message[:size]
+              
               write "$Send" unless @client_extensions.include? 'ADCGet'
+              
               @exit_time = 20
               @exit_thread = Thread.start { 
                 while @exit_time > 0
@@ -220,12 +226,9 @@ module Fargo
       def reset_download
         @file.close unless @file.nil? || @file.closed?
         @socket.sync = false if @socket
-                
-        self[:offset] = nil
-        @file_path = nil
-        self[:download] = nil
-        @length = nil
-        @recvd = nil
+        
+        @zs = self[:offset] = @file_path = @zlib = self[:download] = @length = @recvd = nil        
+
         @handshake_step = 5
       end
   
