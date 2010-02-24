@@ -220,9 +220,11 @@ module Fargo
       private
       def reset_download
         @file.close unless @file.nil? || @file.closed?
-        @socket.sync = false if @socket
         
-        @exit_thread.exit if @exit_thread.alive?
+        @socket.sync = false if @socket
+        @socket.flush if @socket
+        
+        @exit_thread.exit if @exit_thread && @exit_thread.alive?
         
         @zs = self[:offset] = @file_path = @zlib = self[:download] = @length = @recvd = nil        
 

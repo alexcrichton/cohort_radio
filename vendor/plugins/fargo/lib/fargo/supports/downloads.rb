@@ -110,10 +110,10 @@ module Fargo
         
         raise "Already downloading from #{user}!" if @current_downloads[user]
         
-        download = @queued_downloads[user].shift
-        raise "Don't have anything in the queue for #{user}!" if download.nil?
+        return nil if @queued_downloads[user].nil? || @queued_downloads[user].size == 0
         
-        @current_downloads[user] = download 
+        download = @queued_downloads[user].shift 
+        @current_downloads[user] = download
         @trying.delete user
 
         Fargo.logger.debug "#{self}: Locking download: #{download}"

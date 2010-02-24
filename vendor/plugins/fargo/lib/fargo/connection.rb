@@ -88,14 +88,16 @@ module Fargo
         Fargo.logger.debug "When reading data, socket was already closed!"
         disconnect
       else
-        data = @socket.gets "|"
-        raise ConnectionError.new("Received nil data!") if data.nil?
+        begin
+          data = @socket.gets "|"
+          raise ConnectionError.new("Received nil data!") if data.nil?
+        rescue => e
+          Fargo.logger.warn "#{self}: Error reading data, disconnecting: #{e}"
+          disconnect
+        end
         Fargo.logger.debug "#{self} Received: #{data.inspect}" 
         receive data.chomp('|')
       end
-    rescue => e
-      Fargo.logger.warn "#{self}: Error reading data, disconnecting: #{e}"
-      disconnect
     end
     
     def write_data data

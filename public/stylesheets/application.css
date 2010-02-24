@@ -38,12 +38,12 @@ a {
   border: solid 1px #6C6;
 }
 
-.notice {
+.notice, .alert, .error {
   padding: 2px 5px;
   margin: 0;
 }
 
-#flash_error {
+#flash_error, .error, .alert, #flash_alert {
   background-color: #FCC;
   border: solid 1px #C66;
 }

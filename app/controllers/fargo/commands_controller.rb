@@ -7,9 +7,8 @@ class Fargo::CommandsController < ApplicationController
   
   def connect
     fargo.connect
-    flash[:notice] = "Connected!"
 
-    redirect_to playlists_path
+    redirect_to playlists_path, :notice => "Connected!"
   end
   
   def disconnect
@@ -18,10 +17,8 @@ class Fargo::CommandsController < ApplicationController
     else
       fargo.disconnect
     end
-
-    flash[:notice] = "Disconnected!"
     
-    redirect_to playlists_path
+    redirect_to playlists_path, :notice => "Disconnected!"
   end
   
   def clear_finished_downloads
@@ -30,8 +27,7 @@ class Fargo::CommandsController < ApplicationController
     if request.xhr?
       render :text => '<span class="notice">Cleared</span>'
     else
-      flash[:notice] = "Finished downloads were cleared."
-      redirect_to fargo_downloads_path
+      redirect_to fargo_downloads_path, :notice => "Finished downloads were cleared."
     end
   end
   
@@ -41,8 +37,7 @@ class Fargo::CommandsController < ApplicationController
     if request.xhr?
       render :text => '<span class="notice">Cleared</span>'
     else
-      flash[:notice] = "Failed downloads were cleared."
-      redirect_to fargo_downloads_path
+      redirect_to fargo_downloads_path, :notice => "Failed downloads were cleared."
     end  
   end
   
@@ -52,8 +47,13 @@ class Fargo::CommandsController < ApplicationController
     if request.xhr?
       render :text => '<span class="notice">Queued</span>'
     else
-      flash[:notice] = "Song was queued for download."
-      redirect_to fargo_downloads_path
+      redirect_to fargo_downloads_path, :notice => "Song was queued for download."
+    end
+  rescue Fargo::ConnectionException
+    if request.xhr?
+      render :text => '<span class="alert">User no longer exists!</span>'
+    else
+      redirect_to fargo_downloads_path, :alert => "User no longer exists!."
     end
   end
   
