@@ -19,11 +19,10 @@
 					Queued by: <%= item.user.name if item.user %>
 				</p>
 			<% end %>
-			<%= link_to '[download]', download_song_path(song) %>
-			<% if can? :manage, song %>
-				<%= link_to '[edit]', edit_song_path(song) %>
-				<%= link_to '[destroy]', song, :method => :delete, :confirm => 'are you sure?' %>
-			<% end %>
+			<%= link_to '[download]', download_song_path(song) if can? :download, song %>
+			<%= link_to '[edit]', edit_song_path(song) if can? :update, song %>
+			<%= link_to '[destroy]', song, :method => :delete, :confirm => 'are you sure?' if can? :destroy, song %>
+
 			<% if defined?(item) && can?(:destroy, item) %>
 				<br/><%= link_to '[remove]', playlist_queue_item_path(@playlist, item), :class => 'remove' %>
 			<% end %>

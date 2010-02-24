@@ -72,7 +72,6 @@ class ApplicationController < ActionController::Base
       klass.find(id.to_i)
     end
   rescue NameError => e # id doesn't mean for this controller
-  #   raise e
   end
 
 end
