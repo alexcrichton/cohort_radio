@@ -108,6 +108,7 @@ $(function() {
     });
     return false;
   });
+  
   $('#connections tr.timeout a').live('click', function(){
     var par = $(this).parents('td:first');
     $.ajax({

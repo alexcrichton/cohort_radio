@@ -70,10 +70,6 @@ module Fargo
         }
       end
       
-      def clear_timed_out
-        @timed_out.clear
-      end
-      
       def try_again nick
         return false unless @timed_out.include? nick
         @timed_out.delete nick

@@ -46,7 +46,7 @@ class Fargo::DownloadsController < ApplicationController
   
   def try
     fargo.try_again params[:nick]
-    puts 'here'
+
     if request.xhr?
       render :text => '<span class="notice">Trying</span>'
     else
