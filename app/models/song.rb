@@ -2,6 +2,7 @@ class Song < ActiveRecord::Base
   
   has_many :queue_items, :dependent => :destroy
   has_many :playlists, :through => :queue_items
+  has_and_belongs_to_many :pools
   
   has_attached_file :audio, :path => ":rails_root/private/:class/:attachment/:id/:basename.:extension"
   

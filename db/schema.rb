@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100223161837) do
+ActiveRecord::Schema.define(:version => 20100223214907) do
 
   create_table "activations", :force => true do |t|
     t.integer  "user_id"
@@ -42,6 +42,17 @@ ActiveRecord::Schema.define(:version => 20100223161837) do
   create_table "playlists_users", :id => false, :force => true do |t|
     t.integer "playlist_id"
     t.integer "user_id"
+  end
+
+  create_table "pools", :force => true do |t|
+    t.integer  "playlist_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "pools_songs", :id => false, :force => true do |t|
+    t.integer "pool_id"
+    t.integer "song_id"
   end
 
   create_table "queue_items", :force => true do |t|

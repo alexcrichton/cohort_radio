@@ -29,12 +29,23 @@
 			<% end %>
 		</p>
 		<% if @playlist.nil? %>
+			<% playlists = Playlist.all%>
 			<div class='add'>
-				<%= link_to "[add to playlist]", '#' %>
+				<%= link_to "[add to queue]", '#' %>
 				<ul>
-					<% Playlist.all.each do |playlist| %>
+					<% playlists.each do |playlist| %>
 						<li>
 							<%= link_to playlist.name, enqueue_playlist_path(playlist) + '?' + {:song_id => song.id}.to_query %>
+						</li>
+					<% end %>
+				</ul>
+			</div>
+			<div class='add'>
+				<%= link_to "[add to pool]", '#' %>
+				<ul>
+					<% playlists.each do |playlist| %>
+						<li>
+							<%= link_to playlist.name, add_playlist_pool_path(playlist) + '?' + {:song_id => song.id}.to_query %>
 						</li>
 					<% end %>
 				</ul>

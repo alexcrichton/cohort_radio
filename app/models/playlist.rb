@@ -10,6 +10,10 @@ class Playlist < ActiveRecord::Base
   has_many :songs, :through => :queue_items
   has_and_belongs_to_many :users
   
+  has_one :pool
+  
+  after_create :create_pool
+  
   validates_presence_of :name
   validates_uniqueness_of :name, :if => :name_changed?, :case_sensitive => false
   
@@ -68,6 +72,10 @@ class Playlist < ActiveRecord::Base
     end
     puts l, r
     (l + r) / 2
+  end
+  
+  def create_pool
+    pool.create
   end
   
 end
