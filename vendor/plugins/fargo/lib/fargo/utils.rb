@@ -3,9 +3,10 @@ module Fargo
 
     # Lord knows why they're doing this...
     def generate_key lock
+      lock_bytes = lock.bytes.to_a
       bytes = []
-      bytes << (lock[0] ^ lock[-1] ^ lock[-2] ^ 5)
-      (1..lock.length-1).each{ |i| bytes << (lock[i] ^ lock[i - 1]) }
+      bytes << (lock_bytes[0] ^ lock_bytes[-1] ^ lock_bytes[-2] ^ 5)
+      (1..lock.length-1).each{ |i| bytes << (lock_bytes[i] ^ lock_bytes[i - 1]) }
       key = ''
       bytes.each{ |b| key << encode_char(((b << 4) | (b >> 4)) & 0xff) }
       key

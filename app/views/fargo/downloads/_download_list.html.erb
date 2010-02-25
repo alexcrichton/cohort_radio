@@ -11,7 +11,7 @@
 				<tr>
 					<td>
 						<%= link_to "[retry]", :controller => 'fargo/downloads', :action => 'retry', :file => download.file, :nick => nick if defined?(failed) %>
-						<%= truncate(download.file.reverse, 60).reverse %>
+						<%= truncate(download.file.reverse, :length => 60).reverse %>
 					</td>
 					<td><%= number_to_human_size download.size %></td>
 				</tr>

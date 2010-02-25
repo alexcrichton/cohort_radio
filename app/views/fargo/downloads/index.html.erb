@@ -35,7 +35,7 @@
 			</tr>
 			<% @jobs.each do |job| %>
 				<tr class='download'>
-					<td><%= File.basename job.payload_object.file %></td>
+					<td><%= File.basename job.payload_object.file.force_encoding('utf-8') if job.payload_object.file %></td>
 					<td><%= job.run_at %></td>
 					<td><%= !job.locked_at.nil? %></td>
 					<td title="<%= job.last_error %>">
@@ -63,7 +63,7 @@
 			<% @current_downloads.each_pair do |nick, download| %>
 				<tr>
 					<td><%= nick %></td>
-					<td><%= download.file %></td>
+					<td><%= download.file.force_encoding('utf-8') %></td>
 					<td><%= number_to_human_size download.size %></td>
 					<td><%= number_to_percentage download.percent * 100 %></td>
 				</tr>
