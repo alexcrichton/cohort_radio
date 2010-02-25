@@ -150,9 +150,7 @@ $.fn.extend({
 
 $(function() {
   $('#search .result').bindSearchForms();
-});
 
-$(function(){
   $("#song-search #q").autocomplete('/songs/search', {
     matchContains: true,
     extraParams: {
@@ -160,7 +158,6 @@ $(function(){
       completion:'true',
     },
     cacheLength: 50,
-    // multiple: false,
     formatItem: function(row) {
       return row[0].replace(/\(\d+\)/, '');
     },
