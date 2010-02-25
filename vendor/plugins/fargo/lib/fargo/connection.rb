@@ -80,6 +80,7 @@ module Fargo
     def write string
       string << '|' unless string =~ /\|$/
       @outgoing << string
+      true
     end
     
     private

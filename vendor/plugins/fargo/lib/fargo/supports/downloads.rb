@@ -80,7 +80,7 @@ module Fargo
       end
       
       def start_download
-        return false if open_download_slots == 0
+        return false if open_download_slots == 0 || @current_downloads.size + @trying.size > download_slots
         arr = nil
         @downloading_lock.synchronize {
           arr = @queued_downloads.to_a.detect{ |arr|
@@ -128,7 +128,7 @@ module Fargo
             download.status = 'finished'
             download_finished! user, false
             connection.unsubscribe &block
-          elsif type == :download_failed
+          elsif type == :download_failed || type == :download_disconnected
             download.status = 'failed'
             download_finished! user, true
             connection.unsubscribe &block
