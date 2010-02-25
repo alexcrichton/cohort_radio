@@ -3,11 +3,11 @@
 		<%= image_tag song.album_image_url if song.album_image_url %>
 	</div>
 	<div class='content'>
-		<h3><%= song.display_title %></h3>
-		<h5>
-			<%= song.artist %> 
-			<%= raw "&mdash; #{song.album}" unless song.album.blank? %>
-		</h5>
+		<h3><%= truncate song.display_title %></h3>
+		<h5><%= truncate song.artist %></h5>
+		<% unless song.album.blank? %>
+			<h5><%= truncate song.album %></h5>
+		<% end %>
 		<p>
 			Play count: <%= song.play_count %>
 		</p>

@@ -24,7 +24,7 @@
 	<% if radio_connected? && radio.playing?(@playlist) %>
 		<p>
 			Stream url: <%= raw auto_link(@playlist.stream_url) %><br/>
-			Current Song: <%= radio.current_song(@playlist).display_title %>
+			Current Song: <%= truncate radio.current_song(@playlist).display_title %>
 		</p>
 		<!-- <audio src="<%= @playlist.stream_url %>" controls='controls' autobuffer='autobuffer'></audio> -->
 	<% else %>

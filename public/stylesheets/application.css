@@ -102,6 +102,11 @@ a {
 .song .links {
   float: right;
   text-align: right;
+  width: 200px;
+}
+
+.song .content {
+  width: 430px;
 }
 
 .song .add:hover > a {
