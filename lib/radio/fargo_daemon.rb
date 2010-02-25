@@ -18,7 +18,20 @@ class Radio
           # Only enqueue one thing at a time. There was problems running into the connection
           # pool running low as a result of many downloads finishing simultaneously. A pool
           # of 10 ran out very quickly.
-          @enqueue_lock.synchronize{ Delayed::Job.enqueue CreateSongJob.new(hash[:file]) }
+          @enqueue_lock.synchronize{ 
+            failed = true
+            while failed
+              # Even though we're synchronized, the error still happened, so let's just retry the
+              # file until it doesn't fail by catching the exception.
+              begin
+                Delayed::Job.enqueue CreateSongJob.new(hash[:file]) 
+                failed = false
+              rescue ActiveRecord::ConnectionTimeoutError 
+                Fargo.logger.error "Database timeout error!"
+                Fargo.logger.error "Retrying file: #{hash[:file]}"
+              end
+            end
+          }
         end
       }
 
