@@ -22,14 +22,11 @@ module Fargo
 
         @exit_time = 20
         
-        # length = @buffer_size < @length - @recvd ? @buffer_size : @length - @recvd
-        # data = @socket.read length
         data = @socket.readpartial @buffer_size
         
         if @zlib
           @zs = Zlib::Inflate.new if @zs.nil?
           data = @zs.inflate data
-          Fargo.logger.debug "#{self} avail_in:#{@zs.avail_in} avail_out:#{@zs.avail_out} finished?:#{@zs.finished?.inspect}: total_in:#{@zs.total_in} total_out:#{@zs.total_out} stream_end?:#{@zs.stream_end?} ended?:#{@zs.ended?}"
         end
         
         @file << data
@@ -37,7 +34,7 @@ module Fargo
 
         if @recvd == @length
           download_finished!
-        elsif @recvd >= @length
+        elsif @recvd > @length
           Fargo.logger.warn "#{self} #{@recvd} > #{@length}!!!"
           download_finished!
         else
@@ -231,6 +228,7 @@ module Fargo
         @socket.flush if @socket
         
         @exit_thread.exit if @exit_thread && @exit_thread.alive?
+        @exit_thread = nil
         
         @zs = self[:offset] = @file_path = @zlib = self[:download] = @length = @recvd = nil        
 
