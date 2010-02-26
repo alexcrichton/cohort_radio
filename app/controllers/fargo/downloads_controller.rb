@@ -1,7 +1,7 @@
 class Fargo::DownloadsController < ApplicationController
 
-  before_filter(:except => :index){ |c| c.unauthorized! if c.cannot? :manage, Fargo }
-  before_filter(:only => :index){ |c| c.unauthorized! if c.cannot? :download, Fargo }
+  before_filter(:except => [:index, :retry]){ |c| c.unauthorized! if c.cannot? :manage, Fargo }
+  before_filter(:only => [:index, :retry]){ |c| c.unauthorized! if c.cannot? :download, Fargo }
     
   before_filter :require_fargo_connected
     
