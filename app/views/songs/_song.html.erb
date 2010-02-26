@@ -1,6 +1,6 @@
 <div class="song">
 	<div class='image'>
-		<%= image_tag song.album_image_url if song.album_image_url %>
+		<%= image_tag song.album_image_url, :width => '126' if song.album_image_url %>
 	</div>
 	<div class='content'>
 		<h3><%= truncate song.display_title %></h3>
