@@ -6,6 +6,7 @@ module Fargo
 
       def subscribe &subscriber
         raise RuntimeError.new("Need a subscription block!") if subscriber.nil?
+        Fargo.logger.debug "#{self}: subscribing #{subscriber}"
         (@subscribers ||= []) << subscriber
       end
       
@@ -15,6 +16,7 @@ module Fargo
       
       def unsubscribe &subscriber
         raise RuntimeError.new("Need a subscription block!") if subscriber.nil?
+        Fargo.logger.debug "#{self}: unsubscribing #{subscriber}"
         (@subscribers ||= []).delete subscriber
       end
   

@@ -6,9 +6,12 @@ module Fargo
       include Fargo::Parser
         
       def pre_listen
+        Fargo.logger.debug "Initiating connection on: #{self[:address]}:#{self[:port]}"
+        
         self[:quit_on_disconnect] = false
         @lock, @pk = generate_lock
         @handshake_step = 0
+        
         @buffer_size = (2 << 12).freeze
       end
       
@@ -16,11 +19,10 @@ module Fargo
         write "$MyNick #{self[:nick]}|$Lock #{@lock} Pk=#{@pk}" if self[:first]
       end
       
-      
       def read_data
-        return super if @handshake_step != 6
+        return super if @handshake_step != 6 # only download if we're at the correct time
 
-        @exit_time = 20
+        @exit_time = 20 # reset our timeout time
         
         data = @socket.readpartial @buffer_size
         
@@ -120,20 +122,10 @@ module Fargo
             if @handshake_step == 5
               @recvd = 0
               @handshake_step = 6
-              
+                            
               @zlib = message[:zlib]
               @length = message[:size]
               
-              @exit_time = 20
-              @exit_thread = Thread.start { 
-                while @exit_time > 0
-                  sleep 1
-                  @exit_time -= 1
-                  Fargo.logger.debug "#{self} time out in #{@exit_time} seconds"
-                end
-                download_timeout! 
-              }
-
               write "$Send" unless @client_extensions.include? 'ADCGet'
               
               publish :download_started, :file => download_path, :download => self[:download], 
@@ -148,6 +140,7 @@ module Fargo
 
               path, download = download_path, self[:download]
 
+              # cache because publishing must be at end of method and we're about to clear these
               reset_download
 
               publish :download_failed, :nick => @other_nick, :download => download, 
@@ -166,6 +159,8 @@ module Fargo
 
         @file.seek self[:offset]
         @file.sync = true
+        @socket.sync = true
+        @handshake_step = 5
         
         if @client_extensions.include? 'ADCGet'
           download_query = self[:download].file
@@ -177,12 +172,22 @@ module Fargo
             zlig = "ZL1"
             Fargo.logger.debug "#{self} Enabling zlib compression on: #{self[:download].file}"
           end
-          write "$ADCGET file #{download_query} 0 -1 #{zlig}"
+          write "$ADCGET file #{download_query} #{self[:offset]} -1 #{zlig}"
         else
           write "$Get #{self[:download].file}$#{self[:offset] + 1}"
         end
-        @handshake_step = 5
-        @socket.sync = true
+        
+        # This is the thread for the timeout of a connection. The @exit_time variable
+        # is reset to 20 after every bit of information is received.
+        @exit_time = 20
+        @exit_thread = Thread.start { 
+          while @exit_time > 0
+            sleep 1
+            @exit_time -= 1
+            Fargo.logger.debug "#{self} time out in #{@exit_time} seconds"
+          end
+          download_timeout! 
+        }
         
         Fargo.logger.debug "#{self}: Beginning download of #{self[:download]}"
       end
@@ -190,17 +195,20 @@ module Fargo
       def download_timeout!
         Fargo.logger.debug "#{self}: Timeout of #{self[:download]}"
         
+        # cache because publishing must be at end of method and we're about to clear these
         path, download = download_path, self[:download]
 
         reset_download
         
         publish :download_failed, :nick => @other_nick, :download => download, 
                                   :file => path, :last_error => "Download timeout!"
+        @exit_thread = nil
       end
       
       def download_finished!
         Fargo.logger.debug "#{self}: Finished download of #{self[:download]}"
         
+        # cache because publishing must be at end of method and we're about to clear these
         path, download = download_path, self[:download]
         
         reset_download
@@ -209,6 +217,8 @@ module Fargo
       end
       
       def disconnect
+        Fargo.logger.debug "#{self} Disconnecting from: #{@other_nick}"
+        
         super
 
         if self[:download]
@@ -223,15 +233,20 @@ module Fargo
       private
       def reset_download
         @file.close unless @file.nil? || @file.closed?
+        File.delete(@file_path) if @file_path && File.exists?(@file_path) && File.size(@file_path) == 0
         
         @socket.sync = false if @socket
         @socket.flush if @socket
         
-        @exit_thread.exit if @exit_thread && @exit_thread.alive?
-        @exit_thread = nil
+        if @exit_thread != Thread.current # this was called from exit thread, don't kill it
+          @exit_thread.exit if @exit_thread && @exit_thread.alive?
+          @exit_thread = nil
+        end
         
+        # clear out these variables
         @zs = self[:offset] = @file_path = @zlib = self[:download] = @length = @recvd = nil        
 
+        # Go back to the get step
         @handshake_step = 5
       end
   
@@ -240,8 +255,12 @@ module Fargo
         return @file_path unless @file_path.nil?
         prefix = self[:client].download_dir
         filename = File.basename self[:download].file.gsub("\\", '/')
+        
+        @file_path = File.join(prefix, @other_nick, filename)
+        return @file_path unless File.exists?(@file_path)
+        
+        # Generate a file name which won't overwrite some previous one
         i = 0
-
         while File.exists?(@file_path = File.join(prefix, @other_nick, "#{i}-#{filename}"))
           i += 1
         end

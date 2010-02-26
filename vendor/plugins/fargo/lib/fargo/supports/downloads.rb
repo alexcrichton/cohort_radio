@@ -101,7 +101,7 @@ module Fargo
             connect_with arr[0]
           end
         }
-        
+        arr
       end
       
       private
@@ -119,19 +119,20 @@ module Fargo
         Fargo.logger.debug "#{self}: Locking download: #{download}"
         
         block = Proc.new{ |type, map|
+          Fargo.logger.debug "#{connection}: received: #{type.inspect} - #{map.inspect}"
           if type == :download_progress
             download.percent = map[:percent]
           elsif type == :download_started
             download.status = 'downloading'
           elsif type == :download_finished
+            connection.unsubscribe &block
             download.percent = 1
             download.status = 'finished'
             download_finished! user, false
-            connection.unsubscribe &block
           elsif type == :download_failed || type == :download_disconnected
+            connection.unsubscribe &block
             download.status = 'failed'
             download_finished! user, true
-            connection.unsubscribe &block
           end
         }
         
