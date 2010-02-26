@@ -35,7 +35,7 @@
 			</tr>
 			<% @jobs.each do |job| %>
 				<tr class='download'>
-					<td><%= File.basename job.payload_object.file.force_encoding('utf-8') if job.payload_object.file %></td>
+					<td><%= File.basename job.payload_object.file if job.payload_object.file %></td>
 					<td><%= job.run_at %></td>
 					<td><%= !job.locked_at.nil? %></td>
 					<td title="<%= job.last_error %>">

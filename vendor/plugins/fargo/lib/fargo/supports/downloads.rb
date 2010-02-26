@@ -176,9 +176,9 @@ module Fargo
             download = @to_download.pop
             if @timed_out.include? download.nick
               download.status = 'timeout'
-              (@failed_downloads[nick] ||= []) << download
+              (@failed_downloads[download.nick] ||= []) << download
             else
-              (@queued_downloads[nick] ||= []) << download
+              (@queued_downloads[download.nick] ||= []) << download
               start_download
             end
           }
@@ -187,11 +187,11 @@ module Fargo
         @to_remove = Queue.new
         @download_removal_thread = Thread.start {
           loop {
-            nick, file = @to_remove.pop
+            user, file = @to_remove.pop
             @downloading_lock.synchronize {
-              @queued_downloads[nick] ||= []
-              download = @queued_downloads[nick].detect{ |h| h.file == file }
-              @queued_downloads[nick].delete download unless download.nil?
+              @queued_downloads[user] ||= []
+              download = @queued_downloads[user].detect{ |h| h.file == file }
+              @queued_downloads[user].delete download unless download.nil?
             }
           }
         }
@@ -200,7 +200,8 @@ module Fargo
           if type == :connection_timeout
             connection_failed_with! hash[:nick] if @trying.include?(hash[:nick])
           elsif type == :hub_disconnected
-            @to_download.exit
+            @download_starter_thread.exit
+            @download_removal_thread.exit
           end
         }
       end
