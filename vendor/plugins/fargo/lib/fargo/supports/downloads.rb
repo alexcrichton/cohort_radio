@@ -33,15 +33,8 @@ module Fargo
         download = Download.new nick, file, tth, size
         download.percent = 0
         download.status = 'idle'
-        if @timed_out.include? nick
-          download.status = 'timeout'
-          (@failed_downloads[nick] ||= []) << download
-        else
-          @downloading_lock.synchronize { 
-            (@queued_downloads[nick] ||= []) << download
-          }
-          start_download
-        end
+        @to_download << download
+        true
       end
       
       def retry_download nick, file
@@ -52,16 +45,8 @@ module Fargo
       end
       
       def remove_download nick, file
-        return_val = nil
-        @downloading_lock.synchronize {
-          @queued_downloads[nick] ||= []
-          download = @queued_downloads[nick].detect{ |h| h.file == file }
-          return_val = @queued_downloads[nick].delete download unless download.nil?
-        }
-        
-        raise "The download: #{nick}:#{file} wasn't queued!" if return_val.nil?
-        
-        return_val
+        @to_remove << [nick, file]
+        true
       end
       
       def lock_next_download! user, connection
@@ -82,12 +67,12 @@ module Fargo
       def start_download
         return false if open_download_slots == 0 || @current_downloads.size + @trying.size > download_slots
         arr = nil
+
         @downloading_lock.synchronize {
           arr = @queued_downloads.to_a.detect{ |arr|
             nick, downloads = arr
             downloads.size > 0 && !@current_downloads.has_key?(nick) && !@trying.include?(nick) && !@timed_out.include?(nick) && has_slot?(nick)
           }
-
           return false if arr.nil? || arr.size == 0
 
           if connection_for arr[0]
@@ -185,9 +170,37 @@ module Fargo
         
         @open_download_slots = download_slots
         
+        @to_download = Queue.new
+        @download_starter_thread = Thread.start {
+          loop {
+            download = @to_download.pop
+            if @timed_out.include? download.nick
+              download.status = 'timeout'
+              (@failed_downloads[nick] ||= []) << download
+            else
+              (@queued_downloads[nick] ||= []) << download
+              start_download
+            end
+          }
+        }
+        
+        @to_remove = Queue.new
+        @download_removal_thread = Thread.start {
+          loop {
+            nick, file = @to_remove.pop
+            @downloading_lock.synchronize {
+              @queued_downloads[nick] ||= []
+              download = @queued_downloads[nick].detect{ |h| h.file == file }
+              @queued_downloads[nick].delete download unless download.nil?
+            }
+          }
+        }
+        
         subscribe { |type, hash|
           if type == :connection_timeout
             connection_failed_with! hash[:nick] if @trying.include?(hash[:nick])
+          elsif type == :hub_disconnected
+            @to_download.exit
           end
         }
       end
