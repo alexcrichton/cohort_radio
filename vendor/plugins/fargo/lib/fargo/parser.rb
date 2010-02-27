@@ -4,7 +4,7 @@ module Fargo
     #
     # See <http://www.teamfair.info/DC-Protocol.htm> for more information
     #
-    @@commandmatch    = /^\$(.*)$/
+    @@commandmatch    = /\$(.*)$/
     @@messagematch    = /^<(.*?)> (.*)$/
   
     # TODO: Supports, UserIP, ops command
@@ -46,6 +46,7 @@ module Fargo
     @@error         = /^Error (.*)$/
     @@ugetblock     = /^UGetBlock (.*?) (.*?) (.*)$/
     @@adcsnd        = /^ADCSND (.*?) (.*?) (.*?) (.*?)$/
+    @@adcsnd_zl1    = /^ADCSND (.*?) (.*?) (.*?) (.*?) ZL1$/
   
     def parse_message text
       case text
@@ -103,8 +104,10 @@ module Fargo
         when @@maxedout       then {:type => :noslots}
         when @@supports       then {:type => :supports, :extensions => $1.split(' ')}
         when @@error          then {:type => :error, :message => $1}
+        when @@adcsnd_zl1      then {:type => :adcsnd, :kind => $1, :tth => $2, :offset => $3.to_i, 
+                                    :size => $4.to_i, :zlib => true}
         when @@adcsnd         then {:type => :adcsnd, :kind => $1, :tth => $2, :offset => $3.to_i, 
-                                    :size => $4.to_i}
+                                                              :size => $4.to_i}
         when @@ugetblock      then {:type => :ugetblock, :start => $1.to_i, :finish => $2.to_i,
                                     :path => $3}
         when @@userip         then 

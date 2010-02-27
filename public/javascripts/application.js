@@ -12,6 +12,7 @@ $(function() {
   $('.song .links .remove').live('click', function() {
     var par = $(this).parents('.song');
     $.ajax({
+      type: 'DELETE',
       url: $(this).attr('href'),
       success: function() {
         par.remove();
@@ -108,7 +109,19 @@ $(function() {
     return false;
   });
   
-  $('#connections .disconnect').click(function(){
+  $('#connections tr.timeout a').live('click', function(){
+    var par = $(this).parents('td:first');
+    $.ajax({
+      url: $(this).attr('href'), 
+      success: function(data) {
+        par.html(data);
+      }
+    });
+    $(this).html(smallAjax);
+    return false;
+  });
+  
+  $('#connections .disconnect, #failed tr a').click(function(){
     var el = $(this).parents('tr');
     $(this).replaceWith(smallAjax);
     $.ajax({
@@ -137,9 +150,7 @@ $.fn.extend({
 
 $(function() {
   $('#search .result').bindSearchForms();
-});
 
-$(function(){
   $("#song-search #q").autocomplete('/songs/search', {
     matchContains: true,
     extraParams: {
@@ -147,7 +158,6 @@ $(function(){
       completion:'true',
     },
     cacheLength: 50,
-    // multiple: false,
     formatItem: function(row) {
       return row[0].replace(/\(\d+\)/, '');
     },

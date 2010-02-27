@@ -4,7 +4,7 @@ class Radio
     
     BLOCKSIZE = 1 << 16
     
-    @@tag_recoder = Iconv.new("utf-8", 'windows-1251')
+    @@tag_recoder = Iconv.new("utf-8", 'utf-8')
     
     attr_accessor :options
     attr_reader :current_song

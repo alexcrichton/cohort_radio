@@ -6,7 +6,7 @@ class Song < ActiveRecord::Base
   
   has_attached_file :audio, :path => ":rails_root/private/:class/:attachment/:id/:basename.:extension"
   
-  validates_uniqueness_of :title, :scope => [:artist], :if => :title_changed?
+  validates_uniqueness_of :title, :scope => [:artist], :if => :title_changed?, :case_sensitive => false
   validates_attachment_presence :audio
   validates_attachment_content_type :audio, :content_type => ['audio/mpeg', 'application/x-mp3', 'audio/mp3']
   

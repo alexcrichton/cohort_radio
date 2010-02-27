@@ -2,6 +2,7 @@ require 'socket'
 require 'thread'
 require 'logger'
 require 'fileutils'
+require 'zlib'
 
 require File.dirname(__FILE__) + '/fargo/utils'
 require File.dirname(__FILE__) + '/fargo/utils/publisher'

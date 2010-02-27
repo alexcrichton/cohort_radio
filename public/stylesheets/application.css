@@ -38,12 +38,12 @@ a {
   border: solid 1px #6C6;
 }
 
-.notice {
+.notice, .alert, .error {
   padding: 2px 5px;
   margin: 0;
 }
 
-#flash_error {
+#flash_error, .error, .alert, #flash_alert {
   background-color: #FCC;
   border: solid 1px #C66;
 }
@@ -102,6 +102,11 @@ a {
 .song .links {
   float: right;
   text-align: right;
+  width: 200px;
+}
+
+.song .content {
+  width: 420px;
 }
 
 .song .add:hover > a {
@@ -113,7 +118,7 @@ a {
   display: none;
   background: #ccc;
   padding: 0;
-  width: 200px;
+  width: 170px;
   border: 1px solid black;
   border-bottom: 0px;
 }

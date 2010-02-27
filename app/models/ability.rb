@@ -20,6 +20,10 @@ class Ability
       can [:read, :logout], User
       can [:search, :download], Fargo
       can :read, :all
+      can :create, QueueItem
+      can :destroy, QueueItem do |item|
+        item.user_id == user.id
+      end
     end
     
   end

@@ -6,12 +6,13 @@ gem 'cancan'
 gem 'authlogic'
 gem 'paperclip'
 gem 'ruby-mp3info', :require => 'mp3info'
-gem 'ruby-shout', :require => 'shout'
+# gem 'ruby-shout', :require => 'shout'
 gem 'delayed_job'
 gem 'exceptional'
 gem 'will_paginate', '3.0.pre'
 gem 'scrobbler'
 gem 'daemons'
+gem 'shout'
 
 # Not compatible with rails 3 just yet...
 # gem 'thinking-sphinx', :require => 'thinking_sphinx', :source => 'http://gemcutter.org/'
@@ -21,7 +22,6 @@ gem 'daemons'
 
 # ActiveRecord requires a database adapter. By default,
 # Rails has selected sqlite3.
-gem "sqlite3-ruby", :require => 'sqlite3'
 gem 'mysql'
 
 ## Bundle the gems you use:

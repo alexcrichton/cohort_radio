@@ -2,7 +2,8 @@ require 'fargo'
 
 opts = YAML.load_file "#{Rails.root}/config/fargo.yml"
 opts.symbolize_keys!
-opts[:client][:download_dir] = "#{Rails.root}/tmp/fargo/downloads"
+opts[:client].symbolize_keys!
+
 FileUtils.mkdir_p opts[:client][:download_dir] unless File.directory? opts[:client][:download_dir]
 
 Fargo::Client::DEFAULTS.merge! opts[:client].symbolize_keys! if opts[:client]

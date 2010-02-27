@@ -44,12 +44,7 @@ module Fargo
       self.active_server = Fargo::ActiveServer.new options.merge(:client => self, :port => active_port, :address => '127.0.0.1') unless passive
       post_setup if respond_to? :post_setup
       
-      hub.subscribe{ |type, hash| 
-        if type == :connect_with_me && @connection_timeout_threads.has_key?(nick)
-          @connection_timeout_threads.delete(nick).exit
-        end
-        publish type, hash 
-      }
+      hub.subscribe{ |type, hash| publish type, hash}
       searcher.subscribe{ |*args| publish *args } unless passive
       active_server.subscribe{ |*args| publish *args } unless passive
             
@@ -73,6 +68,11 @@ module Fargo
       else
         hub.write "$ConnectToMe #{nick} #{address}:#{active_port}"
       end
+    end
+    
+    def connected_with! nick
+      return unless @connection_timeout_threads.has_key?(nick)
+      @connection_timeout_threads.delete(nick).exit
     end
   
     def connect

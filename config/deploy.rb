@@ -4,7 +4,7 @@ ssh_options[:port] = 7779
 set :user, "capistrano"
 set :use_sudo, false
 
-set :rake, "/opt/ruby1.8/bin/rake"
+# set :rake, "/opt/ruby1.8/bin/rake"
 
 set :scm, :git
 set :repository, "git://github.com/alexcrichton/cohort_radio.git"

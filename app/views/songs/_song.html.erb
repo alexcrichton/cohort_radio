@@ -1,13 +1,13 @@
 <div class="song">
 	<div class='image'>
-		<%= image_tag song.album_image_url if song.album_image_url %>
+		<%= image_tag song.album_image_url, :width => '126' if song.album_image_url %>
 	</div>
 	<div class='content'>
-		<h3><%= song.display_title %></h3>
-		<h5>
-			<%= song.artist %> 
-			<%= raw "&mdash; #{song.album}" unless song.album.blank? %>
-		</h5>
+		<h3><%= truncate song.display_title %></h3>
+		<h5><%= truncate song.artist %></h5>
+		<% unless song.album.blank? %>
+			<h5><%= truncate song.album %></h5>
+		<% end %>
 		<p>
 			Play count: <%= song.play_count %>
 		</p>
@@ -19,13 +19,12 @@
 					Queued by: <%= item.user.name if item.user %>
 				</p>
 			<% end %>
-			<%= link_to '[download]', download_song_path(song) %>
-			<% if can? :manage, song %>
-				<%= link_to '[edit]', edit_song_path(song) %>
-				<%= link_to '[destroy]', song, :method => :delete, :confirm => 'are you sure?' %>
-			<% end %>
-			<% if defined?(item) && can?(:manage, @playlist) %>
-				<br/><%= link_to '[remove]', dequeue_playlist_path(@playlist) + "?" + {:queue_item_id => item.id}.to_query, :class => 'remove' %>
+			<%= link_to '[download]', download_song_path(song) if can? :download, song %>
+			<%= link_to '[edit]', edit_song_path(song) if can? :update, song %>
+			<%= link_to '[destroy]', song, :method => :delete, :confirm => 'are you sure?' if can? :destroy, song %>
+
+			<% if defined?(item) && can?(:destroy, item) %>
+				<br/><%= link_to '[remove]', playlist_queue_item_path(@playlist, item), :class => 'remove' %>
 			<% end %>
 		</p>
 		<% if @playlist.nil? %>
@@ -35,7 +34,7 @@
 				<ul>
 					<% playlists.each do |playlist| %>
 						<li>
-							<%= link_to playlist.name, enqueue_playlist_path(playlist) + '?' + {:song_id => song.id}.to_query %>
+							<%= link_to playlist.name, new_playlist_queue_item_path(playlist) + '?' + {:song_id => song.id}.to_query %>
 						</li>
 					<% end %>
 				</ul>

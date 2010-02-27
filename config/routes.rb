@@ -7,8 +7,9 @@ CohortRadio::Application.routes.draw do |map|
   
   namespace :fargo do
     resources :downloads do
-      get :retry, :on => :member
+      get :retry, :on => :collection
       get :remove, :on => :member
+      get :try, :on => :collection
     end
     resource :search
   end
@@ -18,10 +19,9 @@ CohortRadio::Application.routes.draw do |map|
       get :add
       get :remove
     end
-    
-    post :enqueue, :on => :member
-    get :enqueue, :on => :member
-    get :dequeue, :on => :member
+    resources :queue_items do 
+      post :new, :on => :collection
+    end
   end
 
   resource :user, :except => [:show] do

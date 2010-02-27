@@ -1,7 +1,7 @@
 class Fargo::DownloadsController < ApplicationController
 
-  before_filter(:except => :index){ |c| c.unauthorized! if c.cannot? :manage, Fargo }
-  before_filter(:only => :index){ |c| c.unauthorized! if c.cannot? :download, Fargo }
+  before_filter(:except => [:index, :retry]){ |c| c.unauthorized! if c.cannot? :manage, Fargo }
+  before_filter(:only => [:index, :retry]){ |c| c.unauthorized! if c.cannot? :download, Fargo }
     
   before_filter :require_fargo_connected
     
@@ -24,7 +24,7 @@ class Fargo::DownloadsController < ApplicationController
     fargo.retry_download params[:nick], params[:file]
     
     if request.xhr?
-      render :text => '<span class="notice">Queued</span>'
+      render :text => '<span class="notice">Retried</span>'
     else
       flash[:notice] = "Retrying download. Give it a few seconds to update and/or propagate"
       redirect_to fargo_downloads_path
@@ -42,6 +42,17 @@ class Fargo::DownloadsController < ApplicationController
       redirect_to fargo_downloads_path
     end
     
+  end
+  
+  def try
+    fargo.try_again params[:nick]
+
+    if request.xhr?
+      render :text => '<span class="notice">Trying</span>'
+    else
+      flash[:notice] = "Trying #{params[:nick]} again"
+      redirect_to fargo_downloads_path
+    end
   end
   
   def destroy

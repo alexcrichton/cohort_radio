@@ -12,9 +12,8 @@
 			<% end %>
 		<% end %>
 	</div>
-	<% form_tag enqueue_playlist_path(@playlist), :id => 'song-search' do %>
+	<% form_tag new_playlist_queue_item_path(@playlist), :id => 'song-search' do %>
 		<div>
-			<%= hidden_field_tag :playlist_id, @playlist.slug %>
 			<%= text_field_tag :q, '', :autocomplete => 'off', :placeholder => 'Add a song to this queue' %>
 			<%= submit_tag "Add" %>
 		</div>
@@ -25,7 +24,7 @@
 	<% if radio_connected? && radio.playing?(@playlist) %>
 		<p>
 			Stream url: <%= raw auto_link(@playlist.stream_url) %><br/>
-			Current Song: <%= radio.current_song(@playlist).display_title %>
+			Current Song: <%= truncate radio.current_song(@playlist).display_title %>
 		</p>
 		<!-- <audio src="<%= @playlist.stream_url %>" controls='controls' autobuffer='autobuffer'></audio> -->
 	<% else %>
