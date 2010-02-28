@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100223214907) do
+ActiveRecord::Schema.define(:version => 20100227074202) do
 
   create_table "activations", :force => true do |t|
     t.integer  "user_id"
@@ -31,12 +31,21 @@ ActiveRecord::Schema.define(:version => 20100223214907) do
     t.datetime "updated_at"
   end
 
+  create_table "memberships", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "playlist_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "playlists", :force => true do |t|
     t.string   "name"
     t.text     "description"
     t.string   "slug"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
+    t.boolean  "private",     :default => false
   end
 
   create_table "playlists_users", :id => false, :force => true do |t|

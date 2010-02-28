@@ -33,6 +33,7 @@
 				<%= link_to "[add to queue]", '#' %>
 				<ul>
 					<% playlists.each do |playlist| %>
+					<% next if cannot? :add_to, playlist.pool %>
 						<li>
 							<%= link_to playlist.name, new_playlist_queue_item_path(playlist) + '?' + {:song_id => song.id}.to_query %>
 						</li>
@@ -43,6 +44,7 @@
 				<%= link_to "[add to pool]", '#' %>
 				<ul>
 					<% playlists.each do |playlist| %>
+						<% next if cannot? :add_to, playlist.pool %>
 						<li>
 							<%= link_to playlist.name, add_playlist_pool_path(playlist) + '?' + {:song_id => song.id}.to_query %>
 						</li>

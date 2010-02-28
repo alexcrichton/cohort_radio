@@ -1,8 +1,9 @@
 class User < ActiveRecord::Base
   acts_as_authentic
   
-  has_many :queue_items
-  has_and_belongs_to_many :playlists
+  has_many :queue_items, :dependent => :destroy
+  has_many :memberships, :dependent => :destroy
+  has_many :playlists, :through => :memberships
 
   attr_accessible :name, :email, :password, :password_confirmation
   has_one :activation, :dependent => :destroy
@@ -20,7 +21,7 @@ class User < ActiveRecord::Base
   end
 
   def deliver_activation_instructions!
-    Activation.create(:state => 'pending', :user => self)
+    Activation.create!(:state => 'pending', :user => self)
     reset_perishable_token!
     Notifier.send_later :deliver_activation_instructions, self
   end

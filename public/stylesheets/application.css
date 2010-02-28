@@ -20,7 +20,7 @@ a {
 }
 
 #container {
-  width: 75%;
+  width: 900px;
   margin: 0 auto;
   background-color: #FFF;
   border: solid 3px black;
@@ -113,7 +113,17 @@ a {
   display: none;
 }
 
+.song .add {
+/*  position: relative;*/
+/*  overflow: visible;*/
+/*  top: 0;*/
+/*  left: 0;*/
+}
+
 .song .add ul {
+/*  position: absolute;*/
+/*  z-index: 2;*/
+/*  float: left;*/
   list-style: none;
   display: none;
   background: #ccc;

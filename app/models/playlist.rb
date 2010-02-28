@@ -6,16 +6,22 @@ class Playlist < ActiveRecord::Base
   
   acts_with_slug
   
-  has_many :queue_items, :order => 'priority ASC, created_at ASC'
+  has_many :queue_items, :order => 'priority ASC, created_at ASC', :dependent => :destroy
   has_many :songs, :through => :queue_items
-  has_and_belongs_to_many :users
+
+  has_many :memberships, :dependent => :destroy
+  has_many :users, :through => :memberships
   
-  has_one :pool
+  belongs_to :user
+  
+  has_one :pool, :dependent => :destroy
   
   after_create :create_pool
   
   validates_presence_of :name
   validates_uniqueness_of :name, :if => :name_changed?, :case_sensitive => false
+  
+  attr_protected :private
   
   def ice_mount_point
     return "/#{slug}" if Rails.env.production?

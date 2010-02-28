@@ -3,10 +3,10 @@ class PoolsController < ApplicationController
   authorize_resource
   
   def show
-    @songs = @playlist.pool.songs
+    @songs = @playlist.pool.songs.paginate :page => params[:page]
   end
   
-  def add
+  def add_to
     @playlist.pool.songs << @song
     
     if request.xhr?
@@ -17,7 +17,7 @@ class PoolsController < ApplicationController
     end
   end
   
-  def remove
+  def remove_from
     @playlist.pool.songs.delete @song
     
     if request.xhr?
