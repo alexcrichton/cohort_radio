@@ -170,42 +170,50 @@ module Fargo
         
         @open_download_slots = download_slots
         
-        @to_download = Queue.new
-        @download_starter_thread = Thread.start {
-          loop {
-            download = @to_download.pop
-            if @timed_out.include? download.nick
-              download.status = 'timeout'
-              (@failed_downloads[download.nick] ||= []) << download
-            else
-              (@queued_downloads[download.nick] ||= []) << download
-              start_download
-            end
-          }
-        }
-        
-        @to_remove = Queue.new
-        @download_removal_thread = Thread.start {
-          loop {
-            user, file = @to_remove.pop
-            @downloading_lock.synchronize {
-              @queued_downloads[user] ||= []
-              download = @queued_downloads[user].detect{ |h| h.file == file }
-              @queued_downloads[user].delete download unless download.nil?
-            }
-          }
-        }
-        
         subscribe { |type, hash|
           if type == :connection_timeout
             connection_failed_with! hash[:nick] if @trying.include?(hash[:nick])
           elsif type == :hub_disconnected
-            @download_starter_thread.exit
-            @download_removal_thread.exit
+            exit_download_queue_threads
+          elsif type == :hub_connection_opened
+            start_download_queue_threads
           end
         }
       end
       
+    end
+    
+    def exit_download_queue_threads
+      @download_starter_thread.exit
+      @download_removal_thread.exit
+    end
+    
+    def start_download_queue_threads
+      @to_download = Queue.new
+      @download_starter_thread = Thread.start {
+        loop {
+          download = @to_download.pop
+          if @timed_out.include? download.nick
+            download.status = 'timeout'
+            (@failed_downloads[download.nick] ||= []) << download
+          else
+            (@queued_downloads[download.nick] ||= []) << download
+            start_download
+          end
+        }
+      }
+      
+      @to_remove = Queue.new
+      @download_removal_thread = Thread.start {
+        loop {
+          user, file = @to_remove.pop
+          @downloading_lock.synchronize {
+            @queued_downloads[user] ||= []
+            download = @queued_downloads[user].detect{ |h| h.file == file }
+            @queued_downloads[user].delete download unless download.nil?
+          }
+        }
+      }
     end
     
   
