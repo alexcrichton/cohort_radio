@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   scope :state, lambda{ |state| includes(:activation).where('activations.state = ?', state) }
   scope :admins, where(:admin => true)
   scope :search, Proc.new{ |query| where('name LIKE :q or email LIKE :q', :q => "%#{query}%") }
+  scope :not, Proc.new{ |*ids| where('id NOT IN (?)', ids.size == 0 ? [0] : ids) }
   
   def active?
     activation && activation.activated?

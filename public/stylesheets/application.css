@@ -321,3 +321,7 @@ dl dd {
 
 tr td.header {background:#066;color:#fff;padding-left:5px;font-weight:bold;}
 
+#memberships #q {
+  font-size: 150%;
+  width: 300px;
+}

@@ -42,6 +42,10 @@ class Ability
         item.user_id == user.id
       end
       
+      can [:create, :destroy], Membership do |membership|
+        parent.is_a?(Playlist) && parent.user_id == user.id
+      end
+      
     end
     
   end

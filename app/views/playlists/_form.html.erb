@@ -22,8 +22,9 @@
 		</ul>
 		<% form_for @playlist.memberships.build, :url => playlist_memberships_path(@playlist) do |f| %>
 			<div>
-				<%= f.label :user_id, 'Add:' %>
 				<%= text_field_tag :q %>
+				<%= f.submit 'Add' %>
+			</div>
 		<% end %>
 	</div>
 <% end %>

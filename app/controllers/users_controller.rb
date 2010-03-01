@@ -53,7 +53,11 @@ class UsersController < ApplicationController
   end
   
   def search
-    @users = params[:q].blank? ? [] : User.search(params[:q]).limit(params[:limit])
+    if params[:q].blank?
+      @users = []
+    else
+      @users = User.search(params[:q]).limit(params[:limit])#.not(params[:user_ids])
+    end
   end
   
 end
