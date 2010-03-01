@@ -42,9 +42,9 @@ class ApplicationController < ActionController::Base
     @current_user = current_user_session && current_user_session.user
   end
   
-  # def current_ability
-  #   Ability.new current_user, @parent
-  # end
+  def current_ability
+    Ability.new current_user, @parent
+  end
 
   def store_location
     session[:return_to] = request.request_uri

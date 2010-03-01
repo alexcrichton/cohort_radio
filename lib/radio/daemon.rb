@@ -43,6 +43,7 @@ class Radio
             Exceptional.handle e
           end
         end
+        # needed to log for some reason in production mode
         Rails.logger.auto_flushing = true
         
         begin
