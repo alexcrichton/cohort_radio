@@ -27,6 +27,9 @@
 				<br/><%= link_to '[remove]', playlist_queue_item_path(@playlist, item), :class => 'remove' %>
 			<% end %>
 		</p>
+		<% if @pool %>
+			<%= link_to "[remove from pool]", remove_playlist_pool_path(@playlist) + '?' + {:song_id => song.id}.to_query, :class => 'pool-remove' %>
+		<% end %>
 		<% if @playlist.nil? %>
 			<% playlists = Playlist.all%>
 			<div class='add'>
@@ -44,7 +47,7 @@
 				<%= link_to "[add to pool]", '#' %>
 				<ul>
 					<% playlists.each do |playlist| %>
-						<% next if cannot? :add_to, playlist.pool %>
+						<% next if cannot?(:add_to, playlist.pool) || song.pools.include?(playlist.pool) %>
 						<li>
 							<%= link_to playlist.name, add_playlist_pool_path(playlist) + '?' + {:song_id => song.id}.to_query %>
 						</li>

@@ -9,10 +9,10 @@ $(function() {
 });
 
 $(function() {
-  $('.song .links .remove').live('click', function() {
+  $('.song .links .remove, .song .pool-remove').live('click', function() {
     var par = $(this).parents('.song');
     $.ajax({
-      type: 'DELETE',
+      type: $(this).is('.pool-remove') ? 'GET' : 'DELETE',
       url: $(this).attr('href'),
       success: function() {
         par.remove();

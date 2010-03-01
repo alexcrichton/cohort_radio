@@ -162,7 +162,13 @@ class Radio
     end
     
     def random_song
-      ids = Song.select(:id).map &:id
+      if playlist.pool.songs.count > 0
+        ids = playlist.pool.songs
+      else
+        ids = Song
+      end
+      ids = ids.select(:id).map &:id
+      
       Song.find ids[rand(ids.size)]
     end
     

@@ -3,11 +3,15 @@ class PoolsController < ApplicationController
   authorize_resource
   
   def show
-    @songs = @playlist.pool.songs.paginate :page => params[:page]
+    @pool = @playlist.pool
+    @songs = @playlist.pool.songs.paginate :page => params[:page], :per_page => 10
+    if request.xhr?
+      render :inline => '<% paginated_section @songs do %><%= render @songs %><% end %>'
+    end
   end
   
-  def add_to
-    @playlist.pool.songs << @song
+  def add
+    @playlist.pool.songs << @song unless @playlist.pool.songs.include?(@song)
     
     if request.xhr?
       render :text => "<span class='notice'>Added</span>"
@@ -17,8 +21,8 @@ class PoolsController < ApplicationController
     end
   end
   
-  def remove_from
-    @playlist.pool.songs.delete @song
+  def remove
+    @playlist.pool.songs.delete @song 
     
     if request.xhr?
       render :text => "<span class='notice'>Removed</span>"
