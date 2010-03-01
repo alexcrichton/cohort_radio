@@ -28,7 +28,7 @@
 			<% end %>
 		</p>
 		<% if @pool %>
-			<%= link_to "[remove from pool]", remove_playlist_pool_path(@playlist) + '?' + {:song_id => song.id}.to_query, :class => 'pool-remove' %>
+			<%= link_to "[remove from pool]", remove_playlist_pool_path(@playlist) + '?' + {:song_id => song.id}.to_query, :class => 'pool-remove' if can? :remove_from, @playlist.pool %>
 		<% end %>
 		<% if @playlist.nil? %>
 			<% playlists = Playlist.all%>

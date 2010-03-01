@@ -24,6 +24,12 @@ class Ability
       can [:search, :download], Fargo
       can :read, :all
       
+      can :create, Comment
+      
+      can :manage, Comment do |comment|
+        comment.user_id == user.id
+      end
+      
       can :create, QueueItem do |queue_item|
         parent.is_a?(Playlist) && can?(:add_to, parent.pool)
       end
