@@ -5,7 +5,7 @@ class CommentsController < ApplicationController
   respond_to :html
   
   def index
-    respond_with(@comments = Comment.scoped.paginate(:page => params[:page]))
+    respond_with(@comments = @song.comments.paginate(:page => params[:page]))
   end
   
   def show
@@ -13,13 +13,27 @@ class CommentsController < ApplicationController
   end
   
   def new
-    respond_with @comment = Comment.new
+    respond_with @comment = @song.comments.build
   end
     
   def create
-    @comment = Comment.new(params[:comment])
-    flash[:notice] = "Successfully created comment." if @comment.save
-    respond_with @comment
+    @comment = @song.comments.new(params[:comment])
+    @comment.user = current_user 
+    
+    if @comment.save
+      flash[:notice] = "Successfully created comment."
+      if request.xhr?
+        render @comment
+      else
+        redirect_to @song
+      end
+    else      
+      if request.xhr?
+        render :text => @comment.errors 
+      else
+        render :action => 'new'
+      end
+    end
   end
   
   def edit
@@ -27,13 +41,29 @@ class CommentsController < ApplicationController
   end
   
   def update
-    flash[:notice] = "Successfully updated comment." if @comment.update_attributes(params[:comment])
-    respond_with @comment
+    if @comment.update_attributes(params[:comment])
+      if request.xhr?
+        render @comment
+      else
+        flash[:notice] = "Successfully updated comment."
+        redirect_to @song
+      end
+    else
+      if request.xhr?
+        render :text => @comment.errors
+      else
+        render :action => 'edit'
+      end
+    end
   end
   
   def destroy
     @comment.destroy
-    redirect_to comments_url, :notice => "Successfully destroyed comment."
+    if request.xhr?
+      render :text => 'success'
+    else
+      redirect_to @song, :notice => "Successfully destroyed comment."
+    end
   end
   
 end

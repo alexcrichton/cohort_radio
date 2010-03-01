@@ -86,7 +86,7 @@ a {
   list-style: disc;
 }
 
-.song {
+.song, .comment {
   clear: both;
   overflow: auto;
   border: 3px solid #ccc;
@@ -94,18 +94,18 @@ a {
   -mozilla-border-radius: 20px;
 }
 
-.song div {
+.song div, .comment div {
   float: left;
   margin: 10px;
 }
 
-.song .links {
+.song .links, .comment .links {
   float: right;
   text-align: right;
   width: 200px;
 }
 
-.song .content {
+.song .content, .comment .content {
   width: 420px;
 }
 

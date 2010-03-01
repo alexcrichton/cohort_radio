@@ -1,6 +1,7 @@
 CohortRadio::Application.routes.draw do |map|
   
   resources :songs do 
+    resources :comments
     get :search, :on => :collection
     get :download, :on => :member
   end

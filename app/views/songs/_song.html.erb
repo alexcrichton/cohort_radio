@@ -3,7 +3,7 @@
 		<%= image_tag song.album_image_url, :width => '126' if song.album_image_url %>
 	</div>
 	<div class='content'>
-		<h3><%= truncate song.display_title %></h3>
+		<h3><%= link_to truncate(song.display_title), song %></h3>
 		<h5><%= truncate song.artist %></h5>
 		<% unless song.album.blank? %>
 			<h5><%= truncate song.album %></h5>

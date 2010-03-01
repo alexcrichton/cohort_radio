@@ -1,6 +1,6 @@
 class Song < ActiveRecord::Base
   
-  has_many :comments, :dependent => :destroy
+  has_many :comments, :dependent => :destroy, :order => 'created_at DESC'
   has_many :queue_items, :dependent => :destroy
   has_many :playlists, :through => :queue_items
   has_and_belongs_to_many :pools

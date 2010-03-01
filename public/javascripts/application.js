@@ -9,6 +9,69 @@ $(function() {
 });
 
 $(function() {
+  $('#comments > .links .add, #comments > .links .cancel').click(function(){
+    $(this).parents('.links').children().toggle();
+    return false;
+  });
+  
+  $('#comments > .links form').ajaxForm({
+    beforeSubmit: function() {
+      $(smallAjax).insertAfter($('#comments > .links form input[type=submit]').attr('disabled', 'disabled'));
+    },
+    success: function(data) {
+      var form = $(data);
+      form.find('form').bindCommentForm();
+      form.insertAfter('#comments > .links');
+      $('img.loading').remove();
+      $('#comments > .links form').parent().hide().prev().show();
+      $('#comments > .links form input[type=submit]').removeAttr('disabled');
+    },
+    resetForm: true
+  });
+  
+  $('#comments .comment .edit, #comments .comment .cancel').live('click', function() {
+    var par = $(this).parents('.comment');
+    par.find('.content, .form').toggle();
+    return false;
+  });
+  
+  $('#comments .comment form').bindCommentForm();
+  
+  $('.comment .links .remove').live('click', function() {
+    var par = $(this).parents('.comment');
+    $.ajax({
+      type: 'DELETE',
+      url: $(this).attr('href'),
+      success: function() {
+        par.remove();
+      }
+    });
+    $(this).replaceWith(smallAjax);
+    return false;
+  });
+  
+});
+
+$.fn.extend({
+  bindCommentForm: function() {
+    $(this).ajaxForm({
+      beforeSubmit: function(args, form) {
+        $(smallAjax).insertAfter(form.find('input[type=submit]').attr('disabled', 'disabled'));
+      },
+      success: function(data) {
+        var form = $('img.loading').parents('form');
+        form.find('img.loading').remove();
+        form.find('input[type=submit]').removeAttr('disabled');
+        var newform = $(data);
+        newform.find('form').bindCommentForm();
+        form.parents('.comment').replaceWith(newform);
+      },
+      resetForm: true
+    });
+  }
+});
+
+$(function() {
   $('.song .links .remove, .song .pool-remove').live('click', function() {
     var par = $(this).parents('.song');
     $.ajax({
