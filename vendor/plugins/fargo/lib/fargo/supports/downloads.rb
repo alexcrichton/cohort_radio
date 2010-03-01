@@ -170,6 +170,23 @@ module Fargo
         
         @open_download_slots = download_slots
         
+        subscribe { |type, hash|
+          if type == :connection_timeout
+            connection_failed_with! hash[:nick] if @trying.include?(hash[:nick])
+          elsif type == :hub_disconnected
+            exit_download_queue_threads
+          elsif type == :hub_connection_opened
+            start_download_queue_threads
+          end
+        }
+      end
+      
+      def exit_download_queue_threads
+        @download_starter_thread.exit
+        @download_removal_thread.exit
+      end
+
+      def start_download_queue_threads
         @to_download = Queue.new
         @download_starter_thread = Thread.start {
           loop {
@@ -183,7 +200,7 @@ module Fargo
             end
           }
         }
-        
+
         @to_remove = Queue.new
         @download_removal_thread = Thread.start {
           loop {
@@ -195,19 +212,8 @@ module Fargo
             }
           }
         }
-        
-        subscribe { |type, hash|
-          if type == :connection_timeout
-            connection_failed_with! hash[:nick] if @trying.include?(hash[:nick])
-          elsif type == :hub_disconnected
-            @download_starter_thread.exit
-            @download_removal_thread.exit
-          end
-        }
       end
-      
-    end
-    
-  
-  end
-end
+
+    end # Downloads  
+  end # Supports
+end # Fargo
