@@ -1,7 +1,7 @@
 class Ability
   include CanCan::Ability
   
-  def initialize user, parent
+  def initialize user, parent = nil
     
     can :home, User  
       
@@ -34,9 +34,8 @@ class Ability
         parent.is_a?(Playlist) && can?(:add_to, parent.pool)
       end
       
-      can [:add_to, :remove_from], Pool do |pool|
-        puts pool
-        !pool.playlist.private || pool.playlist.users.include?(user)
+      can :manage, Pool do |action, pool|
+        !pool.playlist.private || pool.playlist.user_ids.include?(user.id)
       end
       
       can :destroy, QueueItem do |item|

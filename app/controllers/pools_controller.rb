@@ -1,9 +1,9 @@
 class PoolsController < ApplicationController
   
+  before_filter :set_pool
   authorize_resource
   
   def show
-    @pool = @playlist.pool
     @songs = @playlist.pool.songs.paginate :page => params[:page], :per_page => 10
     if request.xhr?
       render :inline => '<% paginated_section @songs do %><%= render @songs %><% end %>'
@@ -30,6 +30,11 @@ class PoolsController < ApplicationController
       flash[:notice] = "Song removed from pool"
       redirect_to playlist_pool_path(@playlist)
     end
+  end
+  
+  private
+  def set_pool
+    @pool = @playlist.pool
   end
   
 end

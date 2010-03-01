@@ -39,7 +39,11 @@ module Fargo
       
       def retry_download nick, file
         download = (@failed_downloads[nick] ||= []).detect{ |h| h.file == file }
-        raise "Download of: #{nick}:#{file} isn't failed!" if download.nil?
+        if download.nil?
+          Fargo.logger.warn "#{self}: #{file} isn't a failed download for: #{nick}!"
+          return
+        end
+        
         @failed_downloads[nick].delete download
         download download.nick, download.file, download.tth, download.size
       end

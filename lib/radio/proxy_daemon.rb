@@ -8,6 +8,8 @@ class Radio
     end
     
     def run
+      ActiveRecord::Base.connection.reconnect!
+      
       radio = Radio.new
       
       @thread = Thread.current
@@ -15,10 +17,15 @@ class Radio
       proxy = Radio::Proxy::Server.new :for => radio, :port => @port || DEFAULTS[:port]
       proxy.connect
 
-      trap("INT")  { proxy.disconnect; radio.disconnect; exit }
-      trap("TERM") { proxy.disconnect; radio.disconnect; exit }
+      trap("INT")  { Rails.logger.info 'exiting...'; $exit = true }
+      trap("TERM") { Rails.logger.info 'exiting...'; $exit = true }
       
-      sleep
+      while !$exit
+        sleep 5
+      end
+      
+      proxy.disconnect
+      radio.disconnect
       
     end
     

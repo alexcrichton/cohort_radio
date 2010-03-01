@@ -6,7 +6,8 @@ class Radio
     @@enqueue_lock = Mutex.new
     
     def run
-      Fargo.logger = ::Rails.logger
+      Fargo.logger = Rails.logger
+      ActiveRecord::Base.connection.reconnect!
       
       client = Fargo::Client.new
       
@@ -23,11 +24,17 @@ class Radio
           @converting << thread
         end
       }
-
-      trap("INT")  { proxy.disconnect; client.disconnect; finish_conversions; exit }
-      trap("TERM") { proxy.disconnect; client.disconnect; finish_conversions; exit }
-
-      sleep
+      
+      trap('TERM') { Fargo.logger.info 'Exiting...'; $exit = true }
+      trap('INT')  { Fargo.logger.info 'Exiting...'; $exit = true }
+      
+      while !$exit
+        sleep 5
+      end
+      
+      proxy.disconnect
+      client.disconnect
+      finish_conversions
     end
     
     def finish_conversions
@@ -40,7 +47,7 @@ class Radio
       # pool running low as a result of many downloads finishing simultaneously. A pool
       # of 10 ran out very quickly.
       @@enqueue_lock.synchronize { 
-        Fargo.logger.debug "Queueing create song job for: #{file.inspect}"
+        Fargo.logger.info "Queueing create song job for: #{file.inspect}"
         ActiveRecord::Base.verify_active_connections!
         Delayed::Job.enqueue CreateSongJob.new(file)
       }
@@ -49,6 +56,6 @@ class Radio
     def daemon_name
       'fargo'
     end
-    
+        
   end
 end

@@ -32,19 +32,23 @@ class Radio
         @files_to_reopen << file unless file.closed?
       end
       Daemons.run_proc(daemon_name, :dir => "#{::Rails.root}/tmp/pids", :dir_mode => :normal, :ARGV => @args) do |*args|  
-        Dir.chdir ::Rails.root
+        Dir.chdir Rails.root
+        
+        # re-open file handles
         @files_to_reopen.each do |file|
           begin
-            file.reopen File.join(::Rails.root, 'log', "#{daemon_name}.log"), 'w+'
+            file.reopen File.join(Rails.root, 'log', "#{daemon_name}.log"), 'w+'
             file.sync = true
           rescue ::Exception => e
             Exceptional.handle e
           end
         end
+        Rails.logger.auto_flushing = true
+        
         begin
           run
         rescue => e
-          ::Rails.logger.fatal e
+          Rails.logger.fatal e
           Exceptional.handle e
           STDERR.puts e.message
           exit 1
