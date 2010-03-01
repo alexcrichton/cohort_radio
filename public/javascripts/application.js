@@ -212,6 +212,34 @@ $.fn.extend({
 });
 
 $(function() {
+  $('#memberships li a').live('click', function() {
+    var par = $(this).parents('li');
+    $.ajax({
+      url: $(this).attr('href'),
+      type: 'DELETE',
+      success: function() {
+        par.remove();
+      }
+    });
+    $(this).replaceWith(smallAjax);
+    return false;
+  });
+  $("#memberships form #q").autocomplete('/users/search', {
+    matchContains: true,
+    cacheLength: 50,
+    formatItem: function(row) {
+      return row[0].replace(/\(\d+\)/, '');
+    },
+    formatResult: function(arr) {
+      return arr[0].replace(/\s*\(\d+\)$/, '');
+    }
+  }).result(function(event, data, formatted) {
+    var id = formatted.match(/\((\d+)\)/)[1];
+    $('<input type="hidden" value="' + id + '" name="user_id" />').insertAfter($(this));
+  });  
+});
+
+$(function() {
   $('#search .result').bindSearchForms();
 
   $("#song-search #q").autocomplete('/songs/search', {

@@ -52,4 +52,8 @@ class UsersController < ApplicationController
     redirect_to edit_activation_url, :notice => "Successfully destroyed user."
   end
   
+  def search
+    @users = params[:q].blank? ? [] : User.search(params[:q]).limit(params[:limit])
+  end
+  
 end

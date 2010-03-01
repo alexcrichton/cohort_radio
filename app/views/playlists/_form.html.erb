@@ -11,3 +11,19 @@
 
   <p><%= f.submit "Submit" %></p>
 <% end %>
+
+<% unless @playlist.new_record? %>
+	<h3>Users Allowed to this Playlist</h3>
+	<div id='memberships'>
+		<ul>
+			<% @playlist.memberships.each do |membership| %>
+			<li><%= membership.user.name %> <%= link_to '[remove]', playlist_membership_path(@playlist, membership) %></li>
+			<% end %>
+		</ul>
+		<% form_for @playlist.memberships.build, :url => playlist_memberships_path(@playlist) do |f| %>
+			<div>
+				<%= f.label :user_id, 'Add:' %>
+				<%= text_field_tag :q %>
+		<% end %>
+	</div>
+<% end %>

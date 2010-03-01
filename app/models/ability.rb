@@ -35,7 +35,7 @@ class Ability
       end
       
       can :manage, Pool do |action, pool|
-        !pool.playlist.private || pool.playlist.user_ids.include?(user.id)
+        !pool.playlist.private || pool.playlist.user_id == user.id || pool.playlist.user_ids.include?(user.id)
       end
       
       can :destroy, QueueItem do |item|

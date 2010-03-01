@@ -23,6 +23,7 @@ CohortRadio::Application.routes.draw do |map|
     resources :queue_items do 
       post :new, :on => :collection
     end
+    resources :memberships
   end
 
   resource :user, :except => [:show] do
