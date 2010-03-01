@@ -13,11 +13,13 @@
 			<% end %>
 		<% end %>
 	</div>
-	<% form_tag new_playlist_queue_item_path(@playlist), :id => 'song-search' do %>
-		<div>
-			<%= text_field_tag :q, '', :autocomplete => 'off', :placeholder => 'Add a song to this queue' %>
-			<%= submit_tag "Add" %>
-		</div>
+	<% if can? :add_to, @playlist.pool %>
+		<% form_tag new_playlist_queue_item_path(@playlist), :id => 'song-search' do %>
+			<div>
+				<%= text_field_tag :q, '', :autocomplete => 'off', :placeholder => 'Add a song to this queue' %>
+				<%= submit_tag "Add" %>
+			</div>
+		<% end %>
 	<% end %>
 </div>
 
