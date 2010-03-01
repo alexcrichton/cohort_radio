@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   acts_as_authentic
   
+  has_many :comments, :dependent => :destroy
   has_many :queue_items, :dependent => :destroy
   has_many :memberships, :dependent => :destroy
   has_many :playlists, :through => :memberships
