@@ -6,6 +6,8 @@ class CreateArtists < ActiveRecord::Migration
 
       t.timestamps
     end
+    
+    add_index :artists, :slug
   end
 
   def self.down
