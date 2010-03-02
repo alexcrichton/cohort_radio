@@ -20,9 +20,11 @@ CohortRadio::Application.routes.draw do |map|
       get :add, :as => 'pool' # hack to get naming right
       get :remove, :as => 'pool'
     end
+    
     resources :queue_items do 
       post :new, :on => :collection
     end
+    
     resources :memberships
   end
 

@@ -79,7 +79,7 @@ class Playlist < ActiveRecord::Base
   end
   
   def create_pool
-    pool.create
+    Pool.create! :playlist => self
   end
   
 end

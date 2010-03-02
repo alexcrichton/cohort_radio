@@ -38,8 +38,8 @@ class Song < ActiveRecord::Base
       self[:title] = info['title']
     end
     return if self[:album].blank? || self[:artist].blank?
-    album = Scrobbler::Album.new(self[:artist], self[:album], :include_info => true)
-    self[:album_image_url] = album.image_large
+    album = Scrobbler::Album.new(self[:artist], self[:album], :include_info => true) rescue nil
+    self[:album_image_url] = album.image_large rescue nil if album
   end
   
 end
