@@ -9,6 +9,9 @@
     <%= yield(:head) %>
   </head>
   <body>
+		<% if current_user %>
+			<div style='text-align:center'><%= image_tag 'banner.png' if current_user %></div>
+		<% end %>
     <div id="container">
 			<header>
 				<nav>
