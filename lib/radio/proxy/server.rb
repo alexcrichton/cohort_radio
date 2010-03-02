@@ -53,6 +53,7 @@ class Radio
           socket << encode(value)
         rescue => e
           Rails.logger.error "Server ERROR: #{e}"
+          Rails.logger.error "#{e.backtrace.join("\n")}"
           socket << encode(e) unless socket.closed?
         end
         socket.close

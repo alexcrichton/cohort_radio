@@ -15,6 +15,10 @@ class SongsController < ApplicationController
     end
   end
   
+  def artists
+    @artists = Song.order(:artist).group(:artist).paginate :page => params[:page]
+  end
+  
   def show
   end
   

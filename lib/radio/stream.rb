@@ -47,17 +47,22 @@ class Radio
     def disconnect
       # Exit all threads we've got running
       
+      Rails.logger.info "Stream: #{playlist.name} disconnecting"
+      
       @loop = false
       
       Process.kill 'USR1', @playing_pid rescue nil
+      Rails.logger.debug "Stream: #{playlist.name} waiting for process #{@playing_pid}"
       Process.wait @playing_pid rescue nil
       
       @playing_pid = nil
       
+      Rails.logger.debug "Stream: #{playlist.name} joining with the song thread"
       @song_thread.join if @song_thread
       @song_thread = nil
 
       @queue_items_to_update << nil unless @queue_items_to_update.empty?
+      Rails.logger.debug "Stream: #{playlist.name} joining with the update thread"
       @update_thread.join if @update_thread
       @update_thread = nil
 
@@ -72,7 +77,8 @@ class Radio
       # See the stream_song method as to why
       # We don't want to wait for the pid to exit because that would slow down lots of things
       #   which is bad...
-      Process.kill 'USR1', @playing_pid if @playing_pid
+      Process.kill 'USR1', @playing_pid rescue nil
+      Process.wait @playing_pid rescue nil      
     end
     
     def playing?
@@ -120,7 +126,24 @@ class Radio
       # if we put it in its own process.
       @current_song = song
       
-      @playing_pid = Process.fork { stream_song song, metadata, queue_item }
+      files_to_reopen = []
+      ObjectSpace.each_object(File) do |file|
+        files_to_reopen << file unless file.closed?
+      end
+      # re-open file handles
+
+      @playing_pid = Process.fork { 
+        files_to_reopen.each do |file|
+          begin
+            file.reopen File.join(Rails.root, 'log', "#{daemon_name}.log"), 'a+'
+            file.sync = true
+          rescue ::Exception => e
+            Exceptional.handle e
+          end
+        end
+        
+        stream_song song, metadata, queue_item 
+      }
 
 
       # wait for the process to exit. Once it's exited, we've finished playing this song.
@@ -144,8 +167,11 @@ class Radio
       self.metadata = metadata
       begin
         File.open(song.audio.path) do |file|
+          thread = Thread.current
           Signal.trap("USR1") { 
+            Rails.logger.debug "Kill command received"
             $_song_pass = true
+            thread.wakeup
           }
           while !$_song_pass && data = file.read(BLOCKSIZE)
           	self.send data
@@ -154,9 +180,8 @@ class Radio
           end
         end
       rescue => e
-        Rails.logger.error "Stream: #{name} ERROR: #{e}"
+        Rails.logger.error "Stream: #{name} ERROR: #{e} #{e.backtrace.join("\n")}"
         Exceptional.handle e
-        # disconnect
       end
       
     end
