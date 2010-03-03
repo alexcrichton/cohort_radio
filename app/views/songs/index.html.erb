@@ -1,3 +1,10 @@
+<ul class='alphabet pagination'>
+	<li><%= link_to 'All', songs_path %>
+	<% ('A'..'Z').each do |letter| %>
+		<li><%= link_to letter, songs_path + '?' + {:letter => letter}.to_query %></li>
+	<% end %>
+</ul>
+
 <% paginated_section @songs do %>
 	<%= render @songs %>
 <% end %>

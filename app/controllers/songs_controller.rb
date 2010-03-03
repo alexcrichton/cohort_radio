@@ -7,14 +7,13 @@ class SongsController < ApplicationController
   def index
     top_level = Song
     top_level = @parent.songs if @parent
-    @songs = top_level.order('title').paginate :page => params[:page], :per_page => 10
     
-    # Hack a solution for now. This doesn't work with just respond_with in production for some reason...
-    if request.xhr?
-      render :inline => "<% paginated_section @songs do %><%= render @songs %><% end %>"
-    else
-      respond_with @songs
-    end
+    @songs = top_level.order('title')
+    @songs = @songs.where("title LIKE ?", "#{params[:letter]}%") if params[:letter]
+    
+    @songs = @songs.paginate :page => params[:page], :per_page => 10
+    
+    respond_with @songs
   end
   
   def artists
