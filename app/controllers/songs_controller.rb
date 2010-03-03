@@ -13,7 +13,7 @@ class SongsController < ApplicationController
     
     @songs = @songs.paginate :page => params[:page], :per_page => 10
     
-    respond_with @songs
+    respond_with @songs unless request.xhr?
   end
   
   def artists

@@ -5,7 +5,8 @@ class CommentsController < ApplicationController
   respond_to :html
   
   def index
-    respond_with @comments = @song.comments.paginate(:page => params[:page])
+    @comments = @song.comments.paginate(:page => params[:page])
+    respond_with @comments unless request.xhr?
   end
   
   def show

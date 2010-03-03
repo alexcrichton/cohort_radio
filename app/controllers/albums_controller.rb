@@ -9,8 +9,8 @@ class AlbumsController < ApplicationController
     @albums = @albums.where("name LIKE ?", "#{params[:letter]}%") if params[:letter]
     
     @albums = @albums.paginate :page => params[:page]
-    
-    respond_with @albums
+          
+    respond_with @albums unless request.xhr?
   end
   
   def show

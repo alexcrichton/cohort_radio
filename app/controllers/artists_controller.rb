@@ -10,7 +10,7 @@ class ArtistsController < ApplicationController
     
     @artists = @artists.paginate :page => params[:page]
     
-    respond_with @artists
+    respond_with @artists unless request.xhr?
   end
   
   def show

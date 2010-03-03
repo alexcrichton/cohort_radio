@@ -5,7 +5,8 @@ class PlaylistsController < ApplicationController
   respond_to :html
   
   def index
-    respond_with(@playlists = Playlist.scoped.paginate(:page => params[:page]))
+    @playlists = Playlist.scoped.paginate(:page => params[:page])
+    respond_with @playlists unless request.xhr?
   end
   
   def show
