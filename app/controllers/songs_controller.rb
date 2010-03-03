@@ -66,7 +66,7 @@ class SongsController < ApplicationController
         end
       else
         @songs = @songs.limit params[:limit]
-        render :text => @songs.map { |s| "<img src='#{s.album_image_url}' height='30px'/> #{s.title} - #{s.artist} (#{s.id})" }.join("\n")
+        render :text => @songs.map { |s| "<img src='#{s.album.cover_url}' height='30px'/> #{s.title} - #{s.artist.name} (#{s.id})" }.join("\n")
       end
     end
   end

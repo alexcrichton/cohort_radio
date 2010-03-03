@@ -107,11 +107,10 @@ $(function() {
   
   $('#songs-search form').ajaxForm({
     beforeSubmit: function() {
-      $('#search-holder, #search-response').toggle();
+      $('#search-response').html(hugeAjax);
     },
     success: function(data) {
-      $('#search-response').html(data).show();
-      $('#search-holder').hide();
+      $('#search-response').html(data);
     }
   });
 });
