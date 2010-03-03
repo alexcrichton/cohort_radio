@@ -1,6 +1,6 @@
 <h1><%= @artist.name %></h1>
 
-
+<%= link_to '[all artists]', artists_path %>
 <ul class='block'>
 	<li class='all'><%= link_to 'All Songs', artist_songs_path(@artist) %></li>
 

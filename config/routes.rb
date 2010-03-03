@@ -1,10 +1,12 @@
 CohortRadio::Application.routes.draw do |map|
   
-  resources :albums, :only => [:show, :index] do
-  end
+  resources :albums, :only => [:index]
+  
   resources :artists, :only => [:show, :index] do
-    resources :songs, :only => [:show, :index]
+    resources :songs, :only => [:index]
   end
+  
+  match 'artists/:artist_id/:id' => 'albums#show', :as => 'artist_album'
   
   resources :songs do 
     resources :comments
@@ -48,9 +50,6 @@ CohortRadio::Application.routes.draw do |map|
   match 'login' => "user_sessions#new", :as => 'login'
   resource :user_session, :only => [:create]
 
-  match '/artists' => 'songs#artists', :as => 'artists'
-  match '/artists' => 'songs#artists', :as => 'artists'
-  
   root :to => 'users#home'
   match ':controller(/:action(/:id(.:format)))'
   match ':id' => 'playlists#show'

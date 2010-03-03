@@ -14,8 +14,8 @@ class AlbumsController < ApplicationController
   end
   
   def show
-    @songs = @album.songs
-    @artist = @album.artist
+    @album  = @artist.albums.find_by_slug params[:id]
+    @songs  = @album.songs.paginate :page => params[:page], :per_page => 10
   end
   
 end

@@ -1,5 +1,5 @@
 <li class='album'>
-	<a href="<%= url_for album %>">
+	<a href="<%= artist_album_path album.artist, album %>">
 		<%= image_tag(album.cover_url, :height => 60) if album.cover_url %>
 		<div class='name'><%= album.name %></div>
 		<div class='artist'><%= album.artist.name %></div>
