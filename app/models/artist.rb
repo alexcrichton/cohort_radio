@@ -3,6 +3,7 @@ class Artist < ActiveRecord::Base
   
   acts_with_slug
   
+  validates_uniqueness_of :name, :case_sensitive => false, :if => :name_changed?
   has_many :songs
   has_many :albums, :dependent => :destroy
   

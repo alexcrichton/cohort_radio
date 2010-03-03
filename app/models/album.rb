@@ -7,7 +7,7 @@ class Album < ActiveRecord::Base
   has_many :songs
   
   validates_presence_of :name, :artist
-  validates_uniqueness_of :name, :scope => :artist_id, :if => :name_changed?
+  validates_uniqueness_of :name, :scope => :artist_id, :case_sensitive => false, :if => :name_changed?
   
   before_save :get_image, :if => :name_changed?
   

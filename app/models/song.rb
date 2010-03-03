@@ -10,7 +10,7 @@ class Song < ActiveRecord::Base
   has_and_belongs_to_many :pools
   
   validates_presence_of :title, :artist
-  validates_uniqueness_of :title, :scope => :artist_id, :if => :title_changed?
+  validates_uniqueness_of :title, :scope => :artist_id, :case_sensitive => false, :if => :title_changed?
   
   has_attached_file :audio, :path => ":rails_root/private/:class/:attachment/:id/:basename.:extension"
   
