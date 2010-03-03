@@ -1,5 +1,7 @@
 class Song < ActiveRecord::Base
   
+  attr_accessor :album_name, :artist_name
+  
   belongs_to :artist
   belongs_to :album
   has_many :comments, :dependent => :destroy, :order => 'created_at DESC'
@@ -7,14 +9,15 @@ class Song < ActiveRecord::Base
   has_many :playlists, :through => :queue_items
   has_and_belongs_to_many :pools
   
-  validates_presence_of :title
+  validates_presence_of :title, :artist
   
   has_attached_file :audio, :path => ":rails_root/private/:class/:attachment/:id/:basename.:extension"
   
   validates_attachment_presence :audio
   validates_attachment_content_type :audio, :content_type => ['audio/mpeg', 'application/x-mp3', 'audio/mp3']
   
-  before_create :ensure_artist_and_album
+  before_validation :ensure_artist_and_album
+  after_save :destroy_stale_artist_and_album
   
   scope :search, Proc.new{ |query| where('title LIKE :q or artists.name LIKE :q or albums.name LIKE :q', :q => "%#{query}%").includes(:artist, :album) }
   
@@ -29,24 +32,37 @@ class Song < ActiveRecord::Base
     
     tag = Mp3Info.new(file).tag
     
-    unless tag['artist'].blank?
-      artist = Artist.find_by_name(tag['artist'])
-      artist = Artist.create!(:name => tag['artist']) if artist.nil?
+    self.artist_name ||= tag['artist'] unless custom_set
+    
+    unless artist_name.blank?
+      artist = Artist.find_by_name artist_name
+      artist = Artist.new(:name => artist_name) if artist.nil?
     end
     
-    unless tag['album'].blank?
-      album = Album.find_by_name(tag['album'])
+    self.album_name ||= tag['album'] unless custom_set
+    
+    unless album_name.blank?
+      album = Album.find_by_name album_name
       if album.nil?
-        album = Album.create(:name => tag['album']) 
+        album = Album.new(:name => album_name) 
         album.artist = artist unless artist.blank?
-        album.save!
       end
       artist.albums << album unless artist.nil? || artist.albums.include?(album)
     end
     
+    @old_artist = self.artist
     self.artist = artist unless artist.nil?
-    self.album  = album  unless album.nil?
-    self.title  = tag['title'] || File.basename(file)
+
+    @old_album =  self.album
+    self.album =  album  unless album.nil?
+    
+    self.title ||= File.basename(file)
+    self.title =   tag['title'] unless custom_set
+  end
+  
+  def destroy_stale_artist_and_album
+    @old_artist.destroy if @old_artist && @old_artist.id != artist.id && @old_artist.songs.size == 0
+    @old_album.destroy  if @old_album  && @old_album.id  != album.id  && @old_album.songs.size  == 0
   end
   
 end
