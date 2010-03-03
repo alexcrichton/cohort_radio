@@ -4,7 +4,7 @@ class Artist < ActiveRecord::Base
   acts_with_slug
   
   has_many :songs
-  has_many :albums
+  has_many :albums, :dependent => :destroy
   
   validates_presence_of :name
   

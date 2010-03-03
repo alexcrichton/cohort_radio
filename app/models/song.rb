@@ -10,6 +10,7 @@ class Song < ActiveRecord::Base
   has_and_belongs_to_many :pools
   
   validates_presence_of :title, :artist
+  validates_uniqueness_of :title, :scope => :artist_id, :if => :title_changed?
   
   has_attached_file :audio, :path => ":rails_root/private/:class/:attachment/:id/:basename.:extension"
   
@@ -42,12 +43,8 @@ class Song < ActiveRecord::Base
     self.album_name ||= tag['album'] unless custom_set
     
     unless album_name.blank?
-      album = Album.find_by_name album_name
-      if album.nil?
-        album = Album.new(:name => album_name) 
-        album.artist = artist unless artist.blank?
-      end
-      artist.albums << album unless artist.nil? || artist.albums.include?(album)
+      album = artist.albums.find_by_name album_name
+      album = Album.new(:name => album_name, :artist => artist) if album.nil?
     end
     
     @old_artist = self.artist
