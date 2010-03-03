@@ -5,14 +5,12 @@ class ArtistsController < ApplicationController
   respond_to :html
   
   def index
-    @artists = Artist.paginate :page => params[:page], :per_page => 10
+    @artists = Artist.order('name')
+    @artists = @artists.where("name LIKE ?", "#{params[:letter]}%") if params[:letter]
     
-    # Hack a solution for now. This doesn't work with just respond_with in production for some reason...
-    if request.xhr?
-      render :inline => "<% paginated_section @artists do %><%= render @artists %><% end %>"
-    else
-      respond_with @artists
-    end
+    @artists = @artists.paginate :page => params[:page]
+    
+    respond_with @artists
   end
   
   def show

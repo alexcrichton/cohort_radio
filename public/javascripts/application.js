@@ -36,20 +36,6 @@ $(function() {
   });
   
   $('#comments .comment form').bindCommentForm();
-  
-  $('.comment .links .remove').live('click', function() {
-    var par = $(this).parents('.comment');
-    $.ajax({
-      type: 'DELETE',
-      url: $(this).attr('href'),
-      success: function() {
-        par.remove();
-      }
-    });
-    $(this).replaceWith(smallAjax);
-    return false;
-  });
-  
 });
 
 $.fn.extend({
@@ -72,50 +58,42 @@ $.fn.extend({
 });
 
 $(function() {
-  $('.song .links .remove, .song .pool-remove').live('click', function() {
-    var par = $(this).parents('.song');
+  $('a.remote-remove').live('click', function() {
+    var img = $(smallAjax);
+    var par = parent($(this), img, 'remove');
     $.ajax({
-      type: $(this).is('.pool-remove') ? 'GET' : 'DELETE',
-      url: $(this).attr('href'),
-      success: function() {
+      type: $(this).is('.get') ? 'GET' : 'DELETE',
+      url: $(this).attr('href'), 
+      success: function(data) {
         par.remove();
       }
     });
-    $(this).replaceWith(smallAjax);
+    $(this).replaceWith(img);
     return false;
   });
-});
-
-$(function() {
-  $('.song .add ul li a').live('click', function() {
-    var par = $(this).parents('li:first');
-
-    $.ajax({
-      url: $(this).attr('href'),
-      success: function(data) {
-        par.html(data);
-      }
-    });
-    
-    par.html(smallAjax);
-    
-    return false;
-  });
-});
-
-$(function() {
-  $('#radio-status .links a').live('click', function(){
-    var par = $(this).parents('tr');
+  $('a.remote-replace').live('click', function() {
+    var img = $(smallAjax);
+    var par = parent($(this), img, 'replace');
     $.ajax({
       url: $(this).attr('href'), 
       success: function(data) {
         par.replaceWith(data);
       }
     });
-    $(this).replaceWith(smallAjax);
+    $(this).replaceWith(img);
     return false;
   });
 });
+
+function parent(link, image, klass) {
+  var href = link.attr('href');
+  var par = link.parents('.' + klass + ':first')
+  if(href.indexOf('#') >= 0)
+    par = link.parents(href.substring(href.indexOf('#')) + ":first");
+  if (par.length == 0)
+    par = image;
+  return par;
+}
 
 $(function() {
   $('.pagination-container .pagination a').live('click', function() {
@@ -159,44 +137,6 @@ $(function(){
   });
 });
 
-$(function() {
-  $('#waiting .links .remove').click(function(){
-    var el = $(this).parents('.download');
-    $(this).replaceWith(smallAjax);
-    $.ajax({
-      url: $(this).attr('href'),
-      success: function(){
-        el.remove();
-      }
-    });
-    return false;
-  });
-  
-  $('#connections tr.timeout a').live('click', function(){
-    var par = $(this).parents('td:first');
-    $.ajax({
-      url: $(this).attr('href'), 
-      success: function(data) {
-        par.html(data);
-      }
-    });
-    $(this).html(smallAjax);
-    return false;
-  });
-  
-  $('#connections .disconnect, #failed tr a').click(function(){
-    var el = $(this).parents('tr');
-    $(this).replaceWith(smallAjax);
-    $.ajax({
-      url: $(this).attr('href'),
-      success: function(){
-        el.remove();
-      }
-    });
-    return false;
-  });
-});
-
 $.fn.extend({
   bindSearchForms: function() {
     $(this).find("form").ajaxForm({
@@ -212,18 +152,6 @@ $.fn.extend({
 });
 
 $(function() {
-  $('#memberships li a').live('click', function() {
-    var par = $(this).parents('li');
-    $.ajax({
-      url: $(this).attr('href'),
-      type: 'DELETE',
-      success: function() {
-        par.remove();
-      }
-    });
-    $(this).replaceWith(smallAjax);
-    return false;
-  });
   $("#memberships form #q").autocomplete('/users/search', {
     matchContains: true,
     cacheLength: 50,

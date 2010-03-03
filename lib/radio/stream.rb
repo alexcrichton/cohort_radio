@@ -53,6 +53,7 @@ class Radio
       
       if @song_thread
         Rails.logger.debug "Stream: #{playlist.name} joining with the song thread"
+        @next = true
         @song_thread.wakeup
         @song_thread.join
         @song_thread = nil

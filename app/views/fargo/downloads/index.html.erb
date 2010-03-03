@@ -34,7 +34,7 @@
 				<th>Attempts</th>
 			</tr>
 			<% @jobs.each do |job| %>
-				<tr class='download'>
+				<tr class='download remove'>
 					<td><%= File.basename job.payload_object.file if job.payload_object.file %></td>
 					<td><%= job.run_at %></td>
 					<td><%= !job.locked_at.nil? %></td>
@@ -44,7 +44,7 @@
 					<td><%= job.attempts %></td>
 					<td class='links'>
 						<% if can? :manage, Fargo %>
-							<%= link_to "Remove", remove_fargo_download_path(job.id), :method => :delete, :class => 'remove' %>
+							<%= link_to "Remove", remove_fargo_download_path(job.id), :class => 'remote-remove get' %>
 						<% end %>
 					</td>
 				</tr>
@@ -63,7 +63,7 @@
 			<% @current_downloads.each_pair do |nick, download| %>
 				<tr>
 					<td><%= nick %></td>
-					<td><%= download.file.force_encoding('utf-8') %></td>
+					<td><%= download.file %></td>
 					<td><%= number_to_human_size download.size %></td>
 					<td><%= number_to_percentage download.percent * 100 %></td>
 				</tr>
@@ -85,10 +85,10 @@
 					</td>
 				</tr>
 				<% @connections.each do |nick| %>
-					<tr>
+					<tr class='remove'>
 						<td><%= nick %></td>
 						<td>
-							<%= link_to "Disconnect", {:controller => 'fargo/commands', :action => :disconnect, :nick => nick}, :class => 'disconnect' %>
+							<%= link_to "Disconnect", {:controller => 'fargo/commands', :action => :disconnect, :nick => nick}, :class => 'disconnect remote-remove' %>
 						</td>
 					</tr>
 				<% end %>
@@ -98,10 +98,10 @@
 					</td>
 				</tr>
 				<% @timed_out.each do |nick| %>
-					<tr class='timeout'>
+					<tr class='timeout remove'>
 						<td><%= nick %></td>
 						<td>
-							<%= link_to "Try again", :controller => 'fargo/downloads', :action => :try, :nick => nick %>
+							<%= link_to "Try again", {:controller => 'fargo/downloads', :action => :try, :nick => nick}, :class => 'remote-remove' %>
 						</td>
 					</tr>
 				<% end %>

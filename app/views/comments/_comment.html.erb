@@ -1,4 +1,4 @@
-<div class="comment">
+<div class="comment remove">
 	<div class='content'>
 		<h4><%= comment.user.name %></h4>
 		<%= raw markdown(comment.text) %>
@@ -8,6 +8,6 @@
 	</div>
 	<div class='links'>
 		<%= link_to '[edit]', '#', :class => 'edit' if can? :update, comment %>
-		<%= link_to '[destroy]', song_comment_path(comment.song, comment), :class => 'remove' if can? :destroy, comment %>
+		<%= link_to '[destroy]', song_comment_path(comment.song, comment), :class => 'remote-remove' if can? :destroy, comment %>
 	</div>
 </div>
