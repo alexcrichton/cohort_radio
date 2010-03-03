@@ -14,7 +14,7 @@ class ArtistsController < ApplicationController
   end
   
   def show
-    @albums = @artist.albums
+    @albums = @artist.albums.order('name')
     
     respond_with @artist
   end

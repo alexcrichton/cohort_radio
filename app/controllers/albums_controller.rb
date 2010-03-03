@@ -5,13 +5,12 @@ class AlbumsController < ApplicationController
   respond_to :html
   
   def index
-    @albums = Albums.paginate :page => params[:page], :per_page => 10
+    @albums = Album.order('name')
+    @albums = @albums.where("name LIKE ?", "#{params[:letter]}%") if params[:letter]
     
-    if request.xhr?
-      render :inline => "<% paginated_section @albums do %><%= render @albums %><% end %>"
-    else
-      respond_with @artists
-    end
+    @albums = @albums.paginate :page => params[:page]
+    
+    respond_with @albums
   end
   
   def show

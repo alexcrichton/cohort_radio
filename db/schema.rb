@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100302022610) do
+ActiveRecord::Schema.define(:version => 20100303075109) do
 
   create_table "activations", :force => true do |t|
     t.integer  "user_id"
@@ -102,10 +102,7 @@ ActiveRecord::Schema.define(:version => 20100302022610) do
   end
 
   create_table "songs", :force => true do |t|
-    t.string   "artist"
-    t.string   "album"
     t.string   "title"
-    t.string   "album_image_url"
     t.integer  "play_count",         :default => 0
     t.string   "audio_file_name"
     t.string   "audio_content_type"

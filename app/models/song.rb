@@ -18,14 +18,6 @@ class Song < ActiveRecord::Base
   
   scope :search, Proc.new{ |query| where('title LIKE :q or artists.name LIKE :q or albums.name LIKE :q', :q => "%#{query}%").includes(:artist, :album) }
   
-  def display_title
-    if self[:title]
-      "#{self[:title]}"
-    else
-      File.basename audio.path
-    end
-  end
-
   def ensure_artist_and_album
     if new_record?
       file = audio.queued_for_write[:original].path # get the file paperclip is gonna copy
@@ -52,9 +44,9 @@ class Song < ActiveRecord::Base
       artist.albums << album unless artist.nil? || artist.albums.include?(album)
     end
     
-    self[:artist] = artist unless artist.nil?
-    self[:album] = album unless album.nil?
-    self[:title] = tag['title']
+    self.artist = artist unless artist.nil?
+    self.album  = album  unless album.nil?
+    self.title  = tag['title'] || File.basename(file)
   end
   
 end

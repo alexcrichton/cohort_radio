@@ -1,7 +1,7 @@
 <tr class='replace'>
 	<td><%= link_to playlist.name, playlist %></td>
 	<td><%= radio.has? playlist %></td>
-	<td><%= radio.current_song(playlist).display_title if radio.playing? playlist %></td>
+	<td><%= radio.current_song(playlist).title if radio.playing? playlist %></td>
 	<td class='links'>
 		<% if radio.has? playlist %>
 			<%= link_to 'Next Song', {:controller => 'radio/commands', :action => 'next', :playlist_id => playlist.slug}, :class => 'remote-replace' %>

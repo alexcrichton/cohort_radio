@@ -331,7 +331,71 @@ tr td.header {background:#066;color:#fff;padding-left:5px;font-weight:bold;}
   list-style: none;
   text-align: center;
 }
+
 .alphabet li {
   float: left;
   width: 3.6%;
+}
+
+ul.block {
+  list-style: none;
+  margin-left: 10px;
+  float: left;
+  width: 90%;
+  overflow: auto;
+  border-bottom: 1px solid black;
+  padding: 0;
+}
+
+ul.block > li > a {
+  margin: 0;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  border: 1px solid black;
+  border-bottom: 0;
+  overflow: auto;
+}
+
+ul.block > li:hover > a {
+  background: #bbb;
+}
+
+ul.block > li.all > a {
+  height: 45px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 130%;
+  padding-top: 15px;
+}
+
+ul.column {
+  width: 45%;
+}
+
+li.album a img {
+  margin: 0;
+  display: block;
+  float: left;
+}
+
+li.album a div {
+  padding-left: 10px;
+  width: 80%;
+  float: left;
+}
+
+li.album a .name {
+  font-weight: bold;
+}
+
+li.album .artist {
+  color: #666;
+  font-style: italic;
+}
+
+li.artist a {
+  padding: 6px;
+  font-weight: bold;
+  font-size: 130%;
 }

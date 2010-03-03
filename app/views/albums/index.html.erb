@@ -1,0 +1,15 @@
+<ul class='alphabet pagination'>
+	<li><%= link_to 'All', albums_path %>
+	<% ('A'..'Z').each do |letter| %>
+		<li><%= link_to letter, albums_path + '?' + {:letter => letter}.to_query %></li>
+	<% end %>
+</ul>
+
+<% paginated_section @albums do %>
+	<% left = (right = @albums.dup).slice!(0, (@albums.size / 2.0).ceil) %>
+	<div style='overflow:auto'>
+		<% [left, right].each do |arr| %>
+			<ul class='column block'><%= render arr %></ul>
+		<% end %>
+	</div>
+<% end %>

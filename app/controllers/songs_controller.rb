@@ -5,7 +5,9 @@ class SongsController < ApplicationController
   respond_to :html
   
   def index
-    @songs = Song.paginate :page => params[:page], :per_page => 10
+    top_level = Song
+    top_level = @parent.songs if @parent
+    @songs = top_level.order('title').paginate :page => params[:page], :per_page => 10
     
     # Hack a solution for now. This doesn't work with just respond_with in production for some reason...
     if request.xhr?

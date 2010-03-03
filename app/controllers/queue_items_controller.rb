@@ -10,7 +10,7 @@ class QueueItemsController < ApplicationController
     if request.xhr?
       render :text => "<span class='notice'>Queued.</span>"
     else
-      flash[:notice] = "#{@song.display_title} queued!" unless @song.nil?
+      flash[:notice] = "#{@song.title} queued!" unless @song.nil?
       redirect_to @playlist
     end
   end
@@ -21,7 +21,7 @@ class QueueItemsController < ApplicationController
     if request.xhr?
       render :text => "<span class='notice'>Dequeued</span>"
     else
-      flash[:notice] = "#{@queue_item.song.display_title} dequeued!" unless @queue_item.nil?
+      flash[:notice] = "#{@queue_item.song.title} dequeued!" unless @queue_item.nil?
       redirect_to @playlist
     end
   end

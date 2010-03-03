@@ -6,9 +6,14 @@
 </ul>
 
 <% paginated_section @artists do %>
-	<ul>
-		<% @artists.each do |artist| %>
-			<li><%= link_to artist.name, artist %></li>
+	<% left = (right = @artists.dup).slice!(0, @artists.size / 2 + 1) %>
+	<div style='overflow:auto'>
+		<% [left, right].each do |arr| %>
+			<ul class='column block'>
+				<% arr.each do |artist| %>
+					<li class='artist'><%= link_to artist.name, artist %></li>
+				<% end %>
+			</ul>
 		<% end %>
-	</ul>
+	</div>
 <% end %>
