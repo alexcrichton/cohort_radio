@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100301052945) do
+ActiveRecord::Schema.define(:version => 20100302022610) do
 
   create_table "activations", :force => true do |t|
     t.integer  "user_id"
@@ -17,6 +17,26 @@ ActiveRecord::Schema.define(:version => 20100301052945) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "albums", :force => true do |t|
+    t.string   "name"
+    t.string   "slug"
+    t.string   "cover_url"
+    t.integer  "artist_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "albums", ["slug"], :name => "index_albums_on_slug"
+
+  create_table "artists", :force => true do |t|
+    t.string   "name"
+    t.string   "slug"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "artists", ["slug"], :name => "index_artists_on_slug"
 
   create_table "comments", :force => true do |t|
     t.text     "text"
@@ -94,6 +114,8 @@ ActiveRecord::Schema.define(:version => 20100301052945) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "custom_set"
+    t.integer  "artist_id"
+    t.integer  "album_id"
   end
 
   create_table "users", :force => true do |t|

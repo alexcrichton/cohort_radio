@@ -2,7 +2,7 @@ class Radio
   
   class Stream < Shout
     
-    BLOCKSIZE = 1 << 16
+    BLOCKSIZE = (1 << 16).freeze
     
     @@tag_recoder = Iconv.new("utf-8", 'utf-8')
     
@@ -51,15 +51,12 @@ class Radio
       
       @loop = false
       
-      Process.kill 'USR1', @playing_pid rescue nil
-      Rails.logger.debug "Stream: #{playlist.name} waiting for process #{@playing_pid}"
-      Process.wait @playing_pid rescue nil
-      
-      @playing_pid = nil
-      
-      Rails.logger.debug "Stream: #{playlist.name} joining with the song thread"
-      @song_thread.join if @song_thread
-      @song_thread = nil
+      if @song_thread
+        Rails.logger.debug "Stream: #{playlist.name} joining with the song thread"
+        @song_thread.wakeup
+        @song_thread.join
+        @song_thread = nil
+      end
 
       @queue_items_to_update << nil unless @queue_items_to_update.empty?
       Rails.logger.debug "Stream: #{playlist.name} joining with the update thread"
@@ -74,11 +71,9 @@ class Radio
     end
     
     def next
-      # See the stream_song method as to why
-      # We don't want to wait for the pid to exit because that would slow down lots of things
-      #   which is bad...
-      Process.kill 'USR1', @playing_pid rescue nil
-      Process.wait @playing_pid rescue nil      
+      @next = true
+      @song_thread.wakeup if @song_thread
+      true
     end
     
     def playing?
@@ -89,13 +84,13 @@ class Radio
       !playing?
     end
     
-    def set_next delete = false
+    def next_song
       # was disconnected sometimes...
       ActiveRecord::Base.verify_active_connections! 
       
       playlist.queue_items true # force loading from the database
       
-      playlist.queue_items.delete @next_song[2] if delete && @next_song && @next_song[2]
+      playlist.queue_items.delete @next_song[2] if @next_song && @next_song[2]
       
       # force loading from the database
       queue_item = playlist.queue_items.first
@@ -115,75 +110,39 @@ class Radio
     end
     
     def play_song
-      # set_next if @next_song.nil?
+      song, metadata, queue_item = next_song
 
-      set_next true
-
-      song, metadata, queue_item = @next_song
-
-      # We have to for because Shout's sync method freezes the entire process.
-      # This is obviously undesireable for the entire process, but it'll work 
-      # if we put it in its own process.
       @current_song = song
       
-      files_to_reopen = []
-      ObjectSpace.each_object(File) do |file|
-        files_to_reopen << file unless file.closed?
-      end
-      # re-open file handles
+      self.metadata = metadata
 
-      @playing_pid = Process.fork { 
-        files_to_reopen.each do |file|
-          begin
-            file.reopen File.join(Rails.root, 'log', "#{daemon_name}.log"), 'a+'
-            file.sync = true
-          rescue ::Exception => e
-            Exceptional.handle e
-          end
-        end
-        
-        stream_song song, metadata, queue_item 
-      }
-
-
-      # wait for the process to exit. Once it's exited, we've finished playing this song.
-      Process.wait @playing_pid rescue nil if @playing_pid
+      stream_song song.audio.path
 
       @queue_items_to_update << queue_item
-
     end
     
     def update_song queue_item
       return if queue_item.nil?
-      ActiveRecord::Base.verify_active_connections! # 
+      ActiveRecord::Base.verify_active_connections!
       queue_item.song.update_attributes(:play_count => queue_item.song.play_count + 1)
       playlist.queue_items.delete queue_item
     end
     
-    def stream_song song, metadata, queue_item
-      # Get the song information, then set it to nil so we know to reset it.
-      Rails.logger.debug "Stream: #{name} - playing file #{song.audio.path}"
+    def stream_song path
+      Rails.logger.debug "Stream: #{name} - playing file #{path}"
       
-      self.metadata = metadata
-      begin
-        File.open(song.audio.path) do |file|
-          thread = Thread.current
-          Signal.trap("USR1") { 
-            Rails.logger.debug "Kill command received"
-            $_song_pass = true
-            thread.wakeup
-          }
-          while !$_song_pass && data = file.read(BLOCKSIZE)
-          	self.send data
-            Rails.logger.debug "Stream: #{name} - Block sent"
-          	self.sync
-          end
-        end
-      rescue => e
-        Rails.logger.error "Stream: #{name} ERROR: #{e} #{e.backtrace.join("\n")}"
-        Exceptional.handle e
+      file = File.open(path)
+      @next = false
+      while !@next && data = file.read(BLOCKSIZE)
+      	self.send data
+        Rails.logger.debug "Stream: #{name} - Block sent"
+        
+        # self.sync # this is stupid, freezes the entire process. Do by hand:
+        d = self.delay
+        Rails.logger.debug "Sleeping: #{d}"
+        break if d < 0
+        sleep d.to_f / 1000
       end
-      
     end
     
     def random_song

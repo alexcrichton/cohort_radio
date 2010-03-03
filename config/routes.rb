@@ -1,5 +1,8 @@
 CohortRadio::Application.routes.draw do |map|
   
+  resources :albums, :only => [:show, :index]
+  resources :artists, :only => [:show, :index]
+  
   resources :songs do 
     resources :comments
     get :search, :on => :collection

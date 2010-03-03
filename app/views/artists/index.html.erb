@@ -1,0 +1,5 @@
+<ul>
+<% ('A'..'Z').each do |letter| %>
+	<li><%= link_to letter, artists_path + '?'  %>
+<% end %>
+</ul>

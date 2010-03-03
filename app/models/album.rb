@@ -6,7 +6,9 @@ class Album < ActiveRecord::Base
   belongs_to :artist
   has_many :songs
   
-  after_save :get_image
+  validates_presence_of :name
+  
+  before_save :get_image, :if => :name_changed?
   
   private
   def get_image

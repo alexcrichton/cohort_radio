@@ -7,15 +7,16 @@ class Song < ActiveRecord::Base
   has_many :playlists, :through => :queue_items
   has_and_belongs_to_many :pools
   
+  validates_presence_of :title
+  
   has_attached_file :audio, :path => ":rails_root/private/:class/:attachment/:id/:basename.:extension"
   
-  validates_uniqueness_of :title, :scope => [:artist], :if => :title_changed?, :case_sensitive => false
   validates_attachment_presence :audio
   validates_attachment_content_type :audio, :content_type => ['audio/mpeg', 'application/x-mp3', 'audio/mp3']
   
-  # before_validation :set_metadata
+  before_create :ensure_artist_and_album
   
-  scope :search, Proc.new{ |query| where('title LIKE :q or artist LIKE :q or album LIKE :q', :q => "%#{query}%") }
+  scope :search, Proc.new{ |query| where('title LIKE :q or artists.name LIKE :q or albums.name LIKE :q', :q => "%#{query}%").includes(:artist, :album) }
   
   def display_title
     if self[:title]
@@ -24,48 +25,36 @@ class Song < ActiveRecord::Base
       File.basename audio.path
     end
   end
-  
-  def self.create_song file
-    create_song! file
-  rescue ActiveRecord::RecordInvalid
-    false
-  end
-  
-  def self.create_song! file
-    return false unless File.exists?(file) && File.size(file) > 0
-    
+
+  def ensure_artist_and_album
+    if new_record?
+      file = audio.queued_for_write[:original].path # get the file paperclip is gonna copy
+    else
+      file = audio.path
+    end
+
     artist, album = nil, nil
     
     tag = Mp3Info.new(file).tag
     
-    artist = Artist.find_by_name(tag['artist']) unless tag['artist'].blank?
-    album = Album.find_by_name(tag['album']) unless tag['artist'].blank?
+    unless tag['artist'].blank?
+      artist = Artist.find_by_name(tag['artist'])
+      artist = Artist.create!(:name => tag['artist']) if artist.nil?
+    end
     
-    artist = Artist.create!(:name => tag['artist']) if artist.nil?
-    album = Album.create!(:name => tag['album'], :artist => artist) if album.nil?
+    unless tag['album'].blank?
+      album = Album.find_by_name(tag['album'])
+      if album.nil?
+        album = Album.create(:name => tag['album']) 
+        album.artist = artist unless artist.blank?
+        album.save!
+      end
+      artist.albums << album unless artist.nil? || artist.albums.include?(album)
+    end
     
-    artist.albums << album unless artist.albums.include? album
-    
-    song = Song.create!(:name => tag['title'], :artist => artist, :album => album,
-                        :audio => File.new(file))
+    self[:artist] = artist unless artist.nil?
+    self[:album] = album unless album.nil?
+    self[:title] = tag['title']
   end
-
-  # def set_metadata
-  #   unless custom_set
-  #     if new_record?
-  #       file = audio.queued_for_write[:original].path # get the file paperclip is gonna copy
-  #     else
-  #       file = audio.path
-  #     end
-  # 
-  #     info = Mp3Info.new(file).tag
-  #     self[:artist] = info['artist']
-  #     self[:album] = info['album']
-  #     self[:title] = info['title']
-  #   end
-  #   return if self[:album].blank? || self[:artist].blank?
-  #   album = Scrobbler::Album.new(self[:artist], self[:album], :include_info => true) rescue nil
-  #   self[:album_image_url] = album.image_large rescue nil if album
-  # end
   
 end
