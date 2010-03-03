@@ -33,14 +33,18 @@ class Song < ActiveRecord::Base
     
     tag = Mp3Info.new(file).tag
     
-    self.artist_name ||= tag['artist'] unless custom_set
+    self.artist_name = self.artist.name if self.artist_name.blank? && self.artist
+    self.artist_name ||= tag['artist'] if !custom_set && artist_name.nil?
+    self.artist_name ||= 'unknown'
     
     unless artist_name.blank?
       artist = Artist.find_by_name artist_name
       artist = Artist.new(:name => artist_name) if artist.nil?
     end
     
-    self.album_name ||= tag['album'] unless custom_set
+    self.album_name = self.album.name if self.album
+    self.album_name ||= tag['album'] if !custom_set && album_name.nil?
+    self.album_name ||= 'unknown'
     
     unless album_name.blank?
       album = artist.albums.find_by_name album_name
