@@ -16,6 +16,11 @@
 			Play count: <%= song.play_count %>
 		</p>
 	</div>
+	
+	<div class='form hide'>
+		<%= render 'songs/form', :song => song %>
+	</div>
+	
 	<div class='links'>
 		<p>
 			<% if defined?(item) %>
@@ -24,7 +29,7 @@
 				</p>
 			<% end %>
 			<%= link_to '[download]', download_song_path(song) if can? :download, song %>
-			<%= link_to '[edit]', edit_song_path(song) if can? :update, song %>
+			<%= link_to '[edit]', edit_song_path(song), :class => 'edit' if can? :update, song %>
 			<%= link_to '[destroy]', song, :method => :delete, :confirm => 'are you sure?' if can? :destroy, song %>
 
 			<% if defined?(item) && can?(:destroy, item) %>

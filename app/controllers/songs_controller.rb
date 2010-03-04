@@ -39,7 +39,11 @@ class SongsController < ApplicationController
   
   def update
     flash[:notice] = "Song updated!" if @song.update_attributes params[:song]
-    respond_with @song
+    if request.xhr?
+      render @song
+    else
+      respond_with @song
+    end
   end
   
   def download

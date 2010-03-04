@@ -12,6 +12,14 @@ $(function() {
 });
 
 $(function() {
+  $('.song .links .edit, .song form .cancel').live('click', function() {
+    $(this).parents('.song').find('.content, .form').toggle();
+    return false;
+  });
+  $('.song form').bindSongEditForm();
+});
+
+$(function() {
   $('#comments > .links .add, #comments > .links .cancel').click(function(){
     $(this).parents('.links').children().toggle();
     return false;
@@ -42,6 +50,21 @@ $(function() {
 });
 
 $.fn.extend({
+  bindSongEditForm: function() {
+    $(this).ajaxForm({
+      beforeSubmit: function(args, form) {
+        form.parents('.song').html(hugeAjax);
+      },
+      success: function(data) {
+        var img = $('img.loading');
+        var par = img.parents('.song');
+        img.remove();
+        var el = $(data);
+        el.find('form').bindSongEditForm();
+        par.replaceWith(el);
+      }
+    });
+  },
   bindCommentForm: function() {
     $(this).ajaxForm({
       beforeSubmit: function(args, form) {
