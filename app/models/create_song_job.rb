@@ -2,7 +2,7 @@ class CreateSongJob < Struct.new(:file)
   
   def perform
     raise "File didn't download!" unless File.exists?(file)
-    Song.create_song! file
+    Song.create! :audio => File.new(file)
     File.delete file
   rescue => e
     Exceptional.handle e
