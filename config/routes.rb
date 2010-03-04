@@ -52,5 +52,5 @@ CohortRadio::Application.routes.draw do |map|
 
   root :to => 'users#home'
   match ':controller(/:action(/:id(.:format)))'
-  match ':id' => 'playlists#show'
+  match ':id' => 'playlists#show', :as => 'playlist'
 end
