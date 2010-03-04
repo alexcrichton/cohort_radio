@@ -6,6 +6,9 @@ $.ajaxSetup({error: error});
 
 $(function() {
   $('.tabs').tabs();
+  $(".tabs").bind("tabsshow", function(event, ui) { 
+    window.location.hash = ui.tab.hash;
+  });
 });
 
 $(function() {
@@ -97,9 +100,15 @@ function parent(link, image, klass) {
 
 $(function() {
   $('.pagination-container .pagination a').live('click', function() {
+    window.location.hash = '#' + $(this).attr('href');
     $(this).parents('.pagination-container:first').html(hugeAjax).load($(this).attr('href'));
     return false;
   });
+  
+  if (window.location.hash == '') return;
+  
+  $('.pagination-container:first').html(hugeAjax).load(window.location.hash.substring(1));
+  
 });
 
 $(function() {
