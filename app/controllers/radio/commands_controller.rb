@@ -12,7 +12,7 @@ class Radio::CommandsController < ApplicationController
   end
   
   def add
-    radio.add @playlist
+    radio.add @playlist.id
     
     if request.xhr?
       render :partial => 'radio/status/playlist', :locals => {:playlist => @playlist}
@@ -23,7 +23,7 @@ class Radio::CommandsController < ApplicationController
   end
   
   def stop
-    radio.remove @playlist
+    radio.remove @playlist.id
     
     if request.xhr?
       render :partial => 'radio/status/playlist', :locals => {:playlist => @playlist}
@@ -34,7 +34,7 @@ class Radio::CommandsController < ApplicationController
   end
   
   def next
-    radio.next @playlist
+    radio.next @playlist.id
     
     if request.xhr?
       render :partial => 'radio/status/playlist', :locals => {:playlist => @playlist}

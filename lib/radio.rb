@@ -28,40 +28,40 @@ class Radio
     @connected
   end
   
-  def playlists
-    @streaming.each_value.map &:playlist
+  def playlist_ids
+    @streaming.each_value.map &:playlist_id
   end
   
-  def next playlist
-    return false unless has? playlist
-    @streaming[playlist.slug].next
+  def next playlist_id
+    return false unless has? playlist_id
+    @streaming[playlist_id].next
   end
   
-  def playing? playlist
-    return false unless has? playlist
-    @streaming[playlist.slug].playing?
+  def playing? playlist_id
+    return false unless has? playlist_id
+    @streaming[playlist_id].playing?
   end
   
-  def current_song playlist
-    return false unless has? playlist
-    @streaming[playlist.slug].current_song
+  def current_song playlist_id
+    return false unless has? playlist_id
+    @streaming[playlist_id].current_song
   end
     
-  def has? playlist
-    @streaming.has_key? playlist.slug
+  def has? playlist_id
+    @streaming.has_key? playlist_id
   end
   
-  def add playlist
-    return if has? playlist
-    stream = Radio::Stream.new options.merge(:playlist => playlist)
-    @streaming[playlist.slug] = stream      
+  def add playlist_id
+    return if has? playlist_id
+    stream = Radio::Stream.new options.merge(:playlist_id => playlist_id)
+    @streaming[playlist_id] = stream      
     stream.connect if @connected
     true
   end
   
-  def remove playlist
-    return unless has? playlist
-    @streaming.delete(playlist.slug).disconnect
+  def remove playlist_id
+    return unless has? playlist_id
+    @streaming.delete(playlist_id).disconnect
     true
   end
   

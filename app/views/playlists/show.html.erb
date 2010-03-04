@@ -5,7 +5,7 @@
 		<% end %>
 		<%= link_to "[Pool]", playlist_pool_path(@playlist) %>
 		<% if can?(:manage, Radio) && radio_connected? %>
-			<% if radio.playing? @playlist %>
+			<% if radio.playing? @playlist.id %>
 				<%= link_to "[Stop streaming]", :controller => 'radio/commands', :action => 'stop', :playlist_id => @playlist.slug %>
 				<%= link_to "[Next Song]", :controller => 'radio/commands', :action => 'next', :playlist_id => @playlist.slug %>
 			<% else %>
@@ -24,10 +24,10 @@
 </div>
 
 <div class='status'>
-	<% if radio_connected? && radio.playing?(@playlist) %>
+	<% if radio_connected? && radio.playing?(@playlist.id) %>
 		<p>
 			Stream url: <%= raw auto_link(@playlist.stream_url) %><br/>
-			Current Song: <%= truncate radio.current_song(@playlist).title %>
+			Current Song: <%= truncate radio.current_song(@playlist.id) %>
 		</p>
 		<!-- <audio src="<%= @playlist.stream_url %>" controls='controls' autobuffer='autobuffer'></audio> -->
 	<% else %>
