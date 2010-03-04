@@ -47,7 +47,8 @@ $.fn.extend({
   bindInlineForm: function() {
     $(this).ajaxForm({
       beforeSubmit: function(args, form) {
-        form.parents('.inline-edit').html(hugeAjax);
+        var par = form.parents('.inline-edit');
+        par.html(par.is('.mini') ? bigAjax : hugeAjax);
       },
       success: function(data) {
         var img = $('img.loading');

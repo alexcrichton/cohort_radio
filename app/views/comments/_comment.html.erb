@@ -3,7 +3,7 @@
 		<h4><%= comment.user.name %></h4>
 		<%= raw markdown(comment.text) %>
 	</div>
-	<div class='form hide'>
+	<div class='form'>
 		<%= render 'comments/form', :comment => comment %>
 	</div>
 	<div class='links'>

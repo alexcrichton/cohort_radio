@@ -9,11 +9,7 @@
 	<% left = (right = @artists.dup).slice!(0, @artists.size / 2 + 1) %>
 	<div style='overflow:auto'>
 		<% [left, right].each do |arr| %>
-			<ul class='column block'>
-				<% arr.each do |artist| %>
-					<li class='artist'><%= link_to artist.name, artist %></li>
-				<% end %>
-			</ul>
+			<ul class='column block'><%= render arr %></ul>
 		<% end %>
 	</div>
 <% end %>

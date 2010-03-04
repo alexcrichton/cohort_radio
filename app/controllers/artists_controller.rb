@@ -19,4 +19,10 @@ class ArtistsController < ApplicationController
     respond_with @artist
   end
   
+  def update
+    @artist.update_attributes params[:artist]
+    render @artist
+  end
+  
+  
 end
