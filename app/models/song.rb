@@ -19,6 +19,8 @@ class Song < ActiveRecord::Base
   
   before_validation :ensure_artist_and_album
   after_save :destroy_stale_artist_and_album
+  after_save :write_metadata
+  after_destroy :destroy_invalid_artist_and_album
   
   scope :search, Proc.new{ |query| where('title LIKE :q or artists.name LIKE :q or albums.name LIKE :q', :q => "%#{query}%").includes(:artist, :album) }
   
@@ -64,6 +66,19 @@ class Song < ActiveRecord::Base
   def destroy_stale_artist_and_album
     @old_artist.destroy if @old_artist && @old_artist.id != artist.id && @old_artist.songs.size == 0
     @old_album.destroy  if @old_album  && @old_album.id  != album.id  && @old_album.songs.size  == 0
+  end
+  
+  def write_metadata
+    info = Mp3Info.new audio.path
+    info.tag['artist'] = artist.name unless artist.nil? || artist.name == 'unknown'
+    info.tag['album']  = album.name  unless album.nil?  || album.name  == 'unknown'
+    info.tag['title']  = title
+    info.close
+  end
+  
+  def destroy_invalid_artist_and_album
+    album.destroy  if album.songs.size  == 0
+    artist.destroy if artist.songs.size == 0
   end
   
 end
