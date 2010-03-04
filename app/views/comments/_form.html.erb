@@ -1,12 +1,10 @@
 <% comment = Comment.new :song => @song unless defined?(comment) && comment %>
 
 <% form_for comment, :url => (comment.new_record? ? song_comments_path(@song) : song_comment_path(@song, comment)) do |f| %>
-	<div>
-		<%= f.label :text %><br/>
-		<%= f.text_area :text, :style => 'height:100px' %>
-	</div>
-	<div>
-		<%= f.submit 'Comment' %>
-		<%= link_to '[cancel]', '#', :class => 'cancel' %>
-	</div>
+	<dl>
+		<dt><%= f.label :text %></dt>
+		<dd><%= f.text_area :text, :style => 'height:100px' %></dd>
+		<dt><%= f.submit 'Comment' %></dt>
+		<dd><%= link_to '[cancel]', '#', :class => 'cancel' %></dd>
+	</dl>
 <% end %>

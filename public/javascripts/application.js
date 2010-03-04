@@ -12,14 +12,6 @@ $(function() {
 });
 
 $(function() {
-  $('.song .links .edit, .song form .cancel').live('click', function() {
-    $(this).parents('.song').find('.content, .form').toggle();
-    return false;
-  });
-  $('.song form').bindSongEditForm();
-});
-
-$(function() {
   $('#comments > .links .add, #comments > .links .cancel').click(function(){
     $(this).parents('.links').children().toggle();
     return false;
@@ -39,47 +31,33 @@ $(function() {
     },
     resetForm: true
   });
-  
-  $('#comments .comment .edit, #comments .comment .cancel').live('click', function() {
-    var par = $(this).parents('.comment');
-    par.find('.content, .form').toggle();
+});
+
+$(function() {
+  $('.inline-edit a.edit, .inline-edit form a.cancel').live('click', function() {
+    var par = $(this).parents('.inline-edit:first');
+    par.find('a.edit, a.cancel').toggle();
+    par.children('.content, .form').toggle();
     return false;
   });
-  
-  $('#comments .comment form').bindCommentForm();
+  $('.inline-edit form').bindInlineForm();
 });
 
 $.fn.extend({
-  bindSongEditForm: function() {
+  bindInlineForm: function() {
     $(this).ajaxForm({
       beforeSubmit: function(args, form) {
-        form.parents('.song').html(hugeAjax);
+        form.parents('.inline-edit').html(hugeAjax);
       },
       success: function(data) {
         var img = $('img.loading');
-        var par = img.parents('.song');
+        var par = img.parents('.inline-edit');
         img.remove();
         var el = $(data);
-        el.find('form').bindSongEditForm();
+        el.find('form').bindInlineForm();
         par.replaceWith(el);
       }
-    });
-  },
-  bindCommentForm: function() {
-    $(this).ajaxForm({
-      beforeSubmit: function(args, form) {
-        $(smallAjax).insertAfter(form.find('input[type=submit]').attr('disabled', 'disabled'));
-      },
-      success: function(data) {
-        var form = $('img.loading').parents('form');
-        form.find('img.loading').remove();
-        form.find('input[type=submit]').removeAttr('disabled');
-        var newform = $(data);
-        newform.find('form').bindCommentForm();
-        form.parents('.comment').replaceWith(newform);
-      },
-      resetForm: true
-    });
+    })
   }
 });
 
