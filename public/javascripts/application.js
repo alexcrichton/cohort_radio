@@ -38,6 +38,8 @@ $(function() {
     var par = $(this).parents('.inline-edit:first');
     par.find('a.edit, a.cancel').toggle();
     par.children('.content, .form').toggle();
+    if ($(this).is('.edit'))
+      par.find('form input[type=text]:first').focus();
     return false;
   });
   $('.inline-edit form').bindInlineForm();
