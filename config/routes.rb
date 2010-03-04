@@ -1,6 +1,6 @@
 CohortRadio::Application.routes.draw do |map|
   
-  resources :albums, :only => [:index]
+  resources :albums, :only => [:update, :index]
   
   resources :artists, :only => [:update, :show, :index] do
     resources :songs, :only => [:index]

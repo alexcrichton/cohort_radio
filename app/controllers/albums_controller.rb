@@ -18,4 +18,9 @@ class AlbumsController < ApplicationController
     @songs  = @album.songs.paginate :page => params[:page], :per_page => 10
   end
   
+  def update
+    @album.update_attributes params[:album]
+    render @album
+  end
+  
 end

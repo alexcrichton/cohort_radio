@@ -2,7 +2,9 @@
 
 <%= link_to '[all artists]', artists_path %>
 <ul class='block'>
-	<li class='all'><%= link_to "All #{@artist.songs.count} Songs", artist_songs_path(@artist) %></li>
+	<li class='all'>
+		<%= link_to "All #{@artist.songs.count} Songs", artist_songs_path(@artist), :class => 'content' %>
+	</li>
 
 	<%= render @albums %>
 </ul>

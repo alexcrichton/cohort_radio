@@ -1,7 +1,17 @@
-<li class='album'>
-	<a href="<%= artist_album_path album.artist, album %>">
-		<%= image_tag(album.cover_url, :height => 60) if album.cover_url %>
+<li class='album inline-edit mini'>
+	<% link_to artist_album_path(album.artist, album), :class => 'content' do %>
+		<%= image_tag(album.cover_url, :height => 60, :width => 60) if album.cover_url %>
 		<div class='name'><%= album.name %></div>
 		<div class='artist'><%= album.artist.name %> &mdash; <%= pluralize album.songs.count, 'song' %></div>
-	</a>
+	<% end %>
+	<% if can? :update, album %>
+		<%= link_to '[edit]', '#', :class => 'edit links' %>
+		<% form_for album, :html => {:class => 'form'} do |f| %>
+			<div>
+				<%= f.text_field :name %>
+				<%= f.submit 'Submit' %>
+				<%= link_to '[cancel]', '#', :class => 'cancel' %>
+			</div>
+		<% end %>
+	<% end %>
 </li>

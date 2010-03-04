@@ -349,14 +349,20 @@ ul.block > li .content {
   color: inherit;
   display: block;
   overflow: auto;
-  width: 80%;
+/*  width: 80%;*/
+  width: 100%;
   float: left;
 }
 
-ul.block > li .content .links {
+ul.block > li {
+  position: relative;
+}
+
+ul.block > li .links {
   display: block;
-  float: right;
-  width: 8%;
+  position: absolute;;
+  bottom: 5px;
+  right: 5px;
 }
 
 ul.block > li:hover {
@@ -375,19 +381,13 @@ ul.column {
   width: 45%;
 }
 
-li.album a img {
+li.album img {
   margin: 0;
   display: block;
   float: left;
 }
 
-li.album a div {
-  padding-left: 10px;
-  width: 80%;
-  float: left;
-}
-
-li.album a .name {
+li.album .name {
   font-weight: bold;
 }
 
@@ -396,13 +396,13 @@ li.album .artist {
   font-style: italic;
 }
 
-li.artist .content {
+li.artist  {
   padding: 6px;
   font-weight: bold;
   font-size: 130%;
 }
 
-.inline-edit form {
+.inline-edit .form {
   display: none;
 }
 

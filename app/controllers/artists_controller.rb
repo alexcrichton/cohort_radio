@@ -22,7 +22,5 @@ class ArtistsController < ApplicationController
   def update
     @artist.update_attributes params[:artist]
     render @artist
-  end
-  
-  
+  end  
 end
