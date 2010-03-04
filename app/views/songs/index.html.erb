@@ -1,5 +1,7 @@
+<%= content_tag :h2, @parent.name if @parent %>
+
 <ul class='alphabet pagination'>
-	<li><%= link_to 'All', songs_path %>
+	<li><%= link_to 'All', songs_path %></li>
 	<% ('A'..'Z').each do |letter| %>
 		<li><%= link_to letter, songs_path + '?' + {:letter => letter}.to_query %></li>
 	<% end %>
