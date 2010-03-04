@@ -57,8 +57,8 @@ class Song < ActiveRecord::Base
     @old_album =  self.album
     self.album =  album  unless album.nil?
     
-    self.title = File.basename(file) if self.title.blank?
-    self.title = tag['title']        if !custom_set && self.title.blank?
+    self.title = tag['title'] unless custom_set
+    self.title ||= File.basename(file)
   end
   
   def destroy_stale_artist_and_album
