@@ -105,7 +105,7 @@ $(function() {
     return false;
   });
   
-  if (window.location.hash == '') return;
+  if (window.location.hash == '' || $('.pagination a').length == 0) return;
   
   $('.pagination-container:first').html(hugeAjax).load(window.location.hash.substring(1));
   
