@@ -42,7 +42,7 @@ class Song < ActiveRecord::Base
       artist = Artist.new(:name => artist_name) if artist.nil?
     end
     
-    self.album_name = self.album.name if self.album
+    self.album_name = self.album.name if self.album_name.blank? && self.album
     self.album_name ||= tag['album'] if !custom_set && album_name.nil?
     self.album_name ||= 'unknown'
     
