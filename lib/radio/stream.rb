@@ -128,11 +128,12 @@ class Radio
     def stream_song path
       Rails.logger.info "Stream: #{@playlist.name} - playing file #{path}"
       
-      file = File.open(path)
+      file, size = File.open(path), File.size(path)
       @next = false
       while !@next && data = file.read(BLOCKSIZE)
+        Rails.logger.debug "Stream: #{@playlist.name} sending block...:#{connection?.inspect}"
       	self.send data
-        Rails.logger.debug "Stream: #{@playlist.name} - Block sent"
+        Rails.logger.debug "Stream: #{@playlist.name} - Block sent: #{f.pos.to_f / size} #{connected?.inspect}"
         
         # self.sync # this is stupid, freezes the entire process. Do by hand:
         d = self.delay
