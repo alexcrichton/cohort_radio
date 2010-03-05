@@ -131,7 +131,7 @@ class Radio
       file, size = File.open(path), File.size(path)
       @next = false
       while !@next && data = file.read(BLOCKSIZE)
-        Rails.logger.debug "Stream: #{@playlist.name} sending block...:#{connection?.inspect}"
+        Rails.logger.debug "Stream: #{@playlist.name} sending block...:#{connected?.inspect}"
       	self.send data
         Rails.logger.debug "Stream: #{@playlist.name} - Block sent: #{f.pos.to_f / size} #{connected?.inspect}"
         
