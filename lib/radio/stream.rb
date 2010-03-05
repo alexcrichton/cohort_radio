@@ -20,9 +20,9 @@ class Radio
     
     def connect
       return if connected?
-      Rails.logger.info "Stream: #{@playlist.name} connecting"
       
       @playlist = Playlist.find(playlist_id)
+      Rails.logger.info "Stream: #{@playlist.name} connecting"
 
       self.host         = options[:host]
       self.port         = options[:port]                        unless options[:port].nil?
@@ -70,7 +70,7 @@ class Radio
     end
     
     def playing?
-      @song_thread.alive?
+      @song_thread && @song_thread.alive?
     end
     
     def paused?
