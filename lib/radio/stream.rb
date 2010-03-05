@@ -20,7 +20,8 @@ class Radio
     
     def connect
       return if connected?
-
+      Rails.logger.info "Stream: #{@playlist.name} connecting"
+      
       @playlist = Playlist.find(playlist_id)
 
       self.host         = options[:host]
@@ -38,6 +39,8 @@ class Radio
       
       # play songs in a different thread
       @song_thread = Thread.start { while @loop; play_song; end }
+
+      Rails.logger.info "Stream: #{@playlist.name} connected"
     end
     
     def disconnect
@@ -123,7 +126,7 @@ class Radio
     end
     
     def stream_song path
-      Rails.logger.debug "Stream: #{@playlist.name} - playing file #{path}"
+      Rails.logger.info "Stream: #{@playlist.name} - playing file #{path}"
       
       file = File.open(path)
       @next = false
@@ -137,6 +140,8 @@ class Radio
         break if d < 0
         sleep d.to_f / 1000
       end
+
+      Rails.logger.info "Stream: #{@playlist.name} - done playing file #{path}"
     end
     
     def random_song playlist
