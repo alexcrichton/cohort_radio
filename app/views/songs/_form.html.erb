@@ -1,4 +1,6 @@
-<% song = @song unless defined?(song) %>
+<% unless defined? song %>
+	<% song = @song %>
+<% end %>
 <% form_for song, :html => {:multipart => true} do |f| %>
   <%= f.error_messages %>
 	<% if song.new_record? %>

@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   end
   
   def show
-    respond_with @song
+    respond_with @user
   end
   
   def new
@@ -32,11 +32,10 @@ class UsersController < ApplicationController
   end
   
   def edit
-    respond_with @song
+    respond_with @user
   end
   
   def update
-
     flash[:notice] = "Successfully updated user." if @user.update_attributes(params[:user])
     respond_with @user
   end
@@ -44,7 +43,7 @@ class UsersController < ApplicationController
   def adminize
     @user.admin = params[:user][:admin]
     Notifier.send_later :deliver_admin_notification, @user if @user.save
-    render :text => (params[:user][:admin] == '1' ? 'Adminized' : 'Revoked')
+    render :text => (@user.admin ? 'Adminized' : 'Revoked')
   end
   
   def destroy

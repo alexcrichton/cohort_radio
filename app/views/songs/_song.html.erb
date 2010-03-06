@@ -1,6 +1,6 @@
 <div class="song remove inline-edit">
 	<div class='image'>
-		<% link_to artist_album_path(song.artist, song.album) do %>
+		<% link_to [song.artist, song.album] do %>
 			<%= image_tag song.album.cover_url, :width => '126' %>
 		<% end if song.album && song.album.cover_url%>
 	</div>
@@ -10,7 +10,7 @@
 			<h5><%= link_to truncate(song.artist.name), song.artist %></h5>
 		<% end %>
 		<% unless song.album.blank? %>
-			<h5><%= link_to truncate(song.album.name), artist_album_path(song.artist, song.album) %></h5>
+			<h5><%= link_to truncate(song.album.name), [song.artist, song.album] %></h5>
 		<% end %>
 		<p>
 			Play count: <%= song.play_count %>
@@ -29,17 +29,17 @@
 					Queued by: <%= item.user.name if item.user %>
 				</p>
 			<% end %>
-			<%= link_to '[download]', download_song_path(song) if can? :download, song %>
-			<%= link_to '[edit]', edit_song_path(song), :class => 'edit' if can? :update, song %>
+			<%= link_to '[download]', [:download, song] if can? :download, song %>
+			<%= link_to '[edit]', [:edit, song], :class => 'edit' if can? :update, song %>
 			<%= link_to '[destroy]', song, :method => :delete, :confirm => 'are you sure?' if can? :destroy, song %>
 
 			<% if defined?(item) && can?(:destroy, item) %>
-				<br/><%= link_to '[remove]', playlist_queue_item_path(@playlist, item), :class => 'remote-remove' %>
+				<br/><%= link_to '[remove]', [@playlist, :dequeue, item], :class => 'remote-remove' %>
 			<% end %>
 		</p>
 		
 		<% if @pool %>
-			<%= link_to "[remove from pool]", remove_playlist_pool_path(@playlist) + '?' + {:song_id => song.id}.to_query, :class => 'remote-remove get' if can? :remove_from, @pool %>
+			<%= link_to "[remove from pool]", [@playlist, :pool, :remove, song], :class => 'remote-remove get' if can? :remove_from, @pool %>
 		<% end %>
 		
 		<% if @playlist.nil? %>
@@ -48,9 +48,9 @@
 				<%= link_to "[add to queue]", '#' %>
 				<ul>
 					<% playlists.each do |playlist| %>
-					<% next if cannot? :add_to, playlist.pool %>
+						<% next if cannot? :add_to, playlist.pool %>
 						<li>
-							<%= link_to playlist.name, new_playlist_queue_item_path(playlist) + '?' + {:song_id => song.id}.to_query, :class => 'remote-replace' %>
+							<%= link_to playlist.name, [playlist, :enqueue, song], :class => 'remote-replace' %>
 						</li>
 					<% end %>
 				</ul>
@@ -61,7 +61,7 @@
 					<% playlists.each do |playlist| %>
 						<% next if cannot?(:add_to, playlist.pool) || song.pools.include?(playlist.pool) %>
 						<li>
-							<%= link_to playlist.name, add_playlist_pool_path(playlist) + '?' + {:song_id => song.id}.to_query, :class => 'remote-replace' %>
+							<%= link_to playlist.name, [playlist, :pool, :add, song], :class => 'remote-replace' %>
 						</li>
 					<% end %>
 				</ul>

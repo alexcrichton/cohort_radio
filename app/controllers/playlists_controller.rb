@@ -28,7 +28,8 @@ class PlaylistsController < ApplicationController
   end
   
   def update
-    flash[:notice] = "Successfully updated playlist." if @playlist.update_attributes(params[:playlist])
+    puts @playlist.update_attributes params[:playlist]
+    flash[:notice] = "Successfully updated playlist." if @playlist.update_attributes params[:playlist]
     respond_with @playlist
   end
   
