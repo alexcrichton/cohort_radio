@@ -22,20 +22,9 @@ CohortRadio::Application.routes.draw do |map|
     end
     resource :search
   end
-
-  resources :playlists do
-    resource :pool do
-      match 'remove/:song_id' => 'pools#remove', :as => 'pool_remove_song'
-      match 'add/:song_id' => 'pools#add', :as => 'pool_add_song'
-    end
-    
-    resources :queue_items, :path_names => {:new => :enqueue, :destroy => :dequeue} do
-      match 'enqueue/:song_id' => 'queue_items#new', :on => :collection
-    end
-    
-    resources :memberships
-  end
   
+  # other playlist actions defined below
+  resources :playlists, :only => [:index, :create, :new]
 
   resource :user, :except => [:show] do
     get :search
@@ -56,11 +45,23 @@ CohortRadio::Application.routes.draw do |map|
   
   match ':controller(/:action(/:id(.:format)))'
   
-  # Shorter routes than above are defined down here
-  match ':id' => 'playlists#show', :as => 'playlist', :conditions => {:method => :get}
-  
-  match ':playlist_id/enqueue' => 'queue_items#new', :as => 'playlist_enqueue'
-  match ':playlist_id/enqueue/:song_id' => 'queue_items#new', :as => 'playlist_enqueue_song'
-  match ':playlist_id/dequeue/:id' => 'queue_items#destroy', :as => 'playlist_dequeue_queue_item'
+  resources :playlists, :as => '', :except => [:index, :create, :new] do
+    resource :pool do
+      match 'remove/:song_id' => 'pools#remove', :as => 'pool_remove_song'
+      match 'add/:song_id' => 'pools#add', :as => 'pool_add_song'
+    end
+    
+    resources :queue_items, :path_names => {:new => :enqueue, :destroy => :dequeue} do
+      match 'enqueue/:song_id' => 'queue_items#new', :on => :collection
+    end
+    
+    resources :memberships
+    
+  end
+  scope :name_prefix => 'playlist' do 
+    match ':playlist_id/enqueue' => 'queue_items#new', :as => 'enqueue'
+    match ':playlist_id/enqueue/:song_id' => 'queue_items#new', :as => 'enqueue_song'
+    match ':playlist_id/dequeue/:id' => 'queue_items#destroy', :as => 'dequeue_queue_item'
+  end
   
 end
