@@ -1,7 +1,7 @@
 <div class='actions'>
-	<%= link_to "Edit", edit_song_path(@song) if can? :update, @song %> |
+	<%= link_to "Edit", [:edit, @song] if can? :update, @song %> |
 	<%= link_to "Destroy", @song, :confirm => 'Are you sure?', :method => :delete if can? :destroy, @song %> |
-  <%= link_to "View All", songs_path %>
+  <%= link_to "View All", :songs %>
 </div>
 <%= render @song %>
 

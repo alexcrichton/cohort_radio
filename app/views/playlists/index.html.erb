@@ -10,7 +10,7 @@
 	      <td><%= link_to playlist.name, playlist %></td>
 	      <td>
 					<% if can? :manage, playlist %>
-		      	<%= link_to "Edit", edit_playlist_path(playlist) %>
+		      	<%= link_to "Edit", [:edit, playlist] %>
 		      	<%#= link_to "Destroy", playlist, :confirm => 'Are you sure?', :method => :delete %>
 					<% end %>
 				</td>
@@ -20,4 +20,4 @@
 <% end %>
 
 
-<p><%= link_to "New Playlist", new_playlist_path if can? :create, Playlist %></p>
+<p><%= link_to "New Playlist", [:new, :playlist] if can? :create, Playlist %></p>

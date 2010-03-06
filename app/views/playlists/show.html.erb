@@ -1,9 +1,7 @@
 <div class="search">
 	<div>
-		<% if can? :update, @playlist %>
-			<%= link_to "[Edit playlist]", edit_playlist_path(@playlist) %>
-		<% end %>
-		<%= link_to "[Pool]", playlist_pool_path(@playlist) %>
+		<%= link_to "[Edit playlist]", [:edit, @playlist] if can? :update, @playlist %>
+		<%= link_to "[Pool]", [@playlist, :pool] %>
 		<% if can?(:manage, Radio) && radio_connected? %>
 			<% if radio.playing? @playlist.id %>
 				<%= link_to "[Stop streaming]", :controller => 'radio/commands', :action => 'stop', :playlist_id => @playlist.slug %>

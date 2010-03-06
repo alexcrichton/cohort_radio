@@ -16,11 +16,9 @@ class ActivationsController < ApplicationController
     @user = User.find_by_email(params[:email])
     if @user
       @user.deliver_activation_instructions!
-      flash[:notice] = "Please check your email for activation instructions."
-      redirect_to login_path
+      redirect_to login_path, :notice => "Please check your email for activation instructions."
     else
-      flash[:error] = "No user was found with that email address"
-      render :action => :new
+      render :action => :new, :alert => "No user was found with that email address"
     end
   end
 
@@ -28,13 +26,11 @@ class ActivationsController < ApplicationController
   def activate
     @user = User.find_using_perishable_token(params[:token], 2.days)
     if @user.nil?
-      flash[:notice] = 'Your token is incorrect or has expired, resend your activation instructions to correct this.'
-      redirect_to login_path
+      redirect_to login_path, :notice => 'Your token is incorrect or has expired, resend your activation instructions to correct this.'
     else
-      @user.activation.update_attributes(:state => 'activated')
-      flash[:notice] = 'Your account is now activated.'
+      @user.activation.update_attributes :state => 'activated'
       Notifier.send_later :deliver_confirmation_request, @user
-      redirect_to activation_path
+      redirect_to activation_path, :notice => 'Your account is now activated.'
     end
   end
 

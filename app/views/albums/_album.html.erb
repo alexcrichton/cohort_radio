@@ -2,7 +2,9 @@
 	<% link_to [album.artist, album], :class => 'content' do %>
 		<%= image_tag(album.cover_url, :height => 60, :width => 60) if album.cover_url %>
 		<div class='name'><%= album.name %></div>
-		<div class='artist'><%= album.artist.name %> &mdash; <%= pluralize album.songs.count, 'song' %></div>
+		<div class='artist'>
+			<%= album.artist.name %> &mdash; <%= pluralize album.songs.count, 'song' %>
+		</div>
 	<% end %>
 	<% if can? :update, album %>
 		<%= link_to '[edit]', '#', :class => 'edit links' %>

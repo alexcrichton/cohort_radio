@@ -23,7 +23,7 @@ $(function() {
     },
     success: function(data) {
       var form = $(data);
-      form.find('form').bindCommentForm();
+      form.find('form').bindInlineForm();
       form.insertAfter('#comments > .links');
       $('img.loading').remove();
       $('#comments > .links form').parent().hide().prev().show();
