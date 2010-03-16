@@ -92,6 +92,7 @@ a {
   border: 3px solid #ccc;
   -webkit-border-radius: 20px;
   -mozilla-border-radius: 20px;
+  position: relative;
 }
 
 .song div, .comment div {
@@ -109,18 +110,30 @@ a {
   width: 420px;
 }
 
-.song .add:hover > a {
-  display: none;
+.song .add {
+  position: absolute;
 }
 
 .song .add ul {
+  position: absolute;
+  top: 0;
+  opacity: 0;
+  left: -999px;
   list-style: none;
-  display: none;
   background: #ccc;
   padding: 0;
   width: 170px;
   border: 1px solid black;
   border-bottom: 0px;
+  z-index: 10;
+
+  -webkit-transition: opacity 0.2s linear;
+  -moz-transition: opacity 0.2s linear;
+}
+
+.song .add:hover ul {
+  opacity: 1;
+  left: 0;
 }
 
 .song .add ul li {
@@ -137,10 +150,6 @@ a {
   text-decoration: none;
   color: black;
   width: 100%;
-}
-
-.song .add:hover ul {
-  display: block;
 }
 
 .search {
@@ -356,6 +365,8 @@ ul.block > li .content {
 
 ul.block > li {
   position: relative;
+  -webkit-transition: background 0.1s linear;
+  -moz-transition: background 0.2s linear;
 }
 
 ul.block > li .links {
@@ -367,6 +378,7 @@ ul.block > li .links {
 
 ul.block > li:hover {
   background: #bbb;
+  
 }
 
 ul.block > li.all > a {

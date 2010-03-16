@@ -72,7 +72,9 @@ $(function() {
       type: $(this).is('.get') ? 'GET' : 'DELETE',
       url: $(this).attr('href'), 
       success: function(data) {
-        par.remove();
+        par.slideUp(function(){
+          par.remove();
+        });
       }
     });
     $(this).replaceWith(img);

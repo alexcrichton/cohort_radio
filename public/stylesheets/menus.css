@@ -45,7 +45,8 @@ nav ul ul li {
 }
 
 nav li:hover > ul {
-  display: block;
+  opacity: 1;
+  left: inherit;
 }
 
 nav ul li a, nav ul li span {
@@ -54,10 +55,14 @@ nav ul li a, nav ul li span {
 }
 
 nav ul ul {
-  display: none;
+  display: block;
+  opacity: 0;
   background: #fff;
   border: 1px solid black;
   left: 0%;
   top: 100%;
+  left: -999px;
+  -webkit-transition: opacity 0.2s linear;
+  -moz-transition: opacity 0.2s linear;
 }
 

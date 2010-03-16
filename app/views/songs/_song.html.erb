@@ -1,3 +1,4 @@
+<% playlists = Playlist.all %>
 <div class="song remove inline-edit">
 	<div class='image'>
 		<% link_to [song.artist, song.album] do %>
@@ -5,7 +6,9 @@
 		<% end if song.album && song.album.cover_url%>
 	</div>
 	<div class='content'>
-		<h3><%= link_to truncate(song.title), song %></h3>
+		<h3>
+			<%= link_to truncate(song.title), song %>
+		</h3>
 		<% if song.artist %>
 			<h5><%= link_to truncate(song.artist.name), song.artist %></h5>
 		<% end %>
@@ -43,7 +46,6 @@
 		<% end %>
 		
 		<% if @playlist.nil? %>
-			<% playlists = Playlist.all %>
 			<div class='add'>
 				<%= link_to "[add to queue]", '#' %>
 				<ul>
@@ -55,17 +57,19 @@
 					<% end %>
 				</ul>
 			</div>
-			<div class='add'>
-				<%= link_to "[add to pool]", '#' %>
-				<ul>
-					<% playlists.each do |playlist| %>
-						<% next if cannot?(:add_to, playlist.pool) || song.pools.include?(playlist.pool) %>
-						<li>
-							<%= link_to playlist.name, [playlist, :pool, :add, song], :class => 'remote-replace' %>
-						</li>
-					<% end %>
-				</ul>
-			</div>
+			<% poss = playlists.select{ |p| can?(:add_to, p.pool) && !song.pool_ids.include?(p.pool.id)}%>
+			<% if poss.size > 0 %>
+				<div class='add' style='top:80px;'>
+					<%= link_to "[add to pool]", '#' %>
+					<ul>
+						<% poss.each do |playlist| %>
+							<li>
+								<%= link_to playlist.name, [playlist, :pool, :add, song], :class => 'remote-replace' %>
+							</li>
+						<% end %>
+					</ul>
+				</div>
+			<% end %>
 		<% end %>
 	</div>
 </div>
