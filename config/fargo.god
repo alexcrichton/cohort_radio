@@ -9,6 +9,10 @@ God.watch do |w|
   w.stop = "RAILS_ENV=production #{rails_root}/script/fargo stop"
   w.restart = "RAILS_ENV=production #{rails_root}/script/fargo restart"
   
+  w.pid_file = File.join(rails_root, "tmp/pids/fargo.pid")
+  
+  w.behavior(:clean_pid_file)
+  
   w.uid = 'capistrano'
   w.gid = 'http'
   

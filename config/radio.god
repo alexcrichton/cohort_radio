@@ -9,6 +9,10 @@ God.watch do |w|
   w.stop = "RAILS_ENV=production #{rails_root}/script/radio stop"
   w.restart = "RAILS_ENV=production #{rails_root}/script/radio restart"
   
+  w.pid_file = File.join(rails_root, "tmp/pids/radio.pid")
+  
+  w.behavior(:clean_pid_file)
+  
   w.uid = 'capistrano'
   w.gid = 'http'
   

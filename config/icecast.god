@@ -1,41 +1,36 @@
 God.watch do |w|
   w.name = "icecast"
+  
   w.interval = 30.seconds # default      
-  w.start = "/etc/rc.d/icecast start"
-  w.stop = "/etc/rc.d/icecast stop"
-  w.restart = "/etc/rc.d/icecast restart"
+  
+  w.start = "/usr/bin/icecast -c /etc/icecast.xml"
+  
   w.start_grace = 20.seconds
   w.restart_grace = 20.seconds
-  
-  w.pid_file = "/var/run/icecast.pid"
 
-  w.behavior(:clean_pid_file)
+  w.transition(:init, true => :up, false => :start) do |on|
+    on.condition(:process_running) do |c|
+      c.running = true
+    end
+  end
 
-  w.start_if do |start|
-    start.condition(:process_running) do |c|
+  w.transition([:start, :restart], :up) do |on|
+    on.condition(:process_running) do |c|
+      c.running = true
       c.interval = 5.seconds
+    end
+
+    # failsafe
+    on.condition(:tries) do |c|
+      c.times = 5
+      c.transition = :start
+      c.interval = 5.seconds
+    end
+  end
+
+  w.transition(:up, :start) do |on|
+    on.condition(:process_running) do |c|
       c.running = false
     end
   end
-
-  w.restart_if do |restart|
-    restart.condition(:memory_usage) do |c|
-      c.above = 15.percent
-      c.times = [3, 5] # 3 out of 5 intervals
-    end
-  end
-
-  w.lifecycle do |on|
-    on.condition(:flapping) do |c|
-      c.to_state = [:start, :restart]
-      c.times = 5
-      c.within = 5.minute
-      c.transition = :unmonitored
-      c.retry_in = 10.minutes
-      c.retry_times = 5
-      c.retry_within = 2.hours
-    end
-  end
-
-
 end
