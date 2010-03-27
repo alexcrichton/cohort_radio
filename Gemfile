@@ -12,7 +12,7 @@ gem 'will_paginate', '3.0.pre'
 gem 'scrobbler'
 gem 'daemons'
 gem 'shout'
-gem 'BlueCloth', :require => 'bluecloth'
+gem 'bluecloth'
 
 # Not compatible with rails 3 just yet...
 # gem 'thinking-sphinx', :require => 'thinking_sphinx', :source => 'http://gemcutter.org/'
