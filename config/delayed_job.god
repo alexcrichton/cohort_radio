@@ -5,7 +5,9 @@ God.watch do |w|
   w.group = "cradio"
   w.interval = 30.seconds # default      
   
-  w.start = "rake -f #{rails_root}/Rakefile production jobs:work"
+  w.start = "RAILS_ENV=production #{rails_root}/script/delayed_job start"
+  w.stop = "RAILS_ENV=production #{rails_root}/script/delayed_job stop"
+  w.restart = "RAILS_ENV=production #{rails_root}/script/delayed_job restart"
   
   w.uid = 'capistrano'
   w.gid = 'http'

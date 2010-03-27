@@ -5,9 +5,9 @@ God.watch do |w|
   w.group = "cradio"
   w.interval = 30.seconds # default      
   
-  w.start = "RAILS_ENV=production #{rails_root}/fargo start"
-  w.stop = "RAILS_ENV=production #{rails_root}/fargo stop"
-  w.restart = "RAILS_ENV=production #{rails_root}/fargo restart"
+  w.start = "RAILS_ENV=production #{rails_root}/script/fargo start"
+  w.stop = "RAILS_ENV=production #{rails_root}/script/fargo stop"
+  w.restart = "RAILS_ENV=production #{rails_root}/script/fargo restart"
   
   w.uid = 'capistrano'
   w.gid = 'http'

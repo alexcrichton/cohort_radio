@@ -5,9 +5,9 @@ God.watch do |w|
   w.group = "cradio"
   w.interval = 30.seconds # default      
   
-  w.start = "RAILS_ENV=production #{rails_root}/radio start"
-  w.stop = "RAILS_ENV=production #{rails_root}/radio stop"
-  w.restart = "RAILS_ENV=production #{rails_root}/radio restart"
+  w.start = "RAILS_ENV=production #{rails_root}/script/radio start"
+  w.stop = "RAILS_ENV=production #{rails_root}/script/radio stop"
+  w.restart = "RAILS_ENV=production #{rails_root}/script/radio restart"
   
   w.uid = 'capistrano'
   w.gid = 'http'
