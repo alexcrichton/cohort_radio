@@ -1,6 +1,6 @@
 class Radio::CommandsController < ApplicationController
   
-  before_filter { |c| c.unauthorized! if c.cannot? :manage, Radio }
+  authorize_resource :class => Playlist
   
   before_filter :require_radio_running, :except => :connect
   

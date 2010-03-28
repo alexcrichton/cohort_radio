@@ -2,7 +2,7 @@
 	<div>
 		<%= link_to "[Edit playlist]", [:edit, @playlist] if can? :update, @playlist %>
 		<%= link_to "[Pool]", [@playlist, :pool] %>
-		<% if can?(:manage, Radio) && radio_connected? %>
+		<% if can?(:add, @playlist) && radio_connected? %>
 			<% if radio.playing? @playlist.id %>
 				<%= link_to "[Stop streaming]", :controller => 'radio/commands', :action => 'stop', :playlist_id => @playlist.slug %>
 				<%= link_to "[Next Song]", :controller => 'radio/commands', :action => 'next', :playlist_id => @playlist.slug %>

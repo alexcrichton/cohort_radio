@@ -15,7 +15,7 @@ class Ability
       cannot :reset, 'password' # need to be logged out (don't want to mess with other users)
     elsif user.confirmed?
       can [:read, :create], Playlist
-      can :update, Playlist do |playlist|
+      can [:update, :add, :next, :stop], Playlist do |playlist|
         playlist.user_id == user.id
       end
       can [:download, :create, :search, :update], Song
