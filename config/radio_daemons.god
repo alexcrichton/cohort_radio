@@ -7,8 +7,8 @@ rails_root = "/srv/http/cohort_radio/current"
     w.group = "cradio"
     w.interval = 30.seconds # default      
   
-    w.start = "cd #{rails_root}; RAILS_ENV=production script/#{daemon} start"
-    w.stop  = "cd #{rails_root}; RAILS_ENV=production script/#{daemon} stop"
+    w.start   = "cd #{rails_root}; RAILS_ENV=production script/#{daemon} start"
+    w.stop    = "cd #{rails_root}; RAILS_ENV=production script/#{daemon} stop"
     w.restart = "cd #{rails_root}; RAILS_ENV=production script/#{daemon} restart"
   
     w.pid_file = File.join(rails_root, "tmp/pids/#{daemon}.pid")
@@ -54,7 +54,6 @@ rails_root = "/srv/http/cohort_radio/current"
         c.running = false
       end
     end
-
-
   end
+  
 end
