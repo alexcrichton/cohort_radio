@@ -16,6 +16,7 @@ class ApplicationController < ActionController::Base
     Exceptional.handle exception
     flash[:error] = 'Access denied.'
     store_location unless current_user
+
     redirect_to current_user ? playlists_path : login_url
   end
 
@@ -48,9 +49,11 @@ class ApplicationController < ActionController::Base
 
   def store_location
     session[:return_to] = request.request_uri
+    puts session[:return_to].inspect
   end
 
   def redirect_back_or_default(default)
+    puts session[:return_to].inspect
     redirect_to(session[:return_to] || default)
     session[:return_to] = nil
   end

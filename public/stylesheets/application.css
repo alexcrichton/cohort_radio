@@ -88,7 +88,7 @@ a {
 
 .song, .comment {
   clear: both;
-  overflow: auto;
+  height: 190px;
   border: 3px solid #ccc;
   -webkit-border-radius: 20px;
   -mozilla-border-radius: 20px;

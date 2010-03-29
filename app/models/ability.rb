@@ -31,7 +31,7 @@ class Ability
       end
       
       can :create, QueueItem do |queue_item|
-        parent.is_a?(Playlist) && can?(:add_to, parent.pool)
+        parent.nil? || (parent.is_a?(Playlist) && can?(:add_to, parent.pool))
       end
       
       can :manage, Pool do |action, pool|

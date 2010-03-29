@@ -1,7 +1,6 @@
 class Fargo::CommandsController < ApplicationController
   
-  before_filter(:except => :download){ |c| c.unauthorized! if c.cannot? :manage, Fargo }
-  before_filter(:only => :download){ |c| c.unauthorized! if c.cannot? :download, Fargo }  
+  authorize_resource :class => Fargo
   
   before_filter :require_fargo_connected, :except => :connect
   
