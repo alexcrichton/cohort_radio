@@ -30,9 +30,9 @@ class Ability
         comment.user_id == user.id
       end
       
-      can :create, QueueItem do |queue_item|
-        parent.nil? || (parent.is_a?(Playlist) && can?(:add_to, parent.pool))
-      end
+      # can :create, QueueItem do |queue_item|
+      #   parent.nil? || (parent.is_a?(Playlist) && can?(:add_to, parent.pool))
+      # end
       
       can :manage, Pool do |action, pool|
         !pool.playlist.private || pool.playlist.user_id == user.id || pool.playlist.user_ids.include?(user.id)
@@ -46,6 +46,7 @@ class Ability
         parent.is_a?(Playlist) && parent.user_id == user.id
       end
       
+      can :create, QueueItem
     end
     
   end
