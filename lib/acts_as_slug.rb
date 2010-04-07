@@ -51,7 +51,7 @@ module Acts
 
       private
       def create_slug
-        self[slug_target_column] = self[slug_source_column].to_s.parameterize
+        self[slug_target_column] = self[slug_source_column].to_s.toutf8.parameterize
       end
     end
   end
