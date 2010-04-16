@@ -45,7 +45,7 @@ end
 
 namespace :bundler do
   task :install, :roles => :app do
-    run "cd #{current_path} && bundle install --without=test #{shared_path}/bundle"
+    run "cd #{current_path} && bundle install #{shared_path}/bundle"
   end
 end
 
