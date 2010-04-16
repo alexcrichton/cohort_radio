@@ -1,4 +1,5 @@
 .DS_Store
+vendor/cache
 log/*.log
 tmp/**/*
 public/javascripts/cache
@@ -19,3 +20,4 @@ coverage
 .buildpath
 .idea
 private/*
+.bundle

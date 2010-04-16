@@ -1,10 +1,9 @@
 server "eve.alexcrichton.com", :app, :web, :db, :primary => true
 ssh_options[:port] = 7779
+default_run_options[:pty] = true
 
 set :user, "capistrano"
 set :use_sudo, false
-
-# set :rake, "/opt/ruby1.8/bin/rake"
 
 set :scm, :git
 set :repository, "git://github.com/alexcrichton/cohort_radio.git"
@@ -42,6 +41,12 @@ namespace :db do
     run "ln -nsf #{shared_path}/fargo #{latest_release}/tmp/fargo"
   end
 
+end
+
+namespace :bundler do
+  task :install, :roles => :app do
+    run "cd #{current_path} && bundle install --without=test #{shared_path}/bundle"
+  end
 end
 
 # run through phusion passenger on nginx
