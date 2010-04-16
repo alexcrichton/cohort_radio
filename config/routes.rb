@@ -43,7 +43,6 @@ CohortRadio::Application.routes.draw do |map|
 
   root :to => 'users#home'
   
-  match ':controller(/:action(/:id(.:format)))'
   
   resources :playlists, :except => [:index, :create, :new] do
     resource :pool do
@@ -64,5 +63,6 @@ CohortRadio::Application.routes.draw do |map|
     match ':playlist_id/enqueue/:song_id' => 'queue_items#new', :as => 'enqueue_song'
     match ':playlist_id/dequeue/:id' => 'queue_items#destroy', :as => 'dequeue_queue_item'
   end
+  match ':controller(/:action(/:id(.:format)))'
   
 end

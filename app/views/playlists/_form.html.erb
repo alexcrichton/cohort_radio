@@ -1,5 +1,7 @@
-<% form_for @playlist do |f| %>
+<%= form_for @playlist do |f| %>
+
   <%= f.error_messages %>
+
   <dl>
     <dt><%= f.label :name %></dt>
     <dd><%= f.text_field :name %></dd>
@@ -17,10 +19,10 @@
 	<div id='memberships'>
 		<ul>
 			<% @playlist.memberships.each do |membership| %>
-			<li class='remove'><%= membership.user.name %> <%= link_to '[remove]', [@playlist, membership], :class => 'remote-remove' %></li>
+				<li class='remove'><%= membership.user.name %> <%= link_to '[remove]', [@playlist, membership], :class => 'remote-remove' %></li>
 			<% end %>
 		</ul>
-		<% form_for @playlist.memberships.build, :url => [@playlist, :memberships] do |f| %>
+		<%= form_for @playlist.memberships.build, :url => [@playlist, :memberships] do |f| %>
 			<div>
 				<%= text_field_tag :q %>
 				<%= f.submit 'Add' %>

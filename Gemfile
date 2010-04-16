@@ -8,7 +8,7 @@ gem 'paperclip', :git => 'git://github.com/thoughtbot/paperclip.git', :branch =>
 gem 'ruby-mp3info', :require => 'mp3info'
 gem 'delayed_job'
 gem 'exceptional'
-gem 'will_paginate', '3.0.pre'
+gem 'will_paginate', :git => 'git://github.com/mislav/will_paginate.git', :branch => 'rails3'
 gem 'scrobbler'
 gem 'daemons'
 gem 'shout'

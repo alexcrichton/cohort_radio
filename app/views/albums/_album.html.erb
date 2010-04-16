@@ -1,5 +1,5 @@
 <li class='album inline-edit mini'>
-	<% link_to [album.artist, album], :class => 'content' do %>
+	<%= link_to [album.artist, album], :class => 'content' do %>
 		<%= image_tag(album.cover_url, :height => 60, :width => 60) if album.cover_url %>
 		<div class='name'><%= album.name %></div>
 		<div class='artist'>
@@ -8,7 +8,7 @@
 	<% end %>
 	<% if can? :update, album %>
 		<%= link_to '[edit]', '#', :class => 'edit links' %>
-		<% form_for album, :html => {:class => 'form'} do |f| %>
+		<%= form_for album, :html => {:class => 'form'} do |f| %>
 			<div>
 				<%= f.text_field :name %>
 				<%= f.submit 'Submit' %>

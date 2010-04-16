@@ -1,5 +1,5 @@
 <h1><%= @album.name %></h1>
 <h3><%= link_to @artist.name, @artist %></h3>
-<% paginated_section @songs do %>
+<%= raw( paginated_section @songs do %>
 	<%= render @songs %>
-<% end %>
+<% end )%>

@@ -1,7 +1,7 @@
 <% unless defined? song %>
 	<% song = @song %>
 <% end %>
-<% form_for song, :html => {:multipart => true} do |f| %>
+<%= form_for song, :html => {:multipart => true} do |f| %>
   <%= f.error_messages %>
 	<% if song.new_record? %>
 	  <p>

@@ -1,7 +1,7 @@
 <% playlists = Playlist.all %>
 <div class="song remove inline-edit">
 	<div class='image'>
-		<% link_to [song.artist, song.album] do %>
+		<%= link_to [song.artist, song.album] do %>
 			<%= image_tag song.album.cover_url, :width => '126' %>
 		<% end if song.album && song.album.cover_url%>
 	</div>

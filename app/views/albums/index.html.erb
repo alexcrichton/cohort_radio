@@ -5,11 +5,11 @@
 	<% end %>
 </ul>
 
-<% paginated_section @albums do %>
+<%= raw( paginated_section @albums do %>
 	<% left = (right = @albums.dup).slice!(0, (@albums.size / 2.0).ceil) %>
 	<div style='overflow:auto'>
 		<% [left, right].each do |arr| %>
 			<ul class='column block'><%= render arr %></ul>
 		<% end %>
 	</div>
-<% end %>
+<% end) %>

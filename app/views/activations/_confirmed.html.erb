@@ -3,13 +3,13 @@
   <td><%= user.email %></td>
   <% id = "confirmed_user_#{user.id}" %>
   <td>
-    <% form_for user, :url => activation_path, :html => {:method => :put, :id => id} do |f| %>
+    <%= form_for user, :url => activation_path, :html => {:method => :put, :id => id} do |f| %>
       <%= render 'activations/form', :user => user, :id => id, :op => 'revoke', :link => '[revoke]', :f => f %>
     <% end %>
   </td>
   <td>
     <% id += '_admin' %>
-    <% form_for user, :url => adminize_path(user.id), :html => {:method => :put, :id => id} do |f| %>
+    <%= form_for user, :url => adminize_path(user.id), :html => {:method => :put, :id => id} do |f| %>
       <div>
         <%= f.check_box :admin, :id => id + '_admin' %>
         <span></span>
