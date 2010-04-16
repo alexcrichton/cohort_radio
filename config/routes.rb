@@ -45,10 +45,10 @@ CohortRadio::Application.routes.draw do |map|
   
   match ':controller(/:action(/:id(.:format)))'
   
-  resources :playlists, :as => '', :except => [:index, :create, :new] do
+  resources :playlists, :except => [:index, :create, :new] do
     resource :pool do
-      match 'remove/:song_id' => 'pools#remove', :as => 'pool_remove_song'
-      match 'add/:song_id' => 'pools#add', :as => 'pool_add_song'
+      match 'remove/:song_id' => 'pools#remove', :as => 'remove_song'
+      match 'add/:song_id' => 'pools#add', :as => 'add_song'
     end
     
     resources :queue_items, :path_names => {:new => :enqueue, :destroy => :dequeue} do
@@ -58,6 +58,7 @@ CohortRadio::Application.routes.draw do |map|
     resources :memberships
     
   end
+  
   scope :name_prefix => 'playlist' do 
     match ':playlist_id/enqueue' => 'queue_items#new', :as => 'enqueue'
     match ':playlist_id/enqueue/:song_id' => 'queue_items#new', :as => 'enqueue_song'
