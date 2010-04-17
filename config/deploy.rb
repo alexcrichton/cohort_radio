@@ -1,7 +1,13 @@
 server "eve.alexcrichton.com", :app, :web, :db, :primary => true
 ssh_options[:port] = 7779
-# default_run_options[:pty] = true
-# default_run_options[:shell] = true
+
+set :default_environment, { 
+  'PATH' => "/home/alex/.rvm/rubies/ruby-1.8.7-p249/bin:/home/alex/.rvm/gems/ruby-1.8.7-p249/bin:/home/alex/.rvm/gems/ruby-1.8.7-p249@global/bin:/home/alex/.rvm/bin:$PATH",
+  'RUBY_VERSION' => 'ruby 1.8.7',
+  'GEM_HOME'     => '/home/alex/.rvm/gems/ruby-1.8.7-p249',
+  'GEM_PATH'     => '/home/alex/.rvm/gems/ruby-1.8.7-p249',
+  'BUNDLE_PATH'  => '/home/alex/.rvm/gems/ruby-1.8.7-p249'  # If you are using bundler.
+}
 
 set :user, "capistrano"
 set :use_sudo, false
