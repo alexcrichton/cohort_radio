@@ -8,7 +8,7 @@ class Radio::CommandsController < ApplicationController
     radio.connect
     flash[:notice] = "Connected!"
 
-    redirect_to :controller => 'radio/status'
+    redirect_back_or_default :controller => 'radio/status'
   end
   
   def add
@@ -18,7 +18,7 @@ class Radio::CommandsController < ApplicationController
       render :partial => 'radio/status/playlist', :locals => {:playlist => @playlist}
     else
       flash[:notice] = "Playlist #{@playlist.name} added!"
-      redirect_to @playlist
+      redirect_back_or_default @playlist
     end
   end
   
@@ -29,7 +29,7 @@ class Radio::CommandsController < ApplicationController
       render :partial => 'radio/status/playlist', :locals => {:playlist => @playlist}
     else
       flash[:notice] = "Playlist #{@playlist.name} removed!"
-      redirect_to @playlist
+      redirect_back_or_default @playlist
     end
   end
   
@@ -40,7 +40,7 @@ class Radio::CommandsController < ApplicationController
       render :partial => 'radio/status/playlist', :locals => {:playlist => @playlist}
     else
       flash[:notice] = "Next sent."
-      redirect_to @playlist
+      redirect_back_or_default @playlist
     end
   end
   
@@ -48,7 +48,7 @@ class Radio::CommandsController < ApplicationController
     radio.disconnect
     flash[:notice] = "Disconnected!"
     
-    redirect_to :controller => 'radio/status'
+    redirect_back_or_default :controller => 'radio/status'
   end
   
 end
