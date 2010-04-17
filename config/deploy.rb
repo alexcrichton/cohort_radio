@@ -54,10 +54,10 @@ end
 # run through phusion passenger on nginx
 namespace :deploy do 
   task :restart, :roles => :app do
-    run "touch #{release_path}/tmp/restart.txt"
+    run "touch #{current_path}/tmp/restart.txt"
   end
   task :start, :roles => :app do
-    run "touch #{release_path}/tmp/restart.txt"
+    run "touch #{current_path}/tmp/restart.txt"
   end
   task :stop, :roles => :app do
     # Do nothing, don't want to kill nginx

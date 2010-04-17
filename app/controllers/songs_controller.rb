@@ -47,14 +47,13 @@ class SongsController < ApplicationController
   end
   
   def download
-    puts @song.audio.path, @song.audio_content_type
     # need stream => false with rails 3 because for some reason it doesn't work otherwise...
     send_file @song.audio.path, :type => @song.audio_content_type, :stream => false
   end
   
   def destroy
     @song.destroy
-    redirect_to songs_path, :notice => "Successfully destroyed song."
+    redirect_back_or_default songs_path, :notice => "Successfully destroyed song."
   end
   
   def search

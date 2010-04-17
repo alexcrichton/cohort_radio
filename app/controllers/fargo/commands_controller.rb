@@ -7,7 +7,7 @@ class Fargo::CommandsController < ApplicationController
   def connect
     fargo.connect
 
-    redirect_to playlists_path, :notice => "Connected!"
+    redirect_back_or_default playlists_path, :notice => "Connected!"
   end
   
   def disconnect
@@ -17,7 +17,7 @@ class Fargo::CommandsController < ApplicationController
       fargo.disconnect
     end
     
-    redirect_to playlists_path, :notice => "Disconnected!"
+    redirect_back_or_default playlists_path, :notice => "Disconnected!"
   end
   
   def clear_finished_downloads

@@ -52,9 +52,9 @@ class ApplicationController < ActionController::Base
     puts session[:return_to].inspect
   end
 
-  def redirect_back_or_default(default)
-    puts session[:return_to].inspect
-    redirect_to(session[:return_to] || default)
+  def redirect_back_or_default default, *options
+    redirect_to session[:return_to] || request.referrer || default, *options
+    
     session[:return_to] = nil
   end
 
