@@ -1,6 +1,6 @@
 class Radio::CommandsController < ApplicationController
   
-  authorize_resource :class => Playlist
+  authorize_resource :resource => Playlist
   
   before_filter :require_radio_running, :except => :connect
   

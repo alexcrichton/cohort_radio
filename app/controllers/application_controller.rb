@@ -23,12 +23,14 @@ class ApplicationController < ActionController::Base
   private
   def require_fargo_connected
     return true if fargo_connected?
+    
     flash[:error] = "Fargo is not connected!"
     redirect_to playlists_path
   end
 
   def require_radio_running
     return true if radio_running?
+    
     flash[:error] = "Radio is not running!"
     redirect_to playlists_path
   end
@@ -44,12 +46,11 @@ class ApplicationController < ActionController::Base
   end
   
   def current_ability
-    Ability.new current_user, @parent
+    @current_ability ||= Ability.new current_user, @parent
   end
 
   def store_location
     session[:return_to] = request.request_uri
-    puts session[:return_to].inspect
   end
 
   def redirect_back_or_default default, *options

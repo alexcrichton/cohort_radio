@@ -1,7 +1,7 @@
 class UserSessionsController < ApplicationController
 
-  before_filter(:only => [:destroy]){ |c| c.unauthorized! if c.cannot? :logout, User}
-  before_filter(:only => [:new, :create]){ |c| c.unauthorized! if c.cannot? :login, User}
+  before_filter(:only => [:destroy]){ |c| c.authorize! :logout, User}
+  before_filter(:only => [:new, :create]){ |c| c.authorize! :login, User}
 
   def new
     @user_session = UserSession.new

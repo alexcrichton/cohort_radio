@@ -15,9 +15,7 @@ class Ability
       cannot :reset, 'password' # need to be logged out (don't want to mess with other users)
     elsif user.confirmed?
       can [:read, :create], Playlist
-      can [:update, :add, :next, :stop], Playlist do |playlist|
-        playlist.user_id == user.id
-      end
+      can [:update, :add, :next, :stop], Playlist, :user_id => user.id
       can [:download, :create, :search, :update], Song
       can :manage, user
       can [:read, :logout], User
@@ -26,9 +24,7 @@ class Ability
       
       can :create, Comment
       
-      can :manage, Comment do |comment|
-        comment.user_id == user.id
-      end
+      can :manage, Comment, :user_id => user.id
       
       # can :create, QueueItem do |queue_item|
       #   parent.nil? || (parent.is_a?(Playlist) && can?(:add_to, parent.pool))
@@ -38,9 +34,7 @@ class Ability
         !pool.playlist.private || pool.playlist.user_id == user.id || pool.playlist.user_ids.include?(user.id)
       end
       
-      can :destroy, QueueItem do |item|
-        item.user_id == user.id
-      end
+      can :destroy, QueueItem, :user_id => user.id
       
       can [:create, :destroy], Membership do |membership|
         parent.is_a?(Playlist) && parent.user_id == user.id

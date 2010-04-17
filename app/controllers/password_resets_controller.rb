@@ -1,7 +1,7 @@
 class PasswordResetsController < ApplicationController
 
   before_filter :load_user_using_perishable_token, :only => [:edit, :update]
-  before_filter { |c| c.unauthorized! if c.cannot? :reset, 'password' }
+  before_filter { |c| c.authorize! :reset, 'password' }
 
   def new
   end
@@ -20,8 +20,9 @@ class PasswordResetsController < ApplicationController
   end
 
   def update
-    @user.password = params[:user][:password]
+    @user.password              = params[:user][:password]
     @user.password_confirmation = params[:user][:password_confirmation]
+    
     if @user.save
       redirect_to :playlists, :notice => "Password successfully updated"
     else
