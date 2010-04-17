@@ -30,9 +30,8 @@ CohortRadio::Application.routes.draw do |map|
       get 'disconnect'
     end
     
-    resource :search, :only => [:show] do 
-      get 'results'
-    end
+    get 'search/results'
+    get 'search' => 'search#index'
     
   end
   

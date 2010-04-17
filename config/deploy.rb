@@ -1,6 +1,7 @@
 server "eve.alexcrichton.com", :app, :web, :db, :primary => true
 ssh_options[:port] = 7779
-default_run_options[:pty] = true
+# default_run_options[:pty] = true
+default_run_options[:shell] = true
 
 set :user, "capistrano"
 set :use_sudo, false
