@@ -6,13 +6,13 @@ class Fargo::DownloadsController < ApplicationController
   before_filter :require_fargo_connected
     
   def index
-    @current_downloads = fargo.current_downloads
-    @queued_downloads = fargo.queued_downloads
-    @failed_downloads = fargo.failed_downloads
+    @current_downloads  = fargo.current_downloads
+    @queued_downloads   = fargo.queued_downloads
+    @failed_downloads   = fargo.failed_downloads
     @finished_downloads = fargo.finished_downloads
     
     if can? :manage, Fargo
-      @timed_out = fargo.timed_out
+      @timed_out   = fargo.timed_out
       @connections = fargo.nicks_connected_with
     end
     

@@ -9,6 +9,7 @@
     <%= yield(:head) %>
   </head>
   <body>
+		<%#= link_to 'asdf', :controller => '/fargo/commands', :action => 'connect' %>
 		<% if current_user %>
 			<div style='text-align:center'><%= image_tag 'banner.png' if current_user %></div>
 		<% end %>

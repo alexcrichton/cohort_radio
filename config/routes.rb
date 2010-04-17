@@ -6,7 +6,7 @@ CohortRadio::Application.routes.draw do |map|
     resources :songs, :only => [:index]
   end
   
-  match 'artists/:artist_id/:id' => 'albums#show', :as => 'artist_album'
+  get 'artists/:artist_id/:id' => 'albums#show', :as => 'artist_album'
   
   resources :songs do 
     resources :comments
@@ -15,7 +15,7 @@ CohortRadio::Application.routes.draw do |map|
   end
   
   namespace :fargo do
-    resources :downloads do
+    resources :downloads, :only => [:index] do
       get :retry, :on => :collection
       get :remove, :on => :member
       get :try, :on => :collection
@@ -28,42 +28,41 @@ CohortRadio::Application.routes.draw do |map|
 
   resource :user, :except => [:show] do
     get :search
-    match 'adminize/:id' => 'users#adminize', :as => 'adminize'
-    match 'activate/:token' => 'activations#activate', :as => 'activate'
-    match ':id' => 'users#destroy', :conditions => {:method => :delete}, :as => 'user_destroy'
+    get 'adminize/:id' => 'users#adminize', :as => 'adminize'
+    get 'activate/:token' => 'activations#activate', :as => 'activate'
+    delete ':id' => 'users#destroy', :as => 'user_destroy'
   end
   
   resource :activation, :except => [:destroy]
-  match 'activation/form/:user_id' => 'activations#form', :as => 'activation_form'
+  get 'activation/form/:user_id' => 'activations#form', :as => 'activation_form'
 
   resources :password_resets, :only => [:new, :create, :edit, :update]
-  match 'logout' => "user_sessions#destroy", :as => 'logout'
-  match 'login' => "user_sessions#new", :as => 'login'
+  get 'logout' => "user_sessions#destroy", :as => 'logout'
+  get 'login' => "user_sessions#new", :as => 'login'
   resource :user_session, :only => [:create]
 
   root :to => 'users#home'
   
-  
   resources :playlists, :except => [:index, :create, :new] do
-    resource :pool do
-      match 'remove/:song_id' => 'pools#remove', :as => 'remove_song'
-      match 'add/:song_id' => 'pools#add', :as => 'add_song'
+    resource :pool, :only => [:show] do
+      get 'remove/:song_id' => 'pools#remove', :as => 'remove_song'
+      get 'add/:song_id' => 'pools#add', :as => 'add_song'
     end
     
-    resources :queue_items, :path_names => {:new => :enqueue, :destroy => :dequeue} do
-      match 'enqueue/:song_id' => 'queue_items#new', :on => :collection
-    end
+    # get 'enqueue/:song_id'
+    # resources :queue_items, :path_names => {:new => :enqueue, :destroy => :dequeue} do
+    #   get 'enqueue/:song_id' => 'queue_items#new', :on => :collection
+    # end
     
-    resources :memberships
+    resources :memberships, :only => [:create, :destroy]
     
   end
   
   scope :name_prefix => 'playlist' do 
-    match ':playlist_id/enqueue' => 'queue_items#new', :as => 'enqueue'
-    match ':playlist_id/enqueue/:song_id' => 'queue_items#new', :as => 'enqueue_song'
-    match ':playlist_id/dequeue/:id' => 'queue_items#destroy', :as => 'dequeue_queue_item'
+    post ':playlist_id/enqueue' => 'queue_items#new', :as => 'enqueue'
+    get ':playlist_id/enqueue/:song_id' => 'queue_items#new', :as => 'enqueue_song'
+    delete ':playlist_id/dequeue/:id' => 'queue_items#destroy', :as => 'dequeue_queue_item'
   end
   
-  match ':controller(/:action(/:id(.:format)))'
-  
+  get ':controller(/:action(/:id(.:format)))'
 end
