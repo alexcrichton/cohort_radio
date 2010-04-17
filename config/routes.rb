@@ -58,7 +58,7 @@ CohortRadio::Application.routes.draw do |map|
     get 'search'
     get 'adminize/:id' => 'users#adminize', :as => 'adminize'
     get 'activate/:token' => 'activations#activate', :as => 'activate'
-    delete ':id' => 'users#destroy', :as => 'user_destroy'
+    delete ':id' => 'users#destroy'
   end
   
   resource :activation, :except => [:destroy]
