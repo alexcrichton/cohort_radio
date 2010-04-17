@@ -5,7 +5,7 @@ class Fargo::SearchController < ApplicationController
   
   before_filter :require_fargo_connected
     
-  def show
+  def index
     fargo.search @search if @search
   end
   
