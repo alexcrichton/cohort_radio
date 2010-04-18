@@ -64,7 +64,7 @@ class SongsController < ApplicationController
         if @songs.size == 0
           render :text => "<h4>No results found!</h4>"
         else
-          render :inline => "<% paginated_section @songs do %><%= render @songs %><% end %>"
+          render :inline => "<%= raw(paginated_section @songs do %><%= render @songs %><% end) %>"
         end
       else
         @songs = @songs.limit params[:limit]
