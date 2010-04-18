@@ -23,7 +23,7 @@ CohortRadio::Application.routes.draw do |map|
     end
     
     namespace :commands do
-      get 'download'
+      post 'download'
       get 'clear_failed_downloads'
       get 'clear_finished_downloads'
       get 'connect'
