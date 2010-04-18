@@ -48,7 +48,7 @@ class SongsController < ApplicationController
   
   def download
     # need stream => false with rails 3 because for some reason it doesn't work otherwise...
-    send_file @song.audio.path, :type => @song.audio_content_type, :stream => false
+    send_file @song.audio.path, :type => @song.audio_content_type
   end
   
   def destroy
