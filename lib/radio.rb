@@ -1,6 +1,7 @@
 require 'playlist'
 require 'queue_item'
 require 'song'
+require 'radio/stream'
 
 class Radio
   
