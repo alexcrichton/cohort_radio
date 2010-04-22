@@ -2,8 +2,9 @@ class Ability
   include CanCan::Ability
   
   def initialize user, parent = nil
+    alias_action :play_count, :to => :read
     
-    can :home, User  
+    can :home, User
       
     if user.nil? || user.activation.nil? || user.activation.pending?
       can :login, User
