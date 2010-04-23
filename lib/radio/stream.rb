@@ -136,11 +136,11 @@ class Radio
         Rails.logger.info "Stream: #{@playlist.name} - Block sent: #{file.pos.to_f / size} #{connected?.inspect}"
         
         # self.sync # this is stupid, freezes the entire process. Do by hand:
-        d = self.delay
+        d = self.delay.to_f
         Rails.logger.info "Sleeping: #{d}"
         break if d < 0
         # This source will time out after 10 sections, don't sleep over that
-        sleep [d.to_f / 1000, 9.5].min
+        sleep [[d / 1000, 5].max, 9.5].min
       end
 
       Rails.logger.info "Stream: #{@playlist.name} - done playing file #{path}"
