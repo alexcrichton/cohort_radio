@@ -131,13 +131,13 @@ class Radio
       file, size = File.open(path), File.size(path)
       @next = false
       while !@next && data = file.read(BLOCKSIZE)
-        Rails.logger.debug "Stream: #{@playlist.name} sending block...:#{connected?.inspect}"
+        Rails.logger.info "Stream: #{@playlist.name} sending block...:#{connected?.inspect}"
       	self.send data
-        Rails.logger.debug "Stream: #{@playlist.name} - Block sent: #{file.pos.to_f / size} #{connected?.inspect}"
+        Rails.logger.info "Stream: #{@playlist.name} - Block sent: #{file.pos.to_f / size} #{connected?.inspect}"
         
         # self.sync # this is stupid, freezes the entire process. Do by hand:
         d = self.delay
-        Rails.logger.debug "Sleeping: #{d}"
+        Rails.logger.info "Sleeping: #{d}"
         break if d < 0
         # This source will time out after 10 sections, don't sleep over that
         sleep [d.to_f / 1000, 9.5].min
