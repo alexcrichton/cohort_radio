@@ -140,7 +140,7 @@ class Radio
         Rails.logger.info "Sleeping: #{d}"
         break if d < 0
         # This source will time out after 10 sections, don't sleep over that
-        sleep [[d / 1000, 5].max, 9.5].min
+        sleep [d / 1000, 9.5].min
       end
 
       Rails.logger.info "Stream: #{@playlist.name} - done playing file #{path}"
