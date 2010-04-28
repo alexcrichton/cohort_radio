@@ -1,6 +1,6 @@
 <h1>Playlists</h1>
 
-<%= raw(paginated_section @playlists do %>
+<%= paginated_section @playlists do %>
 	<table>
 	  <tr>
 	    <th>Name</th>
@@ -17,7 +17,7 @@
 	    </tr>
 	  <% end %>
 	</table>
-<% end) %>
+<% end %>
 
 
 <p><%= link_to "New Playlist", [:new, :playlist] if can? :create, Playlist %></p>
