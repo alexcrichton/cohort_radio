@@ -16,5 +16,4 @@ class Activation < ActiveRecord::Base
     state == 'confirmed'
   end
   
-  
 end
