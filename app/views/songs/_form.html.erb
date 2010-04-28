@@ -2,7 +2,8 @@
 	<% song = @song %>
 <% end %>
 <%= form_for song, :html => {:multipart => true} do |f| %>
-  <%= f.error_messages %>
+  <%= render "shared/error_messages", :target => f.object %>
+
 	<% if song.new_record? %>
 	  <p>
 	    <%= f.label :audio, 'Audio File' %><br />
