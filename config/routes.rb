@@ -1,4 +1,4 @@
-CohortRadio::Application.routes.draw do |map|
+CohortRadio::Application.routes.draw do
   
   resources :albums, :only => [:update, :index]
   
@@ -28,7 +28,7 @@ CohortRadio::Application.routes.draw do |map|
       get 'clear_failed_downloads'
       get 'clear_finished_downloads'
       get 'connect'
-      get 'disconnect'
+      delete 'disconnect'
     end
     
     get 'search/results'
