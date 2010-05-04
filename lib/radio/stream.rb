@@ -41,6 +41,7 @@ class Radio
       @song_thread = Thread.start { while @loop; play_song; end }
 
       Rails.logger.info "Stream: #{@playlist.name} connected"
+      true
     end
     
     def disconnect

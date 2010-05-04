@@ -1,6 +1,6 @@
-class Radio
+module Fargo
   module Proxy
-    class FargoServer < Server
+    class Server < Radio::Proxy::Server
       
       attr_accessor :client
     

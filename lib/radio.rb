@@ -66,8 +66,9 @@ class Radio
   def add playlist_id
     return if has? playlist_id
     stream = Radio::Stream.new options.merge(:playlist_id => playlist_id)
-    @streaming[playlist_id] = stream      
-    stream.connect if @connected
+    
+    @streaming[plalylist_id] = stream if !@connected || stream.connect
+
     true
   end
   

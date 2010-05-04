@@ -1,6 +1,6 @@
-class Radio
+module Fargo
   module Proxy
-    class FargoClient < Client
+    class Client < Radio::Proxy::Client
       
       include Fargo::Utils::Publisher
           

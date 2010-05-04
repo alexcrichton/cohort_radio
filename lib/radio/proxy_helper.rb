@@ -1,5 +1,5 @@
 class Radio
-  module StreamHelper
+  module ProxyHelper
     
     def radio
       return @radio_management_client if defined?(@radio_management_client)
@@ -17,7 +17,7 @@ class Radio
   
     def radio_running?
       !(radio.connected? =~ /error/i)
-    rescue Errno::ECONNREFUSED
+    rescue Errno::ECONNREFUSED, Errno::ENOENT
       false
     end
   

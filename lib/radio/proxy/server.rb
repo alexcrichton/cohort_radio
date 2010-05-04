@@ -43,6 +43,7 @@ class Radio
         
         @looping = false
         @server.close unless @server.nil?
+        File.delete @path if @path
         @server = nil
         
         join_all_threads

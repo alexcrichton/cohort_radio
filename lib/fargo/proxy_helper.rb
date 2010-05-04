@@ -1,15 +1,15 @@
-class Radio
-  module FargoHelper
+module Fargo
+  module ProxyHelper
     
     def fargo
       return @fargo_management_client if defined?(@fargo_management_client)
       
-      @fargo_management_client = ::Radio::Proxy::FargoClient.new
+      @fargo_management_client = ::Fargo::Proxy::Client.new
       
-      if FargoDaemon::DEFAULTS[:path]
-        @fargo_management_client.path = FargoDaemon::DEFAULTS[:path]
+      if Fargo.config[:proxy][:path]
+        @fargo_management_client.path = Fargo.config[:proxy][:path]
       else
-        @fargo_management_client.port = FargoDaemon::DEFAULTS[:port]
+        @fargo_management_client.port = Fargo.config[:proxy][:port]
       end
       
       @fargo_management_client
@@ -17,7 +17,7 @@ class Radio
   
     def fargo_running?
       !(fargo.connected? =~ /error/i)
-    rescue Errno::ECONNREFUSED
+    rescue Errno::ECONNREFUSED, Errno::ENOENT
       false
     end
   

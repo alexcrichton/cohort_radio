@@ -1,5 +1,5 @@
-class Radio
-  class FargoDaemon < Radio::Daemon
+module Fargo
+  class ProxyDaemon < Radio::Daemon
     
     DEFAULTS = {:port => 37173}
     
