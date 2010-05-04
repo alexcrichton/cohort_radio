@@ -29,6 +29,7 @@ CohortRadio::Application.routes.draw do
       get 'clear_finished_downloads'
       get 'connect'
       delete 'disconnect'
+      get 'disconnect'
     end
     
     get 'search/results'

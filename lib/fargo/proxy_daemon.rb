@@ -12,13 +12,13 @@ module Fargo
       client = Fargo::Client.new
       
       options = {:client => client}
-      if @path || DEFAULTS[:path]
-        options[:path] = @path || DEFAULTS[:path]
+      if @path || Fargo.config[:proxy][:path]
+        options[:path] = @path || Fargo.config[:proxy][:path]
       else
-        options[:port] = @port || DEFAULTS[:port]
+        options[:port] = @port || Fargo.config[:proxy][:port]
       end
       
-      proxy = Radio::Proxy::FargoServer.new options
+      proxy = Fargo::Proxy::Server.new options
       
       # If a download just finished, we're going to want to convert the
       # file to put it in our database. Do this in separate threads
