@@ -6,10 +6,10 @@ class Radio
       
       @radio_management_client = ::Radio::Proxy::Client.new
       
-      if ProxyDaemon::DEFAULTS[:path]
-        @radio_management_client.path = ProxyDaemon::DEFAULTS[:path]
+      if Radio.config[:proxy][:path]
+        @radio_management_client.path = Radio.config[:proxy][:path]
       else
-        @radio_management_client.port = ProxyDaemon::DEFAULTS[:port]
+        @radio_management_client.port = Radio.config[:proxy][:port]
       end
       
       @radio_management_client

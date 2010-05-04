@@ -11,6 +11,8 @@ class Radio
       else
         @fargo_management_client.port = FargoDaemon::DEFAULTS[:port]
       end
+      
+      @fargo_management_client
     end
   
     def fargo_running?

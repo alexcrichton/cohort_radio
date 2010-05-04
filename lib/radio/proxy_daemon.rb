@@ -1,8 +1,6 @@
 class Radio
   class ProxyDaemon < Radio::Daemon
-    
-    DEFAULTS = {:port => 31743}
-    
+        
     def daemon_name
       'radio'
     end
@@ -14,10 +12,10 @@ class Radio
       radio = Radio.new
       
       options = {:for => radio}
-      if @path || DEFAULTS[:path]
-        options[:path] = @path || DEFAULTS[:path]
+      if @path || Radio.config[:proxy][:path]
+        options[:path] = @path || Radio.config[:proxy][:path]
       else
-        options[:port] = @port || DEFAULTS[:port]
+        options[:port] = @port || Radio.config[:proxy][:port]
       end
             
       @proxy = Radio::Proxy::Server.new options

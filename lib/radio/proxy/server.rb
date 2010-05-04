@@ -75,7 +75,7 @@ class Radio
       
       def open_unix_server
         Rails.logger.info "Starting management server socket: #{@path}"
-        UNIXServer.open @path
+        UNIXServer.new @path
       end
       
       def open_tcp_server

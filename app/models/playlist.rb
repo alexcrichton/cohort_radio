@@ -33,11 +33,11 @@ class Playlist < ActiveRecord::Base
   
   def stream_url
     url = "http://"
-    url << Radio::DEFAULTS[:stream_user]
+    url << Radio.config[:radio][:stream_user]
     url << ':'
-    url << Radio::DEFAULTS[:stream_password]
+    url << Radio.config[:radio][:stream_password]
     url << '@'
-    url << Radio::DEFAULTS[:remote_host]
+    url << Radio.config[:radio][:remote_host]
     url << ice_mount_point
     url
   end

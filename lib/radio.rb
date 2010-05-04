@@ -5,12 +5,23 @@ require 'radio/stream'
 
 class Radio
   
-  DEFAULTS = YAML.load_file("#{Rails.root}/config/radio.yml")['radio'].symbolize_keys! unless defined?(DEFAULTS)
-  
+  def self.config
+    return @@config if defined?(@@config)
+    
+    @@config = YAML.load(ERB.new(File.read("#{Rails.root}/config/radio.yml")).result)
+    
+    @@config.symbolize_keys!
+    @@config.each_value do |v|
+      v.symbolize_keys! if v.respond_to? :symbolize_keys!
+    end
+    
+    @@config
+  end
+    
   attr_accessor :options
   
   def initialize options = {}
-    self.options = DEFAULTS.merge options
+    self.options = Radio.config[:radio].merge options
     @streaming = {}
     @connected = false
   end
