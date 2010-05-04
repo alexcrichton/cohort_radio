@@ -8,25 +8,28 @@ class Radio
     end
     
     def run
+      Rails.logger = Logger.new $stdout
       ActiveRecord::Base.connection.reconnect!
       
       radio = Radio.new
       
-      @thread = Thread.current
-      
-      proxy = Radio::Proxy::Server.new :for => radio, :port => @port || DEFAULTS[:port]
-      proxy.connect
-
-      trap("INT")  { Rails.logger.info 'exiting...'; $exit = true }
-      trap("TERM") { Rails.logger.info 'exiting...'; $exit = true }
-      
-      while !$exit
-        sleep 5
+      options = {:for => radio}
+      if @path || DEFAULTS[:path]
+        options[:path] = @path || DEFAULTS[:path]
+      else
+        options[:port] = @port || DEFAULTS[:port]
       end
+            
+      @proxy = Radio::Proxy::Server.new options
+
+      trap("INT")  { Rails.logger.info 'exiting...'; @proxy.disconnect }
+      trap("TERM") { Rails.logger.info 'exiting...'; @proxy.disconnect }
       
-      proxy.disconnect
+      Rails.logger.info "Connecting radio..."
+      
+      @proxy.connect
+
       radio.disconnect
-      
     end
     
   end

@@ -1,6 +1,8 @@
 class Radio
   class Daemon
     
+    include Radio::Proxy::Utils
+    
     def initialize(args)
       @files_to_reopen = []
 

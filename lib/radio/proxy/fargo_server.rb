@@ -7,11 +7,16 @@ class Radio
       def initialize options = {}
         @client = options[:for] = options[:client]
         super
-
+        
         @subscriptions = []
+        
+        # Subscribe to the client and publish everything over the server
         @client.subscribe { |type, hash|
           Fargo.logger.debug "#{self} publishing: #{type.inspect}, #{hash.inspect}"
+          # encode the data as an array
           data = encode [type, hash]
+          
+          # Publish this data over all subscriptions
           @subscriptions.each{ |socket| 
             if socket.closed?
               @subscriptions.delete socket
@@ -33,6 +38,7 @@ class Radio
         obj == 'new_client_subscription'
       end
       
+      # Override this method to correctly handle new subscriptions
       def answer socket, *args
         if new_subscription? args[0]
           @subscriptions << socket

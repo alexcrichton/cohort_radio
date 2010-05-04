@@ -2,7 +2,15 @@ class Radio
   module FargoHelper
     
     def fargo
-      @fargo_management_client ||= ::Radio::Proxy::FargoClient.new :port => FargoDaemon::DEFAULTS[:port]
+      return @fargo_management_client if defined?(@fargo_management_client)
+      
+      @fargo_management_client = ::Radio::Proxy::FargoClient.new
+      
+      if FargoDaemon::DEFAULTS[:path]
+        @fargo_management_client.path = FargoDaemon::DEFAULTS[:path]
+      else
+        @fargo_management_client.port = FargoDaemon::DEFAULTS[:port]
+      end
     end
   
     def fargo_running?

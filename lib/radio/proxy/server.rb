@@ -8,36 +8,50 @@ class Radio
     
       def initialize options = {}
         @port = options[:port]
-        @for = options[:for]
-        @connections = []
+        @for  = options[:for]
+        @path = options[:path]
+
+        @looping = true
       end
     
       def connect
-        Rails.logger.info "Starting management server on port: #{@port}"
-        @server = TCPServer.new @port
-        @thread = Thread.start { loop { 
-          socket = @server.accept
-          @connections << Thread.start {
-            data = socket.gets(DELIM) # get data 
-            disconnect if data.nil?
+        if @path
+          @server = open_unix_server
+        else
+          @server = open_tcp_server
+        end
 
-            answer socket, decode(data)
-            @connections.delete Thread.current
+        while @looping do
+          socket = @server.accept
+          next if socket.nil?
+          
+          spawn_thread {
+            data = socket.gets(DELIM) # get data 
+            
+            # answer the request
+            answer socket, decode(data) unless data.nil?
+            
+            thread_complete
           }
-        } }
+        end
+        
+      rescue Errno::EBADF # this is reached when the server is killed
       end
     
       def disconnect
         Rails.logger.info "Stopping management server on port: #{@port}"
-        @connections.each &:exit
-        @thread.exit unless @thread.nil?
+        
+        @looping = false
         @server.close unless @server.nil?
-        @server = @thread = nil
+        @server = nil
+        
+        join_all_threads
       rescue => e
         Rails.logger.error "Error disconnecting management server #{e}"
         Exceptional.handle e
       end
       
+      # This is here so subclasses may overwrite this
       def answer socket, data
         proxy socket, *data
       end
@@ -59,6 +73,15 @@ class Radio
         socket.close
       end
       
+      def open_unix_server
+        Rails.logger.info "Starting management server socket: #{@path}"
+        UNIXServer.open @path
+      end
+      
+      def open_tcp_server
+        Rails.logger.info "Starting management server on port: #{@port}"
+        TCPServer.new @port
+      end
       
     end
   end

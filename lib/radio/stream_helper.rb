@@ -2,7 +2,17 @@ class Radio
   module StreamHelper
     
     def radio
-      @radio_management_client ||= ::Radio::Proxy::Client.new :port => ProxyDaemon::DEFAULTS[:port]
+      return @radio_management_client if defined?(@radio_management_client)
+      
+      @radio_management_client = ::Radio::Proxy::Client.new
+      
+      if ProxyDaemon::DEFAULTS[:path]
+        @radio_management_client.path = ProxyDaemon::DEFAULTS[:path]
+      else
+        @radio_management_client.port = ProxyDaemon::DEFAULTS[:port]
+      end
+      
+      @radio_management_client
     end
   
     def radio_running?

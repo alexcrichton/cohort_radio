@@ -1,6 +1,7 @@
 require 'fargo'
 
-opts = YAML.load_file "#{Rails.root}/config/fargo.yml"
+opts = YAML.load(ERB.new(File.read("#{Rails.root}/config/fargo.yml")).result)
+
 opts.symbolize_keys!
 opts[:client].symbolize_keys!
 

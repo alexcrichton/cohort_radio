@@ -11,37 +11,36 @@ class Radio
       
       client = Fargo::Client.new
       
-      proxy = Radio::Proxy::FargoServer.new :client => client, :port => @port || DEFAULTS[:port]
-      proxy.connect
+      options = {:client => client}
+      if @path || DEFAULTS[:path]
+        options[:path] = @path || DEFAULTS[:path]
+      else
+        options[:port] = @port || DEFAULTS[:port]
+      end
       
-      @converting = []
+      proxy = Radio::Proxy::FargoServer.new options
+      
+      # If a download just finished, we're going to want to convert the
+      # file to put it in our database. Do this in separate threads
+      # to not hang things up.
       client.subscribe { |type, hash|
         if type == :download_finished
-          thread = Thread.start { 
+          spawn_thread { 
             convert_song hash[:file] 
-            @converting.delete thread
-          }
-          @converting << thread
+            thread_complete
+          } 
         end
       }
       
-      trap('TERM') { Fargo.logger.info 'Exiting...'; $exit = true }
-      trap('INT')  { Fargo.logger.info 'Exiting...'; $exit = true }
-      
-      while !$exit
-        sleep 5
-      end
-      
-      proxy.disconnect
+      trap('TERM') { Fargo.logger.info 'Exiting...'; proxy.disconnect }
+      trap('INT')  { Fargo.logger.info 'Exiting...'; proxy.disconnect }
+
+      proxy.connect
+
       client.disconnect
-      finish_conversions
+      join_all_threads
     end
-    
-    def finish_conversions
-      @converting.each &:join
-      @converting.clear
-    end
-    
+        
     def convert_song file
       # Only enqueue one thing at a time. There was problems running into the connection
       # pool running low as a result of many downloads finishing simultaneously. A pool

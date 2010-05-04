@@ -4,7 +4,7 @@
 gem "rails", '3.0.0.beta3'
 gem 'cancan'
 gem 'authlogic', :git => 'git://github.com/odorcicd/authlogic.git', :branch => 'rails3'
-gem 'paperclip', :git => 'git://github.com/thoughtbot/paperclip.git', :branch => 'rails3'
+gem 'paperclip', :git => 'git://github.com/thoughtbot/paperclip.git', :branch => 'rails3', :require => 'paperclip'
 gem 'ruby-mp3info', :require => 'mp3info'
 gem 'delayed_job'
 gem 'exceptional'

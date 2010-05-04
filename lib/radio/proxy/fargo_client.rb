@@ -40,7 +40,7 @@ class Radio
       end
       
       def close_subscription
-        @subscription_thread.exit unless @subscription_thread.nil?
+        @subscription_thread.exit  unless @subscription_thread.nil?
         @subscription_socket.close unless @subscription_socket.nil? || @subscription_socket.closed?
         @subscription_socket = @subscription_thread = nil
       end
