@@ -110,7 +110,7 @@ module Fargo
             if @handshake_step == 4 && generate_key(@lock) == message[:key]
 
               dir = File.dirname download_path
-              FileUtils.mkdir_p dir unless File.directory? dir
+              FileUtils.mkdir_p dir, :mode => 0755
 
               begin_download!
               

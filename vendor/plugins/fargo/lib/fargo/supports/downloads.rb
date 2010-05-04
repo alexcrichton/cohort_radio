@@ -160,7 +160,7 @@ module Fargo
       def initialize_queues
         self.download_slots = 4 if options[:download_slots].nil?
         
-        FileUtils.mkdir_p download_dir unless File.directory? download_dir
+        FileUtils.mkdir_p download_dir, :mode => 0755
         
         @downloading_lock = Mutex.new
         
