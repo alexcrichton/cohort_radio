@@ -1,16 +1,20 @@
-<h1>Searching Songs</h1>
+<% unless request.xhr? %>
 
-<div class='search' id='songs-search'>
-	<%= form_tag [:search, :songs], :method => :get do %>
-		<p>
-			<%= text_field_tag :q, params[:q], :placeholder => "Search query" %>
-			<%= submit_tag 'Search' %>
-		</p>
-	<% end %>
-</div>
+	<h1>Searching Songs</h1>
+
+	<div class='search' id='songs-search'>
+		<%= form_tag [:search, :songs], :method => :get do %>
+			<p>
+				<%= text_field_tag :q, params[:q], :placeholder => "Search query" %>
+				<%= submit_tag 'Search' %>
+			</p>
+		<% end %>
+	</div>
+
+<% end %>
 
 <div id='search-response' class='pagination-container'>
-	<%= paginated_section @songs do %>
+	<%= paginated_section @songs, :outer_window => 3, :inner_window => 8 do %>
 		<%= render @songs %>
 	<% end %>
 </div>

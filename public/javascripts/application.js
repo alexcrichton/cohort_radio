@@ -125,7 +125,7 @@ $(function() {
       $('#search-response').html(hugeAjax);
     },
     success: function(data) {
-      $('#search-response').html(data);
+      $('#search-response').html($(data).filter('#search-response').html());
     }
   });
 });

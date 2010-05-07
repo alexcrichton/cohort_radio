@@ -1,11 +1,11 @@
-<ul class='alphabet pagination'>
-	<li><%= link_to 'All', albums_path %>
+<div class='pagination'>
+	<%= link_to 'All', albums_path %>
 	<% ('A'..'Z').each do |letter| %>
-		<li><%= link_to letter, albums_path + '?' + {:letter => letter}.to_query %></li>
+		<%= link_to letter, albums_path + '?' + {:letter => letter}.to_query %>
 	<% end %>
-</ul>
+</div>
 
-<%= paginated_section @albums do %>
+<%= paginated_section @albums, :outer_window => 3, :inner_window => 8 do %>
 	<% left = (right = @albums.dup).slice!(0, (@albums.size / 2.0).ceil) %>
 	<div style='overflow:auto'>
 		<% [left, right].each do |arr| %>

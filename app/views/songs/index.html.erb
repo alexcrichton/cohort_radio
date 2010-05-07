@@ -1,12 +1,12 @@
 <%= content_tag :h2, @parent.name if @parent %>
 
-<ul class='alphabet pagination'>
-	<li><%= link_to 'All', :songs %></li>
+<div class='alphabet pagination'>
+	<%= link_to 'All', :songs %>
 	<% ('A'..'Z').each do |letter| %>
-		<li><%= link_to letter, songs_path + '?' + {:letter => letter}.to_query %></li>
+		<%= link_to letter, songs_path + '?' + {:letter => letter}.to_query %>
 	<% end %>
-</ul>
+</div>
 
-<%= paginated_section @songs do %>
+<%= paginated_section @songs, :outer_window => 3, :inner_window => 8 do %>
 	<%= render @songs %>
 <% end  %>

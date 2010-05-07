@@ -13,6 +13,7 @@ CohortRadio::Application.routes.draw do
     get :search, :on => :collection
     get :play_count, :on => :collection
     get :download, :on => :member
+    get :rate, :on => :member
   end
   
   namespace :fargo do

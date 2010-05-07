@@ -50,6 +50,14 @@ class SongsController < ApplicationController
     respond_with @song
   end
   
+  def rate
+    @rating = @song.ratings.build params[:rating].merge(:user => current_user)
+    
+    @rating.save! # we expect this to work
+    
+    redirect_back_or_default songs_path, :notice => "Successfully rated!"
+  end
+  
   def update
     flash[:notice] = "Song updated!" if @song.update_attributes params[:song]
     if request.xhr?
@@ -72,14 +80,9 @@ class SongsController < ApplicationController
   def search
     @songs = params[:q].blank? ? [] : Song.search(params[:q])
     @songs = @songs.paginate :page => params[:page], :per_page => 10 if params[:completion].blank?
+    
     if request.xhr?
-      if params[:completion].blank?
-        if @songs.size == 0
-          render :text => "<h4>No results found!</h4>"
-        else
-          render :inline => "<%= paginated_section @songs do %><%= render @songs %><% end %>"
-        end
-      else
+      if params[:completion]
         @songs = @songs.limit params[:limit]
         render :text => @songs.map { |s| "<img src='#{s.album.cover_url}' height='30px'/> #{s.title} - #{s.artist.name} (#{s.id})" }.join("\n")
       end

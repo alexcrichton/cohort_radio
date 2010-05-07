@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100303075109) do
+ActiveRecord::Schema.define(:version => 20100507044146) do
 
   create_table "activations", :force => true do |t|
     t.integer  "user_id"
@@ -101,6 +101,14 @@ ActiveRecord::Schema.define(:version => 20100303075109) do
     t.datetime "updated_at"
   end
 
+  create_table "song_ratings", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "score"
+    t.integer  "song_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "songs", :force => true do |t|
     t.string   "title"
     t.integer  "play_count",         :default => 0
@@ -113,19 +121,20 @@ ActiveRecord::Schema.define(:version => 20100303075109) do
     t.boolean  "custom_set"
     t.integer  "artist_id"
     t.integer  "album_id"
+    t.float    "rating",             :default => 0.0
   end
 
   create_table "users", :force => true do |t|
-    t.string   "name",                                   :null => false
-    t.boolean  "admin",               :default => false, :null => false
-    t.string   "email",                                  :null => false
+    t.string   "name",                                                :null => false
+    t.boolean  "admin",                            :default => false, :null => false
+    t.string   "email",                                               :null => false
     t.string   "crypted_password"
     t.string   "password_salt"
-    t.string   "persistence_token",                      :null => false
-    t.string   "single_access_token",                    :null => false
-    t.string   "perishable_token",                       :null => false
-    t.integer  "login_count",         :default => 0,     :null => false
-    t.integer  "failed_login_count",  :default => 0,     :null => false
+    t.string   "persistence_token",                                   :null => false
+    t.string   "single_access_token",                                 :null => false
+    t.string   "perishable_token",                                    :null => false
+    t.integer  "login_count",                      :default => 0,     :null => false
+    t.integer  "failed_login_count",               :default => 0,     :null => false
     t.datetime "last_request_at"
     t.datetime "current_login_at"
     t.datetime "last_login_at"
@@ -133,6 +142,7 @@ ActiveRecord::Schema.define(:version => 20100303075109) do
     t.string   "last_login_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "facebook_uid",        :limit => 8
   end
 
   add_index "users", ["email"], :name => "index_users_on_email"

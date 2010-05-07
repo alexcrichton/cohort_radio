@@ -7,6 +7,7 @@ class Song < ActiveRecord::Base
   has_many :comments, :dependent => :destroy, :order => 'created_at DESC'
   has_many :queue_items, :dependent => :destroy
   has_many :playlists, :through => :queue_items
+  has_many :ratings, :dependent => :destroy, :class_name => "Song::Rating"
   has_and_belongs_to_many :pools
   
   validates_presence_of :title, :artist
@@ -24,6 +25,16 @@ class Song < ActiveRecord::Base
   
   scope :search, Proc.new{ |query| where('title LIKE :q or artists.name LIKE :q or albums.name LIKE :q', :q => "%#{query}%").includes(:artist, :album) }
   
+  def update_rating
+    ratings = self.ratings # load into instance variable to cache
+    
+    rating = ratings.map(&:score).sum.to_f / ratings.size
+    
+    update_attributes :rating => rating
+    
+    rating
+  end
+    
   def ensure_artist_and_album
     if new_record?
       file = audio.queued_for_write[:original].path # get the file paperclip is gonna copy

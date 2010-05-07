@@ -18,6 +18,14 @@
 		<p>
 			Play count: <%= song.play_count %>
 		</p>
+		
+		<div class='ratings'>
+			<div class='overall'>
+			</div>
+			<div class='user'>
+			</div>
+		</div>
+		
 	</div>
 	<% if can? :update, song %>
 		<div class='form'>

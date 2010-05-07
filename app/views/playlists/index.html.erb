@@ -1,6 +1,6 @@
 <h1>Playlists</h1>
 
-<%= paginated_section @playlists do %>
+<%= paginated_section @playlists, :outer_window => 3, :inner_window => 8 do %>
 	<table>
 	  <tr>
 	    <th>Name</th>

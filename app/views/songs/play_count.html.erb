@@ -1,5 +1,5 @@
 <%= content_tag :h2, @parent.name if @parent %>
 
-<%= paginated_section @songs do %>
+<%= paginated_section @songs, :outer_window => 3, :inner_window => 8 do %>
 	<%= render @songs %>
 <% end %>
