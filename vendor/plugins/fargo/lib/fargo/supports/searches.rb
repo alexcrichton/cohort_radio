@@ -38,6 +38,7 @@ module Fargo
       def subscribe_to_searches
         @searches = {}
         @search_objects = {}
+        
         subscribe do |type, map|
           if type == :search_result
             @searches.keys.each do |search|
@@ -48,6 +49,7 @@ module Fargo
             @search_objects.clear
           end
         end
+        
       end
       
     end

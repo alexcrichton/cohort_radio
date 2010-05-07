@@ -17,13 +17,13 @@ require File.dirname(__FILE__) + '/fargo/supports/uploads'
 require File.dirname(__FILE__) + '/fargo/supports/downloads'
 require File.dirname(__FILE__) + '/fargo/supports/persistence'
 
-require File.dirname(__FILE__) + '/fargo/connection'
+require File.dirname(__FILE__) + '/fargo/connection/base'
 require File.dirname(__FILE__) + '/fargo/connection/download'
 require File.dirname(__FILE__) + '/fargo/connection/hub'
 require File.dirname(__FILE__) + '/fargo/connection/search'
 require File.dirname(__FILE__) + '/fargo/connection/upload'
 
-require File.dirname(__FILE__) + '/fargo/active_server'
+require File.dirname(__FILE__) + '/fargo/server'
 require File.dirname(__FILE__) + '/fargo/client'
 
 Thread.abort_on_exception = true

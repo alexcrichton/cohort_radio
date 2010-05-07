@@ -17,16 +17,16 @@ class Radio
       else
         options[:port] = @port || Radio.config[:proxy][:port]
       end
-            
+      
       @proxy = Radio::Proxy::Server.new options
-
+      
       trap("INT")  { Rails.logger.info 'exiting...'; @proxy.disconnect }
       trap("TERM") { Rails.logger.info 'exiting...'; @proxy.disconnect }
       
       Rails.logger.info "Connecting radio..."
       
       @proxy.connect
-
+      
       radio.disconnect
     end
     

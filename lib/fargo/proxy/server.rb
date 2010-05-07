@@ -1,5 +1,8 @@
 module Fargo
   module Proxy
+    
+    # This is an extension of the radio proxy server which supports subscriptions to the
+    # underlying object.
     class Server < Radio::Proxy::Server
       
       attr_accessor :client
@@ -10,7 +13,8 @@ module Fargo
         
         @subscriptions = []
         
-        # Subscribe to the client and publish everything over the server
+        # Subscribe to the client and publish everything over the server to clients
+        # who are subscribed.
         @client.subscribe { |type, hash|
           Fargo.logger.debug "#{self} publishing: #{type.inspect}, #{hash.inspect}"
           # encode the data as an array
@@ -38,7 +42,7 @@ module Fargo
         obj == 'new_client_subscription'
       end
       
-      # Override this method to correctly handle new subscriptions
+      # Override this method to correctly handle new subscription sockets
       def answer socket, *args
         if new_subscription? args[0]
           @subscriptions << socket

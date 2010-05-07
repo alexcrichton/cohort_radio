@@ -1,6 +1,6 @@
 module Fargo
-  class Connection
-    class Hub < Connection
+  module Connection
+    class Hub < Base
   
       include Fargo::Utils
       include Fargo::Parser
@@ -8,7 +8,6 @@ module Fargo
       # See <http://www.teamfair.info/DC-Protocol.htm> for specifics on protocol handling
       def receive data
         message = parse_message data
-        publish message[:type], message
 
         case message[:type]
           when :lock 
@@ -34,19 +33,34 @@ module Fargo
           when :connect_to_me
             return unless self[:client].nicks.include?(message[:nick])
             @client_connections ||= []
-
+            
+            # we're going to initiate the download
             message[:first] = true
+            
+            # the message will contain the port and address of who to connect to
             connection = Fargo::Connection::Download.new self.options.merge(message)
-            connection.subscribe { |type, hash| 
-              publish type, hash
+            
+            # proxy all messages from them back to the client and delete the connection if 
+            # necessary
+            connection.subscribe { |*args| 
+              self[:client].publish *args
               @client_connections.delete connection unless connection.connected?
             }
+            
+            # establish the connection. This will also listen for data to be read/written
             connection.connect
+            
+            # keep track of who we're downloading from
             @client_connections << connection
             
           when :search
+            # Make sure we received a valid search request
             return unless message[:searcher].nil? || self[:client].nicks.include?(message[:searcher])
-            @results = self[:client].search_files message        
+            
+            # Let the client handle the results
+            @results = self[:client].search_files message
+            
+            # Send all the results to the peer. Take care of active/passive connections
             @results.each { |r| 
               if message[:address]
                 r.active_send self[:client].nick, message[:ip], message[:port]
@@ -54,6 +68,7 @@ module Fargo
                 write "$SR #{self[:client].nick} #{r}" 
               end
             }
+            
           when :revconnect
             # TODO: Don't send RevConnectToMe when we're passive and receiving is passive
             if self[:client].passive
@@ -61,6 +76,11 @@ module Fargo
             else
               write "$ConnectToMe #{self[:client].nick} #{self[:client].address}:#{self[:client].extport}"
             end
+            
+          # proxy this message on up the stack if we don't handle it
+          else
+            self[:client].publish message[:type], message
+            
         end
       end
       
@@ -69,6 +89,7 @@ module Fargo
           @client_connections.each &:disconnect
           @client_connections.clear
         end
+        
         super
       end
       

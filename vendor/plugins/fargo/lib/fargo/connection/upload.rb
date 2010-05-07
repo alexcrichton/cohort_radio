@@ -1,6 +1,6 @@
 module Fargo
-  class Connection
-    class Upload < Connection
+  module Connection
+    class Upload < Base
       
       include Fargo::Utils
       include Fargo::Parser

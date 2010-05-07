@@ -34,8 +34,6 @@ class Radio
             thread_complete
           }
         end
-        
-      rescue Errno::EBADF # this is reached when the server is killed
       end
     
       def disconnect

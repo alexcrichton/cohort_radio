@@ -94,24 +94,24 @@ class Radio
       string << " (" 
       string << song.artist.name if song.artist
       string << " - "
-      string << song.album.name if song.album
+      string << song.album.name  if song.album
       string << ")"
-      m.add 'song', @@tag_recoder.iconv(string)
+      m.add 'song',   @@tag_recoder.iconv(string)
       m.add 'artist', @@tag_recoder.iconv("#{song.artist.name}") if song.artist
-      m.add 'album', @@tag_recoder.iconv("#{song.album.name}") if song.album
+      m.add 'album',  @@tag_recoder.iconv("#{song.album.name}")  if song.album
       
       [song, m, queue_item]
     end
     
     def play_song
       song, metadata, queue_item = next_song
-
+      
       @current_song = song.title
       
       self.metadata = metadata
-
+      
       stream_song song.audio.path
-
+      
       update_song queue_item
     end
     
@@ -131,6 +131,7 @@ class Radio
       
       file, size = File.open(path), File.size(path)
       @next = false
+      
       while !@next && data = file.read(BLOCKSIZE)
         Rails.logger.info "Stream: #{@playlist.name} sending block...:#{connected?.inspect}"
       	self.send data
@@ -140,6 +141,7 @@ class Radio
         d = self.delay.to_f
         Rails.logger.info "Sleeping: #{d}"
         break if d < 0
+        
         # This source will time out after 10 sections, don't sleep over that
         sleep [d / 1000, 9.5].min
       end

@@ -33,6 +33,7 @@ class Radio
       ObjectSpace.each_object(File) do |file|
         @files_to_reopen << file unless file.closed?
       end
+      
       Daemons.run_proc(daemon_name, :dir => "#{::Rails.root}/tmp/pids", :dir_mode => :normal, :ARGV => @args) do |*args|  
         Dir.chdir Rails.root
         

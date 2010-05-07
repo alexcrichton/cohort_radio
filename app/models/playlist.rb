@@ -27,7 +27,7 @@ class Playlist < ActiveRecord::Base
   end
   
   def ice_name
-    return "#{name}" if Rails.env.production?
+    return "Cohort Radio - #{name}" if Rails.env.production?
     "#{name} - #{Rails.env}"
   end
   

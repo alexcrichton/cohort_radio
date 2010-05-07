@@ -34,21 +34,34 @@ module Fargo
     def initialize opts = {}
       self.options = DEFAULTS.merge opts
       self.version = '0.75'
+
+      # default the address to the address of this machine
+      self.address ||= IPSocket.getaddress(Socket.gethostname)
+      
       @connection_timeout_threads = {}
     end
-  
+    
     # Don't do this in initialization so we have time to set all the options
     def setup
-      self.hub = Fargo::Connection::Hub.new options.merge(:client => self, :port => hub_port, :address => hub_address)
-      self.searcher = Fargo::Connection::Search.new options.merge(:client => self, :port => search_port, :address => '127.0.0.1') unless passive
-      self.active_server = Fargo::ActiveServer.new options.merge(:client => self, :port => active_port, :address => '127.0.0.1') unless passive
-      post_setup if respond_to? :post_setup
+      new_options = options.merge(:client => self)
       
-      hub.subscribe{ |type, hash| publish type, hash}
-      searcher.subscribe{ |*args| publish *args } unless passive
-      active_server.subscribe{ |*args| publish *args } unless passive
-            
-      @@after_setup_callbacks.each{ |callback| send callback }
+      self.hub = Fargo::Connection::Hub.new new_options.merge(:port => hub_port, :address => hub_address)
+      
+      if not passive
+        
+        # Always create a search connection for this.
+        searcher_options = new_options.merge :port => search_port, 
+                                             :connection => Fargo::Connection::Search
+        self.searcher    = Fargo::Server.new searcher_options
+
+        # For now, being active means that you can only download things. Always make a 
+        # connection which downloads things.
+        active_options     = new_options.merge :port => active_port, 
+                                               :connection => Fargo::Connection::Download
+        self.active_server = Fargo::Server.new active_options
+      end
+      
+      @@after_setup_callbacks.each { |callback| send callback }
     end
   
     def get_info nick
@@ -56,8 +69,7 @@ module Fargo
     end
     
     def get_ip *nicks
-      nicks.flatten!
-      hub.write "$UserIP #{nicks.join '$$'}"
+      hub.write "$UserIP #{nicks.flatten.join '$$'}"
     end
     
     def connect_with nick
@@ -77,11 +89,16 @@ module Fargo
   
     def connect
       setup if options[:hub].nil?
-      Fargo.logger.info "Connecting to hub..."
+      
+      # connect all our associated servers
       hub.connect
-      searcher.connect unless passive
-      active_server.connect unless passive
-      Fargo.logger.info "Connected to hub"
+      
+      if not passive
+        searcher.connect
+        active_server.connect
+      end
+      
+      true
     end
     
     def connected?

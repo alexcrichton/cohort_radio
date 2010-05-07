@@ -30,9 +30,7 @@ class Radio
       def method_missing name, *args
         proxy_data name, *args
       end
-      
-      private
-      
+            
       def open_socket
         if @port
           TCPSocket.open '127.0.0.1', @port
