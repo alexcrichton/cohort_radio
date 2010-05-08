@@ -40,7 +40,7 @@ class Radio
         # re-open file handles
         @files_to_reopen.each do |file|
           begin
-            file.reopen File.join(Rails.root, 'log', "#{daemon_name}.log"), 'w+'
+            file.reopen File.join(Rails.root, 'log', "#{daemon_name}.log"), 'a+'
             file.sync = true
           rescue ::Exception => e
             Exceptional.handle e
