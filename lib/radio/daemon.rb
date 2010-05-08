@@ -34,6 +34,8 @@ class Radio
         @files_to_reopen << file unless file.closed?
       end
       
+      @files_to_reopen += [$stdout, $stderr]
+      
       Daemons.run_proc(daemon_name, :dir => "#{::Rails.root}/tmp/pids", :dir_mode => :normal, :ARGV => @args) do |*args|  
         Dir.chdir Rails.root
         
