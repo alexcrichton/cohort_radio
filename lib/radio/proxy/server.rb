@@ -17,6 +17,8 @@ class Radio
       def connect
         if @path
           @server = open_unix_server
+          
+          at_exit { File.delete @path if @path && File.exists?(@path) }
         else
           @server = open_tcp_server
         end
