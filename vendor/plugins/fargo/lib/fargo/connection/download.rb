@@ -40,10 +40,10 @@ module Fargo
           Fargo.logger.warn "#{self} #{@recvd} > #{@length}!!!"
           download_finished!
         else
-          self[:client].publish :download_progress, :percent => @recvd.to_f / @length, 
-                                    :file => download_path, 
-                                    :nick => @other_nick, :download => self[:download],
-                                    :size => @length, :compressed => @zlib
+          publish :download_progress, :percent => @recvd.to_f / @length, 
+                                      :file => download_path, 
+                                      :nick => @other_nick, :download => self[:download],
+                                      :size => @length, :compressed => @zlib
         end
       rescue IOError => e
         Fargo.logger.warn @last_error = "#{self}: IOError, disconnecting #{e}"
@@ -128,9 +128,9 @@ module Fargo
               
               write "$Send" unless @client_extensions.include? 'ADCGet'
               
-              self[:client].publish :download_started, :file => download_path, 
-                                                       :download => self[:download], 
-                                                       :nick => @other_nick   
+              publish :download_started, :file => download_path, 
+                                         :download => self[:download], 
+                                         :nick => @other_nick   
             else
               Fargo.logger.warn @last_error = "Premature disconnect when #{message[:type]} received"
               disconnect
@@ -138,15 +138,8 @@ module Fargo
           when :noslots
             if self[:download]
               Fargo.logger.debug "#{self}: No Slots for #{self[:download]}"
-
-              path, download = download_path, self[:download]
-
-              # cache because publishing must be at end of method and we're about to clear these
-              reset_download
-
-              self[:client].publish :download_failed, :nick => @other_nick, 
-                                                     :download => download, 
-                                                     :file => path, :last_error => "No slots!"
+              
+              download_failed! "No Slots"
             end
           when :error
             Fargo.logger.error "#{self}: Error! #{message[:message]}"
@@ -207,10 +200,10 @@ module Fargo
 
         reset_download
         
-        self[:client].publish :download_failed, opts.merge(:nick => @other_nick, 
-                                                           :download => download, 
-                                                           :file => path, 
-                                                           :last_error => msg)
+        publish :download_failed, opts.merge(:nick => @other_nick, 
+                                             :download => download, 
+                                             :file => path, 
+                                             :last_error => msg)
         @exit_thread = nil
       end
       
@@ -222,8 +215,8 @@ module Fargo
         
         reset_download
         
-        self[:client].publish :download_finished, :file => path, :download => download, 
-                                                  :nick => @other_nick
+        publish :download_finished, :file => path, :download => download, 
+                                    :nick => @other_nick
       end
       
       def disconnect
