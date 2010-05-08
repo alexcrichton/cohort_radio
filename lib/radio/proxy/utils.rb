@@ -21,7 +21,7 @@ class Radio
       def spawn_thread &block
         @spawned_threads ||= []
         
-        @spawned_threads << Thread.start(&block)
+        @spawned_threads << Thread.start{ instance_eval(&block) }
       end
       
       def thread_complete

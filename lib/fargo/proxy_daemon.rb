@@ -26,14 +26,14 @@ module Fargo
       client.subscribe { |type, hash|
         if type == :download_finished
           spawn_thread { 
+            Fargo.logger.info "Converting: #{hash.inspect}"
             convert_song hash[:file] 
             thread_complete
           } 
         end
       }
       
-      trap('TERM') { Fargo.logger.info 'Exiting...'; proxy.disconnect }
-      trap('INT')  { Fargo.logger.info 'Exiting...'; proxy.disconnect }
+      trap('EXIT') { Fargo.logger.info 'Exiting...'; proxy.disconnect }
 
       proxy.connect
 
