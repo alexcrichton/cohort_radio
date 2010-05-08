@@ -34,7 +34,7 @@ module Fargo
         listen
       
         connection_type = self.class.name.split("::").last.downcase
-        publish :"#{connection_type}_connection_opened"
+        self[:client].publish :"#{connection_type}_connection_opened"
       end
   
       def open_socket
@@ -86,7 +86,7 @@ module Fargo
         @outgoing.clear
       
         connection_type = self.class.name.split("::").last.downcase
-        publish :"#{connection_type}_disconnected"
+        self[:client].publish :"#{connection_type}_disconnected"
       end
   
       def write string
@@ -123,7 +123,7 @@ module Fargo
         Fargo.logger.debug "#{self} Sending: #{data.inspect}" 
         @socket << data
       rescue 
-        publish :write_error
+        self[:client].publish :write_error
         disconnect
       end
     
