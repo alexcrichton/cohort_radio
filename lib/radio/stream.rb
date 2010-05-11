@@ -141,9 +141,11 @@ class Radio
         d = self.delay.to_f
         
         if d > 0
-          Rails.logger.info "Sleeping: #{d}"
+          Rails.logger.info "Stream: #{@playlist.name} - sleeping #{d}"
           # This source will time out after 10 sections, don't sleep over that
           sleep [d / 1000, 9.5].min
+        else
+          Rails.logger.info "Stream: #{@playlist.name} - negative delay..."
         end
       end
 
