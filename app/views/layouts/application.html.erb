@@ -2,11 +2,9 @@
 <html>
   <head>
 		<%= csrf_meta_tag %>
-    <title><%= content_for?(:title) ? yield(:title) : "Cohort Radio" %></title>
+    <title><%= content_for?(:title) ? yield(:title) : 'Cohort Radio' %></title>
     <%= paste_css_tags 'application', 'menus' %>
-    <%#= stylesheet_link_tag 'blueprint/screen', 'jquery-ui', 'application', 'autocomplete', 'menus', :cache => 'cache/all' %>
-    <%= javascript_include_tag 'jquery', 'rails', 'jquery.form', 'jquery-ui', 'jquery.validate', 'jquery.autocomplete', 'application', :cache => 'cache/all' %>
-    <%= yield(:head) %>
+    <%= yield :head %>
   </head>
   <body>
 		<% if current_user %>
@@ -30,7 +28,8 @@
 			</header>
 			
       <% flash.each do |name, msg| %>
-        <% content_tag :div, :id => "flash_#{name}", :class => 'flash' do %>
+        <% javascript 'jquery' %>
+        <%= content_tag :div, :id => "flash_#{name}", :class => 'flash' do %>
 			    <p><%= msg %></p>
 			    <%= link_to '[hide]', '#', :onclick => "$(this).parents('.flash').fadeOut('fast'); return false;" %>
 			    &nbsp; <%# needed for some reason... %>
@@ -42,9 +41,10 @@
 			</section>
 			
 			<footer>
-				&copy; 2010 - Alex Crichton
+			  I'm a footer!
 			</footer>
 
     </div>
+    <%= paste_js_tags %>
   </body>
 </html>

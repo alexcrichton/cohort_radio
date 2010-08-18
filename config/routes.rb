@@ -70,7 +70,7 @@ CohortRadio::Application.routes.draw do
   resources :password_resets, :only => [:new, :create, :edit, :update]
   get 'logout' => "user_sessions#destroy"
   get 'login' => "user_sessions#new"
-  resource :user_session, :only => [:create]
+  post 'login' => 'user_sessions#create'
 
   root :to => 'users#home'
   

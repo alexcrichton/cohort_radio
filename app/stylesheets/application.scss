@@ -31,6 +31,19 @@ a {
 .flash {
   padding: 5px 8px;
   margin: 10px 0;
+  
+  a {
+    float: right;
+  }
+
+  p {
+    float: left;
+    margin: 0;
+  }  
+}
+
+.status {
+  float: right;
 }
 
 #flash_notice, .notice {
@@ -285,32 +298,6 @@ header {
   padding: 0 10px 0 0;
 }
 
-.login {
-  overflow: auto;
-  border: 3px solid #ccc;
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  width: 500px;
-  margin: 0 auto;
-}
-
-.login input[type=submit] {
-  font-size: 120%;
-  height: 25px;
-}
-
-.login form {
-  float: left;
-  display: block;
-}
-
-.login .links {
-  float: left;
-  text-align: center;
-  border-left: #999 solid 1px;
-  overflow: auto;
-}
-
 dl {
   overflow: auto;
 }
@@ -328,18 +315,6 @@ dl dd {
 	float: left;
 	margin: 0;
 	padding: 5px;
-}
-
-.flash a {
-  float: right;
-}
-
-.flash p {
-  float: left;
-}
-
-.status {
-  float: right;
 }
 
 #search-holder {

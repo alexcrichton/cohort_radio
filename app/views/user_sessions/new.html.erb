@@ -1,6 +1,7 @@
+<% css 'login' %>
 
 <section class="login">
-  <%= form_for :user_session, :url => user_session_path do |f| %>
+  <%= form_for @user_session, :url => login_path do |f| %>
     <dl>
       <dt><%= f.label :email, 'email' %></dt>
       <dd>

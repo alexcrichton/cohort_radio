@@ -15,7 +15,7 @@ class UserSessionsController < ApplicationController
       flash[:notice] = "Login successful!"
       redirect_back_or_default root_path
     else
-      flash[:error] = "Login Failed."
+      flash.now[:error] = "Login Failed."
       render :action => :new
     end
   end

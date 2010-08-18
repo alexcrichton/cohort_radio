@@ -13,7 +13,6 @@ class ApplicationController < ActionController::Base
   helper_method :current_user_session, :current_user
   
   rescue_from CanCan::AccessDenied do |exception|
-    Exceptional.handle exception
     flash[:error] = 'Access denied.'
     store_location unless current_user
 
