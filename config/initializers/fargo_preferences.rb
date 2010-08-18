@@ -1,4 +1,5 @@
 require 'fargo'
+require 'fargo/proxy_helper'
 
 opts = YAML.load(ERB.new(File.read("#{Rails.root}/config/fargo.yml")).result)
 

@@ -42,14 +42,14 @@ CohortRadio::Application.routes.draw do
     
     namespace :commands do
       get 'connect'
-      get 'add/:playlist_id' => 'add', :as => 'add'
-      get 'stop/:playlist_id' => 'stop', :as => 'stop'
-      get 'next/:playlist_id' => 'next', :as => 'next'
+      get 'add/:playlist_id' => 'commands#add', :as => 'add'
+      get 'stop/:playlist_id' => 'commands#stop', :as => 'stop'
+      get 'next/:playlist_id' => 'commands#next', :as => 'next'
       get 'disconnect'
     end
     
     namespace :status do
-      get '' => 'index', :as => ''
+      get '' => 'status#index', :as => ''
     end
     
   end
