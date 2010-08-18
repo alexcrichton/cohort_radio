@@ -51,11 +51,16 @@ class SongsController < ApplicationController
   end
   
   def rate
-    @rating = @song.ratings.build params[:rating].merge(:user => current_user)
+    scope = @song.ratings.by current_user
+
+    if @rating = scope.first
+      @rating.update_attributes! params[:rating]
+    else
+      @rating = scope.build params[:rating]
+      @rating.save! # we expect this to work
+    end    
     
-    @rating.save! # we expect this to work
-    
-    redirect_back_or_default songs_path, :notice => "Successfully rated!"
+    render @song if request.xhr?
   end
   
   def update

@@ -71,7 +71,7 @@ class Radio
           Rails.logger.error "#{e.backtrace.join("\n")}"
           socket << encode(e) unless socket.closed?
         end
-        socket.close
+        socket.close unless socket.closed?
       end
       
       def open_unix_server

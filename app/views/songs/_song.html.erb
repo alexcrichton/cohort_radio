@@ -5,6 +5,7 @@
 			<%= image_tag song.album.cover_url, :width => '126' %>
 		<% end if song.album && song.album.cover_url%>
 	</div>
+	
 	<div class='content'>
 		<h3>
 			<%= link_to truncate(song.title), song %>
@@ -17,16 +18,28 @@
 		<% end %>
 		<p>
 			Play count: <%= song.play_count %>
-		</p>
-		
-		<div class='ratings'>
-			<div class='overall'>
-			</div>
-			<div class='user'>
-			</div>
-		</div>
-		
+		</p>	
 	</div>
+	
+	<div class='ratings' remote="<%= url_for [:rate, song] %>">
+		<ul class='overall'>
+			<% (1..10).each do |score| %>
+				<li>&nbsp;</li>
+			<% end %>
+		</ul>
+		<%= song.rating %>
+		<% rating = song.ratings.by current_user %>
+		<ul class='user'>
+			<% (1..10).each do |score| %>
+				<% if rating && score >= rating.score %>
+					<li class='selected'>&nbsp;</li>
+				<% else %>
+					<li>&nbsp;</li>
+				<% end %>
+			<% end %>
+		</ul>
+	</div>
+	
 	<% if can? :update, song %>
 		<div class='form'>
 			<%= render 'songs/form', :song => song %>

@@ -107,7 +107,35 @@ a {
 }
 
 .song .content, .comment .content {
-  width: 420px;
+  width: 400px;
+}
+
+.song .ratings {
+  float: left;
+  overflow: auto;
+  width: 50px;
+  margin: 10px 0 0 0;
+}
+
+.song .ratings ul {
+  list-style: none;
+  float: left;
+  width: 20px;
+  padding: 0;
+  margin: 0 5px 0 0 ;
+}
+
+.song .ratings ul li {
+  margin: 0;
+  display: block;
+/*  height: 17px;*/
+  font-size: 10px;
+  -webkit-border-radius: 10px;
+  border: 1px solid black;
+}
+
+.song .ratings ul.user li.selected {
+  background: blue;
 }
 
 .song .add {

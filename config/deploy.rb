@@ -73,36 +73,36 @@ end
 
 namespace :radio do 
   task :restart, :roles => :app do
-    script 'radio restart'
+    sudo 'god restart cradio-radio'
   end
   task :start, :roles => :app do
-    script 'radio start'
+    sudo 'god start cradio-radio'
   end
   task :stop, :roles => :app do
-    script 'radio stop'
+    sudo 'god stop cradio-radio'
   end
 end
 
 namespace :worker do 
   task :restart, :roles => :app do
-    script 'delayed_job restart'
+    sudo 'god restart cradio-delayed_job'
   end
   task :start, :roles => :app do
-    script 'delayed_job start'
+    sudo 'god restart cradio-delayed_job'
   end
   task :stop, :roles => :app do
-    script 'delayed_job stop'
+    sudo 'god restart cradio-delayed_job'
   end
 end
 
 namespace :fargo do 
   task :restart, :roles => :app do
-    script 'fargo restart'
+    sudo 'god restart cradio-fargo'
   end
   task :start, :roles => :app do
-    script 'fargo start'
+    sudo 'god start cradio-fargo'
   end
   task :stop, :roles => :app do
-    script 'fargo stop'
+    sudo 'god stop cradio-fargo'
   end
 end

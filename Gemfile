@@ -1,37 +1,42 @@
-# Edit this Gemfile to bundle your application's dependencies.
-# source 'http://gemcutter.org'
+source :rubygems
 
-gem "rails", '3.0.0.beta3'
-gem 'cancan'
+gem 'rails', '3.0.0.rc'
+gem 'cancan', '>= 1.3'
 gem 'authlogic', :git => 'git://github.com/odorcicd/authlogic.git', :branch => 'rails3'
 gem 'paperclip', :git => 'git://github.com/dwalters/paperclip.git', :branch => 'rails3'
 gem 'ruby-mp3info', :require => 'mp3info'
 gem 'delayed_job'
-gem 'exceptional'
-gem 'will_paginate', :git => 'git://github.com/alexcrichton/will_paginate.git', :branch => 'rails3'
+
+gem 'will_paginate', '>= 2.0.0.pre'
 gem 'scrobbler'
 gem 'daemons'
-gem 'shout'
+gem 'shout', '2.1.1'
 gem 'bluecloth'
 
-# Not compatible with rails 3 just yet...
-# gem 'thinking-sphinx', :require => 'thinking_sphinx', :source => 'http://gemcutter.org/'
+gem 'haml'
+gem 'paste'
 
-## Bundle edge rails:
-# gem "rails", :git => "git://github.com/rails/rails.git"
+gem 'thinking-sphinx', :require => 'thinking_sphinx', :git => 'git://github.com/freelancing-god/thinking-sphinx.git', :branch => 'rails3'
 
-# ActiveRecord requires a database adapter. By default,
-# Rails has selected sqlite3.
-gem 'mysql'
+group :development do
+  gem 'rvm', '>=0.1.43'
+  gem 'capistrano'
+end
 
-## Bundle the gems you use:
-# gem "bj"
-# gem "hpricot", "0.6"
-# gem "sqlite3-ruby", :require => "sqlite3"
-# gem "aws-s3", :require => "aws/s3"
+group :development, :test do
+  gem 'sqlite3-ruby', :require => 'sqlite3'
+  gem 'bullet', '>=2.0.0.beta.3'
+  gem 'ruby-growl'
+end
 
-## Bundle gems used only in certain environments:
-# gem "rspec", :group => :test
-# group :test do
-#   gem "webrat"
-# end
+group :production, :staging do
+  gem 'mysql2'
+  gem 'exception_notifier'
+end
+
+group :test do
+  gem 'rspec-rails', '>=2.0.0.beta.19'
+  gem 'factory_girl_rails'
+
+  gem 'spork'
+end
