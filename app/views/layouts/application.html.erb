@@ -3,7 +3,8 @@
   <head>
 		<%= csrf_meta_tag %>
     <title><%= content_for?(:title) ? yield(:title) : "Cohort Radio" %></title>
-    <%= stylesheet_link_tag 'blueprint/screen', 'jquery-ui', 'application', 'autocomplete', 'menus', :cache => 'cache/all' %>
+    <%= paste_css_tags 'application', 'menus' %>
+    <%#= stylesheet_link_tag 'blueprint/screen', 'jquery-ui', 'application', 'autocomplete', 'menus', :cache => 'cache/all' %>
     <%= javascript_include_tag 'jquery', 'rails', 'jquery.form', 'jquery-ui', 'jquery.validate', 'jquery.autocomplete', 'application', :cache => 'cache/all' %>
     <%= yield(:head) %>
   </head>

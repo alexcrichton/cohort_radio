@@ -4,56 +4,38 @@ nav li {
   position: relative;
   border: solid #012f52 1px;
   border-top: 0;
-  border-left: 0;
-}
-
+  border-left: 0; }
 nav a, nav span {
   display: inline-block;
   color: black;
   background: inherit;
   text-decoration: none;
-  padding: 5px 7px;
-}
-
+  padding: 5px 7px; }
 nav a:hover, nav span:hover {
-  background-image:-webkit-gradient(linear, 0% 0%, 20% 100%, from(#FFFFFF), to(#B3B3B3));
-  background-image:-moz-linear-gradient(-50deg, #FFFFFF, #B3B3B3);
-}
-
+  background-image: -webkit-gradient(linear, 0% 0%, 20% 100%, from(white), to(#b3b3b3));
+  background-image: -moz-linear-gradient(-50deg, white, #b3b3b3); }
 nav > ul li:first-child a, nav > ul li:first-child span {
   -webkit-border-top-left-radius: 20px;
-  -moz-border-radius-topleft: 20px;
-}
-
-nav li.selected > a, nav li.selected > span {
-  color: #035482;
-}
-
+  -moz-border-radius-topleft: 20px; }
+nav nav li.selected > a, nav nav li.selected > span {
+  color: #035482; }
 nav ul {
   z-index: 10;
   padding: 0;
   font-size: 10pt;
   list-style: none;
   position: absolute;
-  margin: 0;
-}
-
+  margin: 0; }
 nav ul ul li {
   text-align: left;
   float: none;
-  margin: 0;
-}
-
+  margin: 0; }
 nav li:hover > ul {
   opacity: 1;
-  left: inherit;
-}
-
+  left: inherit; }
 nav ul li a, nav ul li span {
-  padding: 5px 10px; 
-  display: block;
-}
-
+  padding: 5px 10px;
+  display: block; }
 nav ul ul {
   display: block;
   opacity: 0;
@@ -63,6 +45,4 @@ nav ul ul {
   top: 100%;
   left: -999px;
   -webkit-transition: opacity 0.2s linear;
-  -moz-transition: opacity 0.2s linear;
-}
-
+  -moz-transition: opacity 0.2s linear; }
