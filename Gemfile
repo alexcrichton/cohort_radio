@@ -16,7 +16,8 @@ gem 'bluecloth'
 gem 'haml'
 gem 'paste', :git => 'git://github.com/alexcrichton/paste.git'
 
-gem 'thinking-sphinx', :require => 'thinking_sphinx', :git => 'git://github.com/freelancing-god/thinking-sphinx.git', :branch => 'rails3'
+# If we need better searching, this should do the trick
+# gem 'thinking-sphinx', :require => 'thinking_sphinx', :git => 'git://github.com/freelancing-god/thinking-sphinx.git', :branch => 'rails3'
 
 group :development do
   gem 'rvm', '>=0.1.43'

@@ -16,15 +16,6 @@ GIT
     paperclip (2.3.1.1)
 
 GIT
-  remote: git://github.com/freelancing-god/thinking-sphinx.git
-  revision: 5fe4a03
-  branch: rails3
-  specs:
-    thinking-sphinx (2.0.0.rc1)
-      activerecord (>= 3.0.0.beta3)
-      riddle (>= 1.0.10)
-
-GIT
   remote: git://github.com/huerlisi/will_paginate.git
   revision: 75c4a10
   branch: rails3
@@ -131,7 +122,6 @@ GEM
       rake (>= 0.8.3)
       thor (~> 0.14.0)
     rake (0.8.7)
-    riddle (1.0.12)
     rspec (2.0.0.beta.19)
       rspec-core (= 2.0.0.beta.19)
       rspec-expectations (= 2.0.0.beta.19)
@@ -188,5 +178,4 @@ DEPENDENCIES
   shout (= 2.1.1)
   spork
   sqlite3-ruby
-  thinking-sphinx!
   will_paginate!
