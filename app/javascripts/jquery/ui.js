@@ -1,4 +1,4 @@
-//= require <jquery>
+//= require <jquery/core>
 //= require_css <jquery/ui>
 /**
  * jQuery UI 1.8rc3

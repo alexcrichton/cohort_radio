@@ -1,3 +1,4 @@
+<% javascript 'songs/search' %>
 <% unless request.xhr? %>
 
 	<h1>Searching Songs</h1>
@@ -5,7 +6,8 @@
 	<div class='search' id='songs-search'>
 		<%= form_tag [:search, :songs], :method => :get do %>
 			<p>
-				<%= text_field_tag :q, params[:q], :placeholder => "Search query" %>
+				<%= text_field_tag :q, params[:q], :placeholder => 'Search query', 
+				      :autocomplete => 'off' %>
 				<%= submit_tag 'Search' %>
 			</p>
 		<% end %>

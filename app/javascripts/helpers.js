@@ -1,18 +1,5 @@
-$(function() {
-  $('.song .ratings .user li').live('hover', function() {
-    $(this).addClass('selected');
-    $(this).nextAll().addClass('selected');
-    $(this).prevAll().removeClass('selected');
-  }).live('click', function() {
-    $(this).parents('.song').load($(this).parents('.ratings').attr('remote') + ' .song',
-    {
-      rating: {
-        score: $(this).parents('ul').find('li.selected').length
-      }
-    });
-  });
-  
-});
+//= require <jquery>
+//= require <jquery/form>
 
 $(function() {
   $('#comments > .links .add, #comments > .links .cancel').click(function() {
@@ -53,7 +40,7 @@ $.fn.extend({
     $(this).ajaxForm({
       beforeSubmit: function(args, form) {
         var par = form.parents('.inline-edit');
-        par.html(par.is('.mini') ? bigAjax : hugeAjax);
+        par.html(par.is('.mini') ? $['big-ajax'] : $['huge-ajax']);
       },
       success: function(data) {
         var img = $('img.loading');
@@ -63,13 +50,13 @@ $.fn.extend({
         el.find('form').bindInlineForm();
         par.replaceWith(el);
       }
-    })
+    });
   }
 });
 
 $(function() {
   $('a.remote-remove').live('click', function() {
-    var img = $(smallAjax);
+    var img = $($['small-ajax']);
     var par = parent($(this), img, 'remove');
     $.ajax({
       type: $(this).is('.get') ? 'GET' : 'DELETE',
@@ -84,7 +71,7 @@ $(function() {
     return false;
   });
   $('a.remote-replace').live('click', function() {
-    var img = $(smallAjax);
+    var img = $($['small-ajax']);
     var par = parent($(this), img, 'replace');
     $.ajax({
       url: $(this).attr('href'), 
@@ -99,48 +86,10 @@ $(function() {
 
 function parent(link, image, klass) {
   var href = link.attr('href');
-  var par = link.parents('.' + klass + ':first')
+  var par = link.parents('.' + klass + ':first');
   if(href.indexOf('#') >= 0)
     par = link.parents(href.substring(href.indexOf('#')) + ":first");
   if (par.length == 0)
     par = image;
   return par;
 }
-
-$(function(){
-  if($('#fargo-search').length == 0) return;
-  
-  var timeoutId;
-  
-  $('#fargo-search form').ajaxForm({
-    success: function() {
-      $('#query').text($('#q').val());
-      $('#search-response').html(hugeAjax);
-      $('#q, input[type=submit]').attr('disabled', 'disabled');
-      if(timeoutId != null) clearTimeout(timeoutId);
-      timeoutId = setTimeout(function(){ 
-        $('#search-response').load("/fargo/search/results?q=" + escape($('#q').val()), function(){
-          $('#q, input[type=submit]').removeAttr('disabled');
-          $('#search .result').bindSearchForms();
-        });
-      }, 1000)
-    }
-  });
-});
-
-
-$(function() {
-  $("#memberships form #q").autocomplete('/users/search', {
-    matchContains: true,
-    cacheLength: 50,
-    formatItem: function(row) {
-      return row[0].replace(/\(\d+\)/, '');
-    },
-    formatResult: function(arr) {
-      return arr[0].replace(/&.*$/, '');
-    }
-  }).result(function(event, data, formatted) {
-    var id = formatted.match(/\((\d+)\)/)[1];
-    $('<input type="hidden" value="' + id + '" name="user_id" />').insertAfter($(this));
-  });  
-});

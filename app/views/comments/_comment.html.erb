@@ -8,6 +8,9 @@
 	</div>
 	<div class='links'>
 		<%= link_to '[edit]', '#', :class => 'edit' if can? :update, comment %>
-		<%= link_to '[destroy]', song_comment_path(comment.song, comment), :class => 'remote-remove' if can? :destroy, comment %>
+		<% if can? :destroy, comment %>
+		  <% javascript 'helpers' %>
+  		<%= link_to '[destroy]', song_comment_path(comment.song, comment), :class => 'remote-remove' %>
+  	<% end %>
 	</div>
 </div>

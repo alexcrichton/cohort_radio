@@ -15,6 +15,7 @@ class SongsController < ApplicationController
     end
     @songs = @songs.where("title LIKE ?", "#{params[:letter]}%") if params[:letter]
     
+    @songs = @songs.includes(:album, :artist)
     @songs = @songs.paginate :page => params[:page], :per_page => 10
     
     respond_with @songs unless request.xhr?
@@ -24,7 +25,7 @@ class SongsController < ApplicationController
     top_level = Song
     top_level = @parent.songs if @parent
     
-    @songs = top_level.order('play_count DESC')
+    @songs = top_level.order('play_count DESC').includes(:album, :artist)
     
     @songs = @songs.paginate :page => params[:page], :per_page => 10
   end

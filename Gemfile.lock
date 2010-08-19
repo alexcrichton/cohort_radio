@@ -1,4 +1,14 @@
 GIT
+  remote: git://github.com/alexcrichton/paste.git
+  revision: c2ed213
+  specs:
+    paste (0.2.1)
+      activesupport (>= 3.0.0.beta4)
+      closure-compiler
+      paste
+      sprockets
+
+GIT
   remote: git://github.com/dwalters/paperclip.git
   revision: c285292
   branch: rails3
@@ -13,6 +23,13 @@ GIT
     thinking-sphinx (2.0.0.rc1)
       activerecord (>= 3.0.0.beta3)
       riddle (>= 1.0.10)
+
+GIT
+  remote: git://github.com/huerlisi/will_paginate.git
+  revision: 75c4a10
+  branch: rails3
+  specs:
+    will_paginate (3.0.pre2)
 
 GIT
   remote: git://github.com/odorcicd/authlogic.git
@@ -94,11 +111,6 @@ GEM
     net-ssh-gateway (1.0.1)
       net-ssh (>= 1.99.1)
     nokogiri (1.4.3.1)
-    paste (0.2.0)
-      activesupport (>= 3.0.0.beta4)
-      closure-compiler
-      paste
-      sprockets
     polyglot (0.3.1)
     rack (1.2.1)
     rack-mount (0.6.9)
@@ -133,7 +145,7 @@ GEM
       webrat (>= 0.7.2.beta.1)
     ruby-growl (2.0)
     ruby-mp3info (0.6.13)
-    rvm (0.1.45)
+    rvm (0.1.46)
     scrobbler (0.2.3)
       activesupport (>= 1.4.2)
       hpricot (>= 0.4.86)
@@ -149,7 +161,6 @@ GEM
       nokogiri (>= 1.2.0)
       rack (>= 1.0)
       rack-test (>= 0.5.3)
-    will_paginate (3.0.pre2)
 
 PLATFORMS
   ruby
@@ -167,7 +178,7 @@ DEPENDENCIES
   haml
   mysql2
   paperclip!
-  paste
+  paste!
   rails (= 3.0.0.rc)
   rspec-rails (>= 2.0.0.beta.19)
   ruby-growl
@@ -178,4 +189,4 @@ DEPENDENCIES
   spork
   sqlite3-ruby
   thinking-sphinx!
-  will_paginate (>= 2.0.0.pre)
+  will_paginate!

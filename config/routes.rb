@@ -15,7 +15,7 @@ CohortRadio::Application.routes.draw do
     get :download, :on => :member
     post :rate, :on => :member
   end
-  
+
   namespace :fargo do
     
     resources :downloads, :only => [:index, :destroy] do
@@ -35,7 +35,7 @@ CohortRadio::Application.routes.draw do
     
     get 'search/results'
     get 'search' => 'search#index'
-    
+
   end
   
   namespace :radio do

@@ -14,8 +14,7 @@ $.extend($, {
 
 $(function() {
   $('*[data-remote]').live('ajax:loading', function () {
-    $("<%= escape_javascript(image_tag('ajax-small.gif')) %>")
-        .insertAfter(this);
+    $($['ajax-small']).insertAfter(this);
   });
 
   $('*[data-remote]').live('ajax:success ajax:complete ajax:failure', function () {

@@ -1,21 +1,29 @@
+<% javascript 'playlists/show' %>
+
 <div class="search">
 	<div>
 		<%= link_to "[Edit playlist]", [:edit, @playlist] if can? :update, @playlist %>
 		<%= link_to "[Pool]", [@playlist, :pool] %>
+
 		<% if can?(:add, @playlist) && radio_connected? %>
 			<% if radio.playing? @playlist.id %>
-				<%= link_to "[Stop streaming]", :controller => 'radio/commands', :action => 'stop', :playlist_id => @playlist.slug %>
-				<%= link_to "[Next Song]", :controller => 'radio/commands', :action => 'next', :playlist_id => @playlist.slug %>
+				<%= link_to "[Stop streaming]", :controller => 'radio/commands', 
+				        :action => 'stop', :playlist_id => @playlist.slug %>
+				<%= link_to "[Next Song]", :controller => 'radio/commands', 
+				        :action => 'next', :playlist_id => @playlist.slug %>
 			<% else %>
-				<%= link_to "[Start streaming]", :controller => 'radio/commands', :action => 'add', :playlist_id => @playlist.slug %>
+				<%= link_to "[Start streaming]", :controller => 'radio/commands',
+				        :action => 'add', :playlist_id => @playlist.slug %>
 			<% end %>
 		<% end %>
 	</div>
+
 	<% if can? :add_to, @playlist.pool %>
-		<% form_tag [@playlist, :enqueue], :id => 'song-search' do %>
+		<%= form_tag [@playlist, :enqueue], :id => 'song-search' do %>
 			<div>
-				<%= text_field_tag :q, '', :autocomplete => 'off', :placeholder => 'Add a song to this queue' %>
-				<%= submit_tag "Add" %>
+				<%= text_field_tag :q, params[:q], :autocomplete => 'off', 
+				        :placeholder => 'Add a song to this queue' %>
+				<%= submit_tag 'Add' %>
 			</div>
 		<% end %>
 	<% end %>
@@ -32,6 +40,7 @@
 		This playlist is not streaming
 	<% end %>
 </div>
+
 <h2>Queue:</h2>
 
 <section id='songs'>

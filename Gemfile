@@ -7,14 +7,14 @@ gem 'paperclip', :git => 'git://github.com/dwalters/paperclip.git', :branch => '
 gem 'ruby-mp3info', :require => 'mp3info'
 gem 'delayed_job'
 
-gem 'will_paginate', '>= 2.0.0.pre'
+gem 'will_paginate', :git => 'git://github.com/huerlisi/will_paginate.git', :branch => 'rails3'
 gem 'scrobbler'
 gem 'daemons'
 gem 'shout', '2.1.1'
 gem 'bluecloth'
 
 gem 'haml'
-gem 'paste'
+gem 'paste', :git => 'git://github.com/alexcrichton/paste.git'
 
 gem 'thinking-sphinx', :require => 'thinking_sphinx', :git => 'git://github.com/freelancing-god/thinking-sphinx.git', :branch => 'rails3'
 

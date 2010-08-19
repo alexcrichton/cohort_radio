@@ -5,7 +5,7 @@ class AlbumsController < ApplicationController
   respond_to :html
   
   def index
-    @albums = Album.order('name')
+    @albums = Album.order('name').includes(:artist)
     @albums = @albums.where("name LIKE ?", "#{params[:letter]}%") if params[:letter]
     
     @albums = @albums.paginate :page => params[:page]

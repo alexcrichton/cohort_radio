@@ -14,6 +14,9 @@ function error() {
   });
 }
 
-$['small-ajax'] = "<img alt=\"Ajax-small\" class=\"loading\" src=\"/images/ajax-small.gif?1271485846\" />";
-$['big-ajax'] = "<img alt=\"Ajax-big\" class=\"loading\" src=\"/images/ajax-big.gif?1271485860\" />";
-$['huge-ajax'] = "<img alt=\"Ajax-huge\" class=\"loading\" src=\"/images/ajax-huge.gif?1271485827\" />";
+$['small-ajax'] = "<%= escape_javascript image_tag('ajax-small.gif', 
+    :class => 'loading') %>";
+$['big-ajax'] = "<%= escape_javascript image_tag('ajax-big.gif', 
+    :class => 'loading') %>";
+$['huge-ajax'] = "<%= escape_javascript image_tag('ajax-huge.gif', 
+    :class => 'loading') %>";

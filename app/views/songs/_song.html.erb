@@ -1,4 +1,6 @@
-<% playlists = Playlist.all %>
+<% javascript 'helpers', 'songs/show', 'rails' %>
+
+<% playlists = Playlist.scoped.includes(:pool) %>
 <div class="song remove inline-edit">
 	<div class='image'>
 		<%= link_to [song.artist, song.album] do %>
@@ -28,7 +30,7 @@
 			<% end %>
 		</ul>
 		<%= song.rating %>
-		<% rating = song.ratings.by current_user %>
+		<% rating = song.ratings.by(current_user).first %>
 		<ul class='user'>
 			<% (1..10).each do |score| %>
 				<% if rating && score >= rating.score %>
@@ -85,7 +87,7 @@
 					<ul>
 						<% poss.each do |playlist| %>
 							<li>
-								<%= link_to playlist.name, [playlist, :pool, :add, song], :class => 'remote-replace' %>
+								<%= link_to playlist.name, add_song_playlist_pool_path(playlist, song), :class => 'remote-replace' %>
 							</li>
 						<% end %>
 					</ul>
