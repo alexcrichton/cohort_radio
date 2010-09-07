@@ -1,113 +1,112 @@
-<% javascript 'helpers' %>
+<% javascript 'helpers', 'tabs' %>
 
 <div class='tabs'>
-	<ul>
-		<li><a href="#queued">Queued</a></li>
-		<li><a href="#current">Current</a></li>
-		<li><a href="#finished">Finished</a></li>
-		<li><a href="#failed">Failed</a></li>
-		<li><a href="#waiting">Awaiting Conversion</a></li>
-		<% if can? :manage, Fargo %>
-			<li><a href="#connections">Persistent Connections</a></li>
-		<% end %>
-	</ul>
-	
-	<div id='queued'>
-		<%= render 'download_list', :downloads => @queued_downloads %>
-	</div>
-	
-	<div id='current'>
-		<table>
-			<tr>
-				<th>Nick</th>
-				<th>File</th>
-				<th>Size</th>
-				<th>Progress</th>
-			</tr>
-			<% @current_downloads.each_pair do |nick, download| %>
-				<tr>
-					<td><%= nick %></td>
-					<td><%= download.file %></td>
-					<td><%= number_to_human_size download.size %></td>
-					<td><%= number_to_percentage download.percent * 100 %></td>
-				</tr>
-			<% end %>
-		</table>
-	</div>
-	
-	<div id='finished'>
-		<%= link_to "[Clear these]", :controller => 'fargo/commands', :action => "clear_finished_downloads" if can? :manage, Fargo %>
-		<%= render 'download_list', :downloads => @finished_downloads %>
-	</div>
-	
-	<div id='failed'>
-		<%= link_to "[Clear these]", :controller => 'fargo/commands', :action => "clear_failed_downloads" if can? :manage, Fargo %>
-		<%= render 'download_list', :downloads => @failed_downloads, :failed => true %>
-	</div>
-	
-	<div id='waiting'>
-		<table>
-			<tr>
-				<th>File</th>
-				<th>Next Run</th>
-				<th>Running?</th>
-				<th>Last Error</th>
-				<th>Attempts</th>
-			</tr>
-			<% @jobs.each do |job| %>
-				<tr class='download remove'>
-					<td><%= File.basename job.payload_object.file if job.payload_object.file %></td>
-					<td><%= job.run_at %></td>
-					<td><%= !job.locked_at.nil? %></td>
-					<td title="<%= job.last_error %>">
-						<%= truncate job.last_error.split("\n").first unless job.last_error.nil? %>
-					</td>
-					<td><%= job.attempts %></td>
-					<td class='links'>
-						<% if can? :manage, Fargo %>
-							<%= link_to "Remove", remove_fargo_download_path(job.id), :class => 'remote-remove get' %>
-						<% end %>
-					</td>
-				</tr>
-			<% end %>
-		</table>	
-	</div>
-	
-	
-	<% if can? :manage, Fargo %>
-		<div id='connections'>
-			<table>
-				<tr>
-					<th>Nick</th>
-					<th>Action</th>
-				</tr>
-				<tr>
-					<td colspan='2' class='header'>
-						Persistent
-					</td>
-				</tr>
-				<% @connections.each do |nick| %>
-					<tr class='remove'>
-						<td><%= nick %></td>
-						<td>
-							<%= link_to "Disconnect", {:controller => 'fargo/commands', :action => :disconnect, :nick => nick}, :class => 'disconnect remote-remove' %>
-						</td>
-					</tr>
-				<% end %>
-				<tr>
-					<td colspan='2' class='header'>
-						Timed Out
-					</td>
-				</tr>
-				<% @timed_out.each do |nick| %>
-					<tr class='timeout remove'>
-						<td><%= nick %></td>
-						<td>
-							<%= link_to "Try again", {:controller => 'fargo/downloads', :action => :try, :nick => nick}, :class => 'remote-remove' %>
-						</td>
-					</tr>
-				<% end %>
-			</table>
-		</div>
-	<% end %>
+  <ul>
+    <li><a href="#queued">Queued</a></li>
+    <li><a href="#current">Current</a></li>
+    <li><a href="#finished">Finished</a></li>
+    <li><a href="#failed">Failed</a></li>
+    <li><a href="#waiting">Awaiting Conversion</a></li>
+    <% if can? :manage, Fargo %>
+      <li><a href="#connections">Persistent Connections</a></li>
+    <% end %>
+  </ul>
+
+  <div id='queued'>
+    <%= render 'download_list', :downloads => @queued_downloads %>
+  </div>
+
+  <div id='current'>
+    <table>
+      <tr>
+        <th>Nick</th>
+        <th>File</th>
+        <th>Size</th>
+        <th>Progress</th>
+      </tr>
+      <% @current_downloads.each_pair do |nick, download| %>
+        <tr>
+          <td><%= nick %></td>
+          <td><%= download.file %></td>
+          <td><%= number_to_human_size download.size %></td>
+          <td><%= number_to_percentage download.percent * 100 %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+
+  <div id='finished'>
+    <%= link_to "[Clear these]", :controller => 'fargo/commands', :action => "clear_finished_downloads" if can? :manage, Fargo %>
+    <%= render 'download_list', :downloads => @finished_downloads %>
+  </div>
+
+  <div id='failed'>
+    <%= link_to "[Clear these]", :controller => 'fargo/commands', :action => "clear_failed_downloads" if can? :manage, Fargo %>
+    <%= render 'download_list', :downloads => @failed_downloads, :failed => true %>
+  </div>
+
+  <div id='waiting'>
+    <table>
+      <tr>
+        <th>File</th>
+        <th>Next Run</th>
+        <th>Running?</th>
+        <th>Last Error</th>
+        <th>Attempts</th>
+      </tr>
+      <% @jobs.each do |job| %>
+        <tr class='download remove'>
+          <td><%= File.basename job.payload_object.file if job.payload_object.file %></td>
+          <td><%= job.run_at %></td>
+          <td><%= !job.locked_at.nil? %></td>
+          <td title="<%= job.last_error %>">
+            <%= truncate job.last_error.split("\n").first unless job.last_error.nil? %>
+          </td>
+          <td><%= job.attempts %></td>
+          <td class='links'>
+            <% if can? :manage, Fargo %>
+              <%= link_to "Remove", remove_fargo_download_path(job.id), :class => 'remote-remove get' %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+
+  <% if can? :manage, Fargo %>
+    <div id='connections'>
+      <table>
+        <tr>
+          <th>Nick</th>
+          <th>Action</th>
+        </tr>
+        <tr>
+          <td colspan='2' class='header'>
+            Persistent
+          </td>
+        </tr>
+        <% @connections.each do |nick| %>
+          <tr class='remove'>
+            <td><%= nick %></td>
+            <td>
+              <%= link_to "Disconnect", {:controller => 'fargo/commands', :action => :disconnect, :nick => nick}, :class => 'disconnect remote-remove' %>
+            </td>
+          </tr>
+        <% end %>
+        <tr>
+          <td colspan='2' class='header'>
+            Timed Out
+          </td>
+        </tr>
+        <% @timed_out.each do |nick| %>
+          <tr class='timeout remove'>
+            <td><%= nick %></td>
+            <td>
+              <%= link_to "Try again", {:controller => 'fargo/downloads', :action => :try, :nick => nick}, :class => 'remote-remove' %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  <% end %>
 </div>
