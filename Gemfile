@@ -1,6 +1,6 @@
 source :rubygems
 
-gem 'rails', '3.0.0.rc'
+gem 'rails', '3.0.0'
 gem 'cancan', '>= 1.3'
 gem 'authlogic', :git => 'git://github.com/odorcicd/authlogic.git', :branch => 'rails3'
 gem 'paperclip', :git => 'git://github.com/dwalters/paperclip.git', :branch => 'rails3'
@@ -13,7 +13,7 @@ gem 'daemons'
 gem 'shout', '2.1.1'
 gem 'bluecloth'
 
-gem 'haml'
+gem 'compass'
 gem 'paste', :git => 'git://github.com/alexcrichton/paste.git'
 
 # If we need better searching, this should do the trick
