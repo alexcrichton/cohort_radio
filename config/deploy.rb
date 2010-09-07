@@ -1,31 +1,29 @@
-server "eve.alexcrichton.com", :app, :web, :db, :primary => true
+require 'rvm/capistrano'
+require 'paste/capistrano'
+require 'bundler/capistrano'
+
+server 'eve.alexcrichton.com', :app, :web, :db, :primary => true
 ssh_options[:port] = 7779
 
-set :default_environment, { 
-  'PATH' => "/home/alex/.rvm/rubies/ruby-1.8.7-p249/bin:/home/alex/.rvm/gems/ruby-1.8.7-p249/bin:/home/alex/.rvm/gems/ruby-1.8.7-p249@global/bin:/home/alex/.rvm/bin:$PATH",
-  'RUBY_VERSION' => 'ruby 1.8.7',
-  'GEM_HOME'     => '/home/alex/.rvm/gems/ruby-1.8.7-p249',
-  'GEM_PATH'     => '/home/alex/.rvm/gems/ruby-1.8.7-p249',
-  'BUNDLE_PATH'  => '/home/alex/.rvm/gems/ruby-1.8.7-p249'  # If you are using bundler.
-}
-
-set :user, "capistrano"
+set :user, 'capistrano'
 set :use_sudo, false
+set :rails_env do (ENV['RAILS_ENV'] || 'production').to_sym end
+set :rvm_ruby_string, '1.8.7'
 
 set :scm, :git
-set :repository, "git://github.com/alexcrichton/cohort_radio.git"
-set :branch, "master"
+set :repository, 'git://github.com/alexcrichton/cohort_radio.git'
+set :branch, 'master'
 set :deploy_via, :remote_cache
 
-set :deploy_to, "/srv/http/cohort_radio"
+set :deploy_to, '/srv/http/cohort_radio'
 
-before "deploy:setup", :db
-after "deploy:update_code", "db:symlink"
+before 'deploy:setup', :db
+after 'deploy:update_code', 'db:symlink'
 # before "deploy:symlink", "push:restart"
 # before "deploy:symlink", "worker:restart"
 
 def script command, opts = {}
-  run "cd #{current_path}; RAILS_ENV=#{opts[:env] || 'production'} script/#{command}"
+  run "cd #{latest_release}; RAILS_ENV=#{rails_env} script/#{command}"
 end
 
 namespace :db do
@@ -36,7 +34,7 @@ namespace :db do
     run "mkdir -p #{shared_path}/bundle"
   end
 
-  desc "Make symlink for database yaml" 
+  desc "Make symlink for database yaml"
   task :symlink do
     run "ln -nsf #{shared_path}/config/mail_auth.rb #{release_path}/config/initializers/"
     run "ln -nsf #{shared_path}/config/session_store.rb #{release_path}/config/initializers/"
@@ -52,14 +50,8 @@ namespace :db do
 
 end
 
-namespace :bundler do
-  task :install, :roles => :app do
-    run "cd #{current_path} && bundle install #{shared_path}/bundle"
-  end
-end
-
 # run through phusion passenger on nginx
-namespace :deploy do 
+namespace :deploy do
   task :restart, :roles => :app do
     run "touch #{current_path}/tmp/restart.txt"
   end
@@ -71,7 +63,7 @@ namespace :deploy do
   end
 end
 
-namespace :radio do 
+namespace :radio do
   task :restart, :roles => :app do
     sudo 'god restart cradio-radio'
   end
@@ -83,7 +75,7 @@ namespace :radio do
   end
 end
 
-namespace :worker do 
+namespace :worker do
   task :restart, :roles => :app do
     sudo 'god restart cradio-delayed_job'
   end
@@ -95,7 +87,7 @@ namespace :worker do
   end
 end
 
-namespace :fargo do 
+namespace :fargo do
   task :restart, :roles => :app do
     sudo 'god restart cradio-fargo'
   end
