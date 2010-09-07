@@ -12,7 +12,8 @@ gem 'scrobbler'
 gem 'daemons'
 gem 'shout', '2.1.1'
 gem 'bluecloth'
-gem 'fargo'
+
+gem 'fargo', :git => 'git://github.com/alexcrichton/fargo.git'
 
 gem 'compass'
 gem 'paste', :git => 'git://github.com/alexcrichton/paste.git'

@@ -1,4 +1,13 @@
 GIT
+  remote: git://github.com/alexcrichton/fargo.git
+  revision: 9baac6a9cd3bb47dbadecb5ad3d2af24e5572a58
+  specs:
+    fargo (0.1.0)
+      activesupport (>= 3.0.0)
+      bzip2-ruby
+      libxml-ruby
+
+GIT
   remote: git://github.com/alexcrichton/paste.git
   revision: 8125cfe64e4cda9bae9885220de243f5d407bec5
   specs:
@@ -86,10 +95,6 @@ GEM
     factory_girl_rails (1.0)
       factory_girl (~> 1.3)
       rails (>= 3.0.0.beta4)
-    fargo (0.1.0)
-      activesupport (>= 3.0.0)
-      bzip2-ruby
-      libxml-ruby
     haml (3.0.18)
     highline (1.6.1)
     hpricot (0.8.2)
@@ -167,7 +172,7 @@ DEPENDENCIES
   delayed_job
   exception_notifier
   factory_girl_rails
-  fargo
+  fargo!
   mysql2
   paperclip!
   paste!
