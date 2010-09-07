@@ -1,6 +1,6 @@
 class Fargo::CommandsController < ApplicationController
   
-  authorize_resource :resource => Fargo
+  authorize_resource :class => Fargo
   
   before_filter :require_fargo_connected, :except => :connect
   

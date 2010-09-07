@@ -40,18 +40,13 @@ CohortRadio::Application.routes.draw do
   
   namespace :radio do
     
-    namespace :commands do
-      get 'connect'
-      get 'add/:playlist_id' => 'commands#add', :as => 'add'
-      get 'stop/:playlist_id' => 'commands#stop', :as => 'stop'
-      get 'next/:playlist_id' => 'commands#next', :as => 'next'
-      get 'disconnect'
-    end
+    get 'commands/connect'
+    get 'commands/add/:playlist_id'  => 'commands#add',  :as => 'add'
+    get 'commands/stop/:playlist_id' => 'commands#stop', :as => 'stop'
+    get 'commands/next/:playlist_id' => 'commands#next', :as => 'next'
+    get 'commands/disconnect'
     
-    namespace :status do
-      get '' => 'status#index', :as => ''
-    end
-    
+    get 'status' => 'status#index'    
   end
   
   # other playlist actions defined below
@@ -83,7 +78,7 @@ CohortRadio::Application.routes.draw do
     resources :memberships, :only => [:create, :destroy]
   end
   
-  scope :name_prefix => 'playlist' do 
+  scope :as => 'playlist' do 
     post ':playlist_id/enqueue' => 'queue_items#new', :as => 'enqueue'
     get ':playlist_id/enqueue/:song_id' => 'queue_items#new', :as => 'enqueue_song'
     delete ':playlist_id/dequeue/:id' => 'queue_items#destroy', :as => 'dequeue_queue_item'

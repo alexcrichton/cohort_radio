@@ -42,5 +42,10 @@ module CohortRadio
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password, :password_confirmation]
+
+    config.to_prepare do
+      require 'drb'
+      DRb.start_service
+    end
   end
 end

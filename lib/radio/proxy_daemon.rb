@@ -1,3 +1,5 @@
+require 'drb'
+
 class Radio
   class ProxyDaemon < Radio::Daemon
         
@@ -11,24 +13,11 @@ class Radio
       
       radio = Radio.new
       
-      options = {:for => radio}
-      if @path || Radio.config[:proxy][:path]
-        options[:path] = @path || Radio.config[:proxy][:path]
-      else
-        options[:port] = @port || Radio.config[:proxy][:port]
-      end
-      
-      @proxy = Radio::Proxy::Server.new options
-      
-      trap("INT")  { Rails.logger.info 'exiting...'; @proxy.disconnect }
-      trap("TERM") { Rails.logger.info 'exiting...'; @proxy.disconnect }
-      
-      Rails.logger.info "Connecting radio..."
-      
-      @proxy.connect
-      
-      radio.disconnect
+      DRb.start_service 'drbunix:///tmp/radio.sock', radio
+      Rails.logger.info 'Connecting radio...'
+
+      DRb.thread.join
     end
-    
+
   end
 end
