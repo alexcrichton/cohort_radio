@@ -58,11 +58,11 @@ CohortRadio::Application.routes.draw do
   resources :playlists, :only => [:index, :create, :new]
 
   resource :user, :except => [:show] do
-    get 'search'
     get 'adminize/:id' => 'users#adminize', :as => 'adminize'
     get 'activate/:token' => 'activations#activate', :as => 'activate'
     delete ':id' => 'users#destroy'
   end
+  get 'users/search'
   
   resource :activation, :except => [:destroy]
   get 'activation/form/:user_id' => 'activations#form', :as => 'activation_form'
