@@ -28,8 +28,6 @@ end
 
 group :development, :test do
   gem 'sqlite3-ruby', :require => 'sqlite3'
-  gem 'bullet', '>=2.0.0.beta.3'
-  gem 'ruby-growl'
 end
 
 group :production, :staging do
