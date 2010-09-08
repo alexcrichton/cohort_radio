@@ -16,14 +16,17 @@ class Song < ActiveRecord::Base
   has_attached_file :audio, :path => ":rails_root/private/:class/:attachment/:id/:basename.:extension"
   
   validates_attachment_presence :audio
-  validates_attachment_content_type :audio, :content_type => ['audio/mpeg', 'application/x-mp3', 'audio/mp3']
+  validates_attachment_content_type :audio, :content_type => ['audio/mpeg', 'application/x-mp3', 'audio/mp3', 'application/x-flac', 'audio/flac']
   
   before_validation :ensure_artist_and_album
   after_save :destroy_stale_artist_and_album
   after_save :write_metadata
   after_destroy :destroy_invalid_artist_and_album
   
-  scope :search, Proc.new{ |query| where('title LIKE :q or artists.name LIKE :q or albums.name LIKE :q', :q => "%#{query}%").includes(:artist, :album) }
+  scope :search, Proc.new{ |query| 
+    where('title LIKE :q or artists.name LIKE :q or albums.name LIKE :q', 
+        :q => "%#{query}%").includes(:artist, :album)
+  }
   
   def update_rating
     ratings = self.ratings # load into instance variable to cache
@@ -44,7 +47,16 @@ class Song < ActiveRecord::Base
 
     artist, album = nil, nil
     
-    tag = Mp3Info.new(file).tag
+    if flac?
+      tag = FlacInfo.new(file).tags
+      tag['artist'] ||= tag['ARTIST']
+      tag['album']  ||= tag['ALBUM']
+      tag['title']  ||= tag['TITLE']
+    elsif mp3?
+      tag = Mp3Info.new(file).tag
+    else
+      raise 'Unsupported song type!'
+    end
     
     self.artist_name = self.artist.name if self.artist_name.blank? && self.artist
     self.artist_name ||= tag['artist']  if !custom_set && artist_name.nil?
@@ -67,8 +79,8 @@ class Song < ActiveRecord::Base
     @old_artist = self.artist
     self.artist = artist unless artist.nil?
 
-    @old_album =  self.album
-    self.album =  album  unless album.nil?
+    @old_album = self.album
+    self.album = album  unless album.nil?
     
     self.title = tag['title'] unless custom_set
     self.title ||= File.basename(file)
@@ -80,16 +92,29 @@ class Song < ActiveRecord::Base
   end
   
   def write_metadata
-    info = Mp3Info.new audio.path
-    info.tag['artist'] = artist.name unless artist.nil? || artist.name == 'unknown'
-    info.tag['album']  = album.name  unless album.nil?  || album.name  == 'unknown'
-    info.tag['title']  = title
-    info.close
+    if flac?
+    elsif mp3?
+      info = Mp3Info.new audio.path
+      info.tag['artist'] = artist.name unless artist.nil? || artist.name == 'unknown'
+      info.tag['album']  = album.name  unless album.nil?  || album.name  == 'unknown'
+      info.tag['title']  = title
+      info.close
+    else
+      raise 'Unsupported type!'
+    end
   end
   
   def destroy_invalid_artist_and_album
     album.destroy  if album.songs.size  == 0
     artist.destroy if artist.songs.size == 0
+  end
+  
+  def flac?
+    audio.path =~ /\.flac$/
+  end
+
+  def mp3?
+    audio.path =~ /\.mp3$/
   end
   
 end
