@@ -14,12 +14,9 @@ class Song < ActiveRecord::Base
   validates_uniqueness_of :title, :scope => :artist_id,
       :case_sensitive => false, :if => :title_changed?
 
-  has_attached_file :audio,
-      :path => ':rails_root/private/:class/:attachment/:id/:basename.:extension'
-
-  validates_attachment_presence :audio
-  validates_attachment_content_type :audio, :content_type => ['audio/mpeg',
-      'application/x-mp3', 'audio/mp3']
+  mount_uploader :audio, SongUploader, :mount_on => :audio_file_name
+  validates_presence_of :audio
+  validates_integrity_of :audio
 
   before_validation :ensure_artist_and_album
   after_save :destroy_stale_artist_and_album
@@ -32,23 +29,13 @@ class Song < ActiveRecord::Base
   }
 
   def update_rating
-    ratings = self.ratings # load into instance variable to cache
-
-    rating = ratings.map(&:score).sum.to_f / ratings.size
-
-    update_attributes :rating => rating
-
-    rating
+    self[:rating] = ratings.sum(:score).to_f / ratings.size
+    save
+    self[:rating]
   end
 
   def ensure_artist_and_album
-    if new_record?
-      # get the file paperclip is gonna copy
-      file = audio.queued_for_write[:original].path
-    else
-      file = audio.path
-    end
-
+    file = audio.path
     artist, album = nil, nil
 
     tag = Mp3Info.new(file).tag

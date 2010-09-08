@@ -1,14 +1,17 @@
 source :rubygems
 
 gem 'rails', '3.0.0'
+
 gem 'cancan', '>= 1.3'
 gem 'authlogic', :git => 'git://github.com/odorcicd/authlogic.git', :branch => 'rails3'
-gem 'paperclip', :git => 'git://github.com/dwalters/paperclip.git', :branch => 'rails3'
+
+gem 'carrierwave', '>= 0.5.0.beta'
 gem 'ruby-mp3info', :require => 'mp3info'
+gem 'flacinfo-rb', :require => 'flacinfo'
 gem 'delayed_job'
+gem 'scrobbler'
 
 gem 'will_paginate', :git => 'git://github.com/huerlisi/will_paginate.git', :branch => 'rails3'
-gem 'scrobbler'
 gem 'daemons'
 gem 'shout', '2.1.1'
 gem 'bluecloth'
