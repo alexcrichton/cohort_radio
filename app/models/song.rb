@@ -7,13 +7,15 @@ class Song < ActiveRecord::Base
   has_many :comments, :dependent => :destroy, :order => 'created_at DESC'
   has_many :queue_items, :dependent => :destroy
   has_many :playlists, :through => :queue_items
-  has_many :ratings, :dependent => :destroy, :class_name => "Song::Rating"
+  has_many :ratings, :dependent => :destroy, :class_name => 'Song::Rating'
   has_and_belongs_to_many :pools
 
   validates_presence_of :title, :artist
-  validates_uniqueness_of :title, :scope => :artist_id, :case_sensitive => false, :if => :title_changed?
+  validates_uniqueness_of :title, :scope => :artist_id,
+      :case_sensitive => false, :if => :title_changed?
 
-  has_attached_file :audio, :path => ":rails_root/private/:class/:attachment/:id/:basename.:extension"
+  has_attached_file :audio,
+      :path => ':rails_root/private/:class/:attachment/:id/:basename.:extension'
 
   validates_attachment_presence :audio
   validates_attachment_content_type :audio, :content_type => ['audio/mpeg',
@@ -51,18 +53,18 @@ class Song < ActiveRecord::Base
 
     tag = Mp3Info.new(file).tag
 
-    self.artist_name = self.artist.name if self.artist_name.blank? && self.artist
-    self.artist_name ||= tag['artist']  if !custom_set && artist_name.nil?
-    self.artist_name = 'unknown'        if self.artist_name.blank?
+    self.artist_name = self.artist.try :name if self.artist_name.blank?
+    self.artist_name ||= tag['artist']       if !custom_set && artist_name.nil?
+    self.artist_name = 'unknown'             if self.artist_name.blank?
 
     unless artist_name.blank?
       artist = Artist.find_by_name artist_name
       artist = Artist.new(:name => artist_name) if artist.nil?
     end
 
-    self.album_name = self.album.name if self.album_name.blank? && self.album
-    self.album_name ||= tag['album']  if !custom_set && album_name.nil?
-    self.album_name = 'unknown'       if self.album_name.blank?
+    self.album_name = self.album.try :name if self.album_name.blank?
+    self.album_name ||= tag['album']       if !custom_set && album_name.nil?
+    self.album_name = 'unknown'            if self.album_name.blank?
 
     unless album_name.blank?
       album = artist.albums.find_by_name album_name
