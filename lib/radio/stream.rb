@@ -83,19 +83,22 @@ class Radio
       ActiveRecord::Base.verify_active_connections!
 
       # Get a fresh copy of the playlist
-      playlist = Playlist.find(playlist_id)
-
+      playlist   = Playlist.find playlist_id
       queue_item = playlist.queue_items.first
-      song = queue_item.nil? ? random_song(playlist) : queue_item.song
+      song       = queue_item.nil? ? random_song(playlist) : queue_item.song
 
       m = ShoutMetadata.new
       m.add 'filename', @@tag_recoder.iconv(song.audio.path)
+
       string = song.title
       string << ' ('
       string << song.artist.name if song.artist
-      string << ' - '
-      string << song.album.name  if song.album
+      if song.album
+        string << ' - '
+        string << song.album.name
+      end
       string << ')'
+
       m.add 'song',   @@tag_recoder.iconv(string)
       m.add 'artist', @@tag_recoder.iconv(song.artist.name) if song.artist
       m.add 'album',  @@tag_recoder.iconv(song.album.name)  if song.album
@@ -129,7 +132,7 @@ class Radio
     def stream_song path
       Rails.logger.info "Stream: #{@playlist.name} - playing file #{path}"
 
-      file, size = File.open(path), File.size(path)
+      file, size = File.open(path, 'rb'), File.size(path)
       @next = false
 
       while !@next && data = file.read(BLOCKSIZE)
@@ -137,13 +140,17 @@ class Radio
         self.send data
         Rails.logger.info "Stream: #{@playlist.name} - Block sent: #{file.pos.to_f / size} #{connected?.inspect}"
 
-        # self.sync # this is stupid, freezes the entire process. Do by hand:
+        # Do not call self.sync! This will cause the entire process to freeze
+        # and do weird things (freeze all other running threads). Instead
+        # just get the delay and sleep with ruby
         d = self.delay.to_f
 
         if d > 0
-          Rails.logger.info "Stream: #{@playlist.name} - sleeping #{d}"
-          # This source will time out after 10 sections, don't sleep over that
-          sleep [d / 1000, 9.5].min
+          Rails.logger.info "Stream: #{@playlist.name} - sleeping #{d}ms"
+          # Different sizes for different songs will cause sleeping for
+          # different periods of time. Make sure that the icecast server won't
+          # time out if we sleep for too long
+          sleep d / 1000
         else
           Rails.logger.info "Stream: #{@playlist.name} - negative delay..."
         end
@@ -156,15 +163,13 @@ class Radio
 
     def random_song playlist
       if playlist.pool.songs.count > 0
-        ids = playlist.pool.songs
+        scope = playlist.pool.songs
       else
-        ids = Song
+        scope = Song.scoped
       end
-      ids = ids.select(:id).map &:id
 
-      Song.find ids[rand(ids.size)]
+      scope.offset(rand(scope.count)).first
     end
 
   end
-
 end
