@@ -18,57 +18,50 @@ class Radio
       options[:playlist_id]
     end
 
-    def connect perform_setup = true
-      if perform_setup
-        return if connected?
+    def connect
+      return if connected?
 
-        @playlist = Playlist.find(playlist_id)
-        Rails.logger.info "Stream: #{@playlist.name} connecting"
+      @playlist = Playlist.find(playlist_id)
+      Rails.logger.info "Stream: #{@playlist.name} connecting"
 
-        self.host         = options[:host]
-        self.port         = options[:port]        unless options[:port].nil?
-        self.user         = options[:user]        unless options[:user].nil?
-        self.pass         = options[:password]
-        self.pass       ||= options[:pass]
-        self.mount        = @playlist.ice_mount_point
-        self.name         = @playlist.ice_name
-        self.description  = @playlist.description if @playlist.description
-      end
+      self.host         = options[:host]
+      self.port         = options[:port]        unless options[:port].nil?
+      self.user         = options[:user]        unless options[:user].nil?
+      self.pass         = options[:password]
+      self.pass       ||= options[:pass]
+      self.mount        = @playlist.ice_mount_point
+      self.name         = @playlist.ice_name
+      self.description  = @playlist.description if @playlist.description
 
-      super()
+      super
 
-      if perform_setup
-        @loop = true
+      @loop = true
 
-        # play songs in a different thread
-        @song_thread = Thread.start { while @loop; play_song; end }
+      # play songs in a different thread
+      @song_thread = Thread.start { while @loop; play_song; end }
 
-        Rails.logger.info "Stream: #{@playlist.name} connected"
-      end
-
+      Rails.logger.info "Stream: #{@playlist.name} connected"
       true
     end
 
-    def disconnect perform_teardown = true
-      if perform_teardown
-        # Exit all threads we've got running
+    def disconnect
+      # Exit all threads we've got running
 
-        Rails.logger.info "Stream: #{@playlist.name} disconnecting"
+      Rails.logger.info "Stream: #{@playlist.name} disconnecting"
 
-        @loop = false
+      @loop = false
 
-        if @song_thread
-          Rails.logger.debug "Stream: #{@playlist.name} joining with the song thread"
-          @next = true
-          @song_thread.wakeup
-          @song_thread.join
-          @song_thread = nil
-        end
-
-        @current_song = nil
+      if @song_thread
+        Rails.logger.debug "Stream: #{@playlist.name} joining with the song thread"
+        @next = true
+        @song_thread.wakeup
+        @song_thread.join
+        @song_thread = nil
       end
 
-      super() if connected?
+      @current_song = nil
+
+      super if connected?
     end
 
     def next
@@ -92,7 +85,7 @@ class Radio
       # Get a fresh copy of the playlist
       playlist   = Playlist.find playlist_id
       queue_item = playlist.queue_items.first
-      song       = queue_item.present? ? queue_item.song : random_song(playlist)
+      song       = queue_item.nil? ? random_song(playlist) : queue_item.song
 
       m = ShoutMetadata.new
       m.add 'filename', @@tag_recoder.iconv(song.audio.path)
@@ -118,25 +111,16 @@ class Radio
 
       @current_song = song.title
 
-      if song.flac?
-        change_format Shout::OGG
-      else
-        change_format Shout::MP3
-      end
-
       self.metadata = metadata
+      if song.flac?
+        self.format = Shout::OGG
+      else
+        self.format = Shout::MP3
+      end
 
       stream_song song.audio.path
 
       update_song queue_item
-    end
-
-    def change_format fmt
-      if self.format != fmt
-        disconnect false
-        self.format = fmt
-        connect false
-      end
     end
 
     def update_song queue_item
@@ -181,7 +165,7 @@ class Radio
 
     def random_song playlist
       if playlist.pool.songs.count > 0
-        scope = playlist.pool.songs.scoped
+        scope = playlist.pool.songs
       else
         scope = Song.scoped
       end
