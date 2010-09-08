@@ -25,12 +25,13 @@ class Radio
       Rails.logger.info "Stream: #{@playlist.name} connecting"
 
       self.host         = options[:host]
-      self.port         = options[:port]                        unless options[:port].nil?
-      self.user         = options[:user]                        unless options[:user].nil?
-      self.pass         = options[:password] || options[:pass]  unless options[:password].nil?
+      self.port         = options[:port]        unless options[:port].nil?
+      self.user         = options[:user]        unless options[:user].nil?
+      self.pass         = options[:password]
+      self.pass       ||= options[:pass]
       self.mount        = @playlist.ice_mount_point
       self.name         = @playlist.ice_name
-      self.description  = @playlist.description                 if @playlist.description
+      self.description  = @playlist.description if @playlist.description
       self.format       = Shout::MP3
 
       super
