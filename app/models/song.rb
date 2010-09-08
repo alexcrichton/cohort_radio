@@ -14,12 +14,9 @@ class Song < ActiveRecord::Base
   validates_uniqueness_of :title, :scope => :artist_id,
       :case_sensitive => false, :if => :title_changed?
 
-  has_attached_file :audio,
-      :path => ':rails_root/private/:class/:attachment/:id/:basename.:extension'
-
-  validates_attachment_presence :audio
-  validates_attachment_content_type :audio, :content_type => ['audio/mpeg',
-      'application/x-mp3', 'audio/mp3', 'application/x-flac', 'audio/flac']
+  mount_uploader :audio, SongUploader, :mount_on => :audio_file_name
+  validates_presence_of :audio
+  validates_integrity_of :audio
 
   before_validation :ensure_artist_and_album
   after_save :destroy_stale_artist_and_album
