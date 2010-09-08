@@ -32,7 +32,6 @@ class Radio
       self.mount        = @playlist.ice_mount_point
       self.name         = @playlist.ice_name
       self.description  = @playlist.description if @playlist.description
-      self.format       = Shout::MP3
 
       super
 
@@ -113,6 +112,11 @@ class Radio
       @current_song = song.title
 
       self.metadata = metadata
+      if song.flac?
+        self.format = Shout::OGG
+      else
+        self.format = Shout::MP3
+      end
 
       stream_song song.audio.path
 
