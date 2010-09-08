@@ -1,13 +1,9 @@
-# encoding: utf-8
-
 class SongUploader < CarrierWave::Uploader::Base
   include CarrierWave::Compatibility::Paperclip
 
   storage :file
 
-  version :mp3 do
-    process :encode_to_mp3
-  end
+  process :encode_to_mp3
 
   def paperclip_path
     ':rails_root/private/songs/audios/:id/:basename.:extension'

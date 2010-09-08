@@ -29,35 +29,16 @@ class Song < ActiveRecord::Base
   }
 
   def update_rating
-    ratings = self.ratings # load into instance variable to cache
-
-    rating = ratings.map(&:score).sum.to_f / ratings.size
-
-    update_attributes :rating => rating
-
-    rating
+    self[:rating] = ratings.sum(:score).to_f / ratings.size
+    save
+    self[:rating]
   end
 
   def ensure_artist_and_album
-    if new_record?
-      # get the file paperclip is gonna copy
-      file = audio.queued_for_write[:original].path
-    else
-      file = audio.path
-    end
-
+    file = audio.path
     artist, album = nil, nil
 
-    if flac?
-      tag = FlacInfo.new(file).tags
-      tag['artist'] ||= tag['ARTIST']
-      tag['album']  ||= tag['ALBUM']
-      tag['title']  ||= tag['TITLE']
-    elsif mp3?
-      tag = Mp3Info.new(file).tag
-    else
-      raise 'Unsupported song type!'
-    end
+    tag = Mp3Info.new(file).tag
 
     self.artist_name = self.artist.try :name if self.artist_name.blank?
     self.artist_name ||= tag['artist']       if !custom_set && artist_name.nil?
@@ -93,29 +74,16 @@ class Song < ActiveRecord::Base
   end
 
   def write_metadata
-    if flac?
-    elsif mp3?
-      info = Mp3Info.new audio.path
-      info.tag['artist'] = artist.name unless artist.nil? || artist.name == 'unknown'
-      info.tag['album']  = album.name  unless album.nil?  || album.name  == 'unknown'
-      info.tag['title']  = title
-      info.close
-    else
-      raise 'Unsupported type!'
-    end
+    info = Mp3Info.new audio.path
+    info.tag['artist'] = artist.name unless artist.nil? || artist.name == 'unknown'
+    info.tag['album']  = album.name  unless album.nil?  || album.name  == 'unknown'
+    info.tag['title']  = title
+    info.close
   end
 
   def destroy_invalid_artist_and_album
     album.destroy  if album.songs.size  == 0
     artist.destroy if artist.songs.size == 0
-  end
-
-  def flac?
-    audio.path =~ /\.flac$/
-  end
-
-  def mp3?
-    audio.path =~ /\.mp3$/
   end
 
 end
