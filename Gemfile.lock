@@ -17,13 +17,6 @@ GIT
       sprockets
 
 GIT
-  remote: git://github.com/dwalters/paperclip.git
-  revision: c285292ee515e0169ebff6f3fa63aec48a383850
-  branch: rails3
-  specs:
-    paperclip (2.3.1.1)
-
-GIT
   remote: git://github.com/huerlisi/will_paginate.git
   revision: ef54916d38bdecd1b5030a16cb620438c62b758d
   branch: rails3
@@ -176,7 +169,6 @@ DEPENDENCIES
   fargo!
   flacinfo-rb
   mysql2
-  paperclip!
   paste!
   rails (= 3.0.0)
   rspec-rails (>= 2.0.0.beta.19)
