@@ -122,11 +122,8 @@ class Radio
       return if queue_item.nil?
       ActiveRecord::Base.verify_active_connections!
 
-      # Get a fresh copy of the playlist
-      playlist = Playlist.find(playlist_id)
-
-      queue_item.song.update_attributes(:play_count => queue_item.song.play_count + 1)
-      playlist.queue_items.delete queue_item
+      queue_item.song.increment! :play_count
+      queue_item.destroy
     end
 
     def stream_song path
