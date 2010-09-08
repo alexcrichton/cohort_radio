@@ -41,7 +41,8 @@ class Song < ActiveRecord::Base
 
   def ensure_artist_and_album
     if new_record?
-      file = audio.queued_for_write[:original].path # get the file paperclip is gonna copy
+      # get the file paperclip is gonna copy
+      file = audio.queued_for_write[:original].path
     else
       file = audio.path
     end
