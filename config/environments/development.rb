@@ -18,17 +18,8 @@ CohortRadio::Application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method       = :sendmail
   config.action_mailer.default_url_options   = { :host => 'localhost:3000' }
-  
+
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
-    
-  config.after_initialize do
-    Bullet.enable        = true 
-    Bullet.bullet_logger = true  
-    Bullet.growl         = true
 
-    Bullet.rails_logger          = true
-    Bullet.disable_browser_cache = true
-  end
-  
 end
