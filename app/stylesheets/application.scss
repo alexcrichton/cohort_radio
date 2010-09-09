@@ -105,9 +105,9 @@ a {
   clear: both;
   height: 190px;
   border: 3px solid #ccc;
-  -webkit-border-radius: 20px;
-  -mozilla-border-radius: 20px;
   position: relative;
+
+  @include border-radius(20px);
 }
 
 .song div, .comment div {
@@ -152,12 +152,18 @@ a {
     margin: 0;
     display: block;
     font-size: 10px;
-    @include border-radius(10px);
     border: 1px solid black;
+
+    @include border-radius(10px);
   }
 
-  ul.user li.selected {
-    background: blue;
+  ul.user {
+    li {
+      cursor: pointer;
+    }
+    li.selected {
+      background: blue;
+    }
   }
 
   ul.overall li.selected {
@@ -188,8 +194,7 @@ a {
   border-bottom: 0px;
   z-index: 10;
 
-  -webkit-transition: opacity 0.2s linear;
-  -moz-transition: opacity 0.2s linear;
+  @include transition(opacity, 0.2s, linear);
 }
 
 .song .add:hover ul {
@@ -235,25 +240,23 @@ input[type=submit] {
   -moz-appearance: button;
   padding: 0 8px;
   border: 1px solid #999;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
-  background-image: -moz-linear-gradient(-90deg, #fff, #ddd);
+
+  @include border-radius(2px);
+  @include linear-gradient(color-stops(#fff, #ddd));
+
   font-size: 150%;
   height: 30px;
   margin: 0.5em;
 }
 
 input[type=submit]:active {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#ddd));
-  background-image: -moz-linear-gradient(-90deg, #ccc, #ddd);
+  @include linear-gradient(color-stops(#ccc, #ddd));
 }
 
 #search fieldset {
   overflow: auto;
   border: 5px solid #ccc;
-  -webkit-border-radius: 20px;
-  -mozilla-border-radius: 20px;
+  @include border-radius(20px);
 }
 
 #search fieldset .nick {
@@ -282,21 +285,16 @@ input[type=submit]:active {
 }
 
 #container {
-  -moz-border-radius: 20px;
-  -webkit-border-radius: 20px;
+  @include border-radius(20px);
 }
 
 footer {
   text-align: center;
   height: 20px;
   padding: 10px;
-  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ccc));
-  background-image: -moz-linear-gradient(-90deg, #fff, #ccc);
-  -webkit-border-bottom-right-radius: 20px;
-  -webkit-border-bottom-left-radius: 20px;
-  -moz-border-radius-bottomright: 20px;
-  -moz-border-radius-bottomleft: 20px;
 
+  @include linear-gradient(color-stops(#fff, #ccc));
+  @include border-bottom-radius(20px);
 }
 
 section#content {
@@ -305,13 +303,8 @@ section#content {
 }
 
 header {
-  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#FFFCFD), color-stop(0,#ccc),color-stop(.7,#CCCCCC));
-  background-image: -moz-linear-gradient(-90deg, #ccc, #ccc 70%, #fff);
-
-  -webkit-border-top-right-radius: 20px;
-  -webkit-border-top-left-radius: 20px;
-  -moz-border-radius-topright: 20px;
-  -moz-border-radius-topleft: 20px;
+  @include linear-gradient(color-stops(#ccc, #ccc 70%, #fff));
+  @include border-top-radius(20px);
 
   overflow: auto;
   height: 40px;
@@ -377,8 +370,8 @@ ul.block > li .content {
 
 ul.block > li {
   position: relative;
-  -webkit-transition: background 0.1s linear;
-  -moz-transition: background 0.2s linear;
+
+  @include transition(background, 0.1s, linear);
 }
 
 ul.block > li .links {
