@@ -1,3 +1,5 @@
+@import "compass/css3";
+
 nav {
   li {
     text-align: center;
@@ -17,13 +19,11 @@ nav {
   }
 
   a:hover, span:hover {
-    background-image:-webkit-gradient(linear, 0% 0%, 20% 100%, from(#FFFFFF), to(#B3B3B3));
-    background-image:-moz-linear-gradient(-50deg, #FFFFFF, #B3B3B3);
+    @include linear-gradient(color-stops(#fff, #b3b3b3), top left);
   }
 
   & > ul li:first-child a, & > ul li:first-child span {
-    -webkit-border-top-left-radius: 20px;
-    -moz-border-radius-topleft: 20px;
+    @include border-top-left-radius(20px);
   }
 
   nav li.selected > a, nav li.selected > span {
@@ -51,7 +51,7 @@ nav {
   }
 
   ul li a, ul li span {
-    padding: 5px 10px; 
+    padding: 5px 10px;
     display: block;
   }
 
@@ -63,8 +63,8 @@ nav {
     left: 0%;
     top: 100%;
     left: -999px;
-    -webkit-transition: opacity 0.2s linear;
-    -moz-transition: opacity 0.2s linear;
+
+    @include transition(opacity, 0.2s, linear);
   }
 
 }

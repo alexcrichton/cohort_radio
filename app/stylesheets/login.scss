@@ -1,22 +1,23 @@
+@import "compass/css3/border-radius";
+
 .login {
   overflow: auto;
   border: 3px solid #ccc;
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
+  @include border-radius(20px);
   width: 500px;
   margin: 0 auto;
-  
+
   input[type=submit] {
     font-size: 120%;
     height: 25px;
   }
-  
+
   form {
     float: left;
     display: block;
     width: 70%;
   }
-  
+
   .links {
     float: left;
     text-align: center;
