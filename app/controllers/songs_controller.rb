@@ -3,13 +3,16 @@ class SongsController < ApplicationController
   authorize_resource
 
   respond_to :html
+  respond_to :js, :only => :rate
 
   def index
     top_level = Song
     top_level = @parent.songs if @parent
 
     if params[:order] == 'play_count'
-      @songs = top_level.order params[:order]
+      @songs = top_level.order 'play_count DESC'
+    elsif params[:order] == 'rating'
+      @songs = top_level.order 'rating DESC'
     else
       @songs = top_level.order 'title'
     end
@@ -19,15 +22,6 @@ class SongsController < ApplicationController
     @songs = @songs.paginate :page => params[:page], :per_page => 10
 
     respond_with @songs unless request.xhr?
-  end
-
-  def play_count
-    top_level = Song
-    top_level = @parent.songs if @parent
-
-    @songs = top_level.order('play_count DESC').includes(:album, :artist)
-
-    @songs = @songs.paginate :page => params[:page], :per_page => 10
   end
 
   def artists
@@ -58,10 +52,13 @@ class SongsController < ApplicationController
       @rating.update_attributes! params[:rating]
     else
       @rating = scope.build params[:rating]
+      @rating.user = current_user
       @rating.save! # we expect this to work
     end
 
-    render @song if request.xhr?
+    @song.reload # Our rating has changed
+
+    respond_with @song
   end
 
   def update

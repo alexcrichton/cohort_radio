@@ -8,6 +8,8 @@ $.extend($, {
     if (!config.data) config.data = {};
     config.data[csrf_param] = csrf_token;
     config.type = 'PUT';
+    config.dataType = 'script';
+
     $.ajax(config);
   }
 });

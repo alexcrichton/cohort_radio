@@ -1,98 +1,106 @@
 <% javascript 'helpers', 'songs/show', 'rails' %>
 
 <% playlists = Playlist.scoped.includes(:pool) %>
-<div class="song remove inline-edit">
-	<div class='image'>
-		<%= link_to [song.artist, song.album] do %>
-			<%= image_tag song.album.cover_url, :width => '126' %>
-		<% end if song.album && song.album.cover_url%>
-	</div>
-	
-	<div class='content'>
-		<h3>
-			<%= link_to truncate(song.title), song %>
-		</h3>
-		<% if song.artist %>
-			<h5><%= link_to truncate(song.artist.name), song.artist %></h5>
-		<% end %>
-		<% unless song.album.blank? %>
-			<h5><%= link_to truncate(song.album.name), [song.artist, song.album] %></h5>
-		<% end %>
-		<p>
-			Play count: <%= song.play_count %>
-		</p>	
-	</div>
-	
-	<div class='ratings' remote="<%= url_for [:rate, song] %>">
-		<ul class='overall'>
-			<% (1..10).each do |score| %>
-				<li>&nbsp;</li>
-			<% end %>
-		</ul>
-		<%= song.rating %>
-		<% rating = song.ratings.by(current_user).first %>
-		<ul class='user'>
-			<% (1..10).each do |score| %>
-				<% if rating && score >= rating.score %>
-					<li class='selected'>&nbsp;</li>
-				<% else %>
-					<li>&nbsp;</li>
-				<% end %>
-			<% end %>
-		</ul>
-	</div>
-	
-	<% if can? :update, song %>
-		<div class='form'>
-			<%= render 'songs/form', :song => song %>
-		</div>
-	<% end %>
-	
-	<div class='links'>
-		<p>
-			<% if defined?(item) %>
-				<p>
-					Queued by: <%= item.user.name if item.user %>
-				</p>
-			<% end %>
-			<%= link_to '[download]', [:download, song] if can? :download, song %>
-			<%= link_to '[edit]', [:edit, song], :class => 'edit' if can? :update, song %>
-			<%= link_to '[destroy]', song, :method => :delete, :confirm => 'are you sure?' if can? :destroy, song %>
 
-			<% if defined?(item) && can?(:destroy, item) %>
-				<br/><%= link_to '[remove]', [@playlist, :dequeue, item], :class => 'remote-remove' %>
-			<% end %>
-		</p>
-		
-		<% if @pool %>
-			<%= link_to "[remove from pool]", [@playlist, :pool, :remove, song], :class => 'remote-remove get' if can? :remove_from, @pool %>
-		<% end %>
-		
-		<% if @playlist.nil? %>
-			<div class='add'>
-				<%= link_to "[add to queue]", '#' %>
-				<ul>
-					<% playlists.each do |playlist| %>
-						<% next if cannot? :add_to, playlist.pool %>
-						<li>
-							<%= link_to playlist.name, [playlist, :enqueue, song], :class => 'remote-replace' %>
-						</li>
-					<% end %>
-				</ul>
-			</div>
-			<% poss = playlists.select{ |p| can?(:add_to, p.pool) && !song.pool_ids.include?(p.pool.id)}%>
-			<% if poss.size > 0 %>
-				<div class='add' style='top:80px;'>
-					<%= link_to "[add to pool]", '#' %>
-					<ul>
-						<% poss.each do |playlist| %>
-							<li>
-								<%= link_to playlist.name, add_song_playlist_pool_path(playlist, song), :class => 'remote-replace' %>
-							</li>
-						<% end %>
-					</ul>
-				</div>
-			<% end %>
-		<% end %>
-	</div>
+<div class="song remove inline-edit" id="s<%= song.id %>">
+  <div class='image'>
+    <%= link_to [song.artist, song.album] do %>
+      <%= image_tag song.album.cover_url, :width => '126' %>
+    <% end if song.album && song.album.cover_url%>
+  </div>
+
+  <div class='content'>
+    <h3>
+      <%= link_to truncate(song.title), song %>
+    </h3>
+    <% if song.artist %>
+      <h5><%= link_to truncate(song.artist.name), song.artist %></h5>
+    <% end %>
+    <% unless song.album.blank? %>
+      <h5>
+        <%= link_to truncate(song.album.name), [song.artist, song.album] %>
+      </h5>
+    <% end %>
+    <p>
+      Play count: <%= song.play_count %>
+    </p>
+  </div>
+
+  <div class='ratings' remote="<%= url_for [:rate, song] %>">
+    <div class='rating'>
+      <ul class='overall' data-rating="<%= number_to_percentage song.rating %>">
+        <% (1..10).each do |score| %>
+          <li<%= raw(' class="selected"') if score > 10 - song.rating %>>
+            &nbsp;
+          </li>
+        <% end %>
+      </ul>
+      <span class='score'><%= song.rating.to_i %></span>
+    </div>
+    <div class='rating'>
+      <% rating = song.ratings.by(current_user).first %>
+      <ul class='user' data-rating="<%= rating.try(:score) %>">
+        <% (1..10).each do |score| %>
+          <li<%= raw(' class="selected"') if score > 10 - song.rating %>>
+            &nbsp;
+          </li>
+        <% end %>
+      </ul>
+      <span class='score'><%= rating.try(:score).try(:to_i) %></span>
+    </div>
+  </div>
+
+  <% if can? :update, song %>
+    <div class='form'>
+      <%= render 'songs/form', :song => song %>
+    </div>
+  <% end %>
+
+  <div class='links'>
+    <p>
+      <% if defined?(item) %>
+        <p>
+          Queued by: <%= item.user.name if item.user %>
+        </p>
+      <% end %>
+      <%= link_to '[download]', [:download, song] if can? :download, song %>
+      <%= link_to '[edit]', [:edit, song], :class => 'edit' if can? :update, song %>
+      <%= link_to '[destroy]', song, :method => :delete, :confirm => 'are you sure?' if can? :destroy, song %>
+
+      <% if defined?(item) && can?(:destroy, item) %>
+        <br/><%= link_to '[remove]', [@playlist, :dequeue, item], :class => 'remote-remove' %>
+      <% end %>
+    </p>
+
+    <% if @pool %>
+      <%= link_to "[remove from pool]", [@playlist, :pool, :remove, song], :class => 'remote-remove get' if can? :remove_from, @pool %>
+    <% end %>
+
+    <% if @playlist.nil? %>
+      <div class='add'>
+        <%= link_to "[add to queue]", '#' %>
+        <ul>
+          <% playlists.each do |playlist| %>
+            <% next if cannot? :add_to, playlist.pool %>
+            <li>
+              <%= link_to playlist.name, [playlist, :enqueue, song], :class => 'remote-replace' %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <% poss = playlists.select{ |p| can?(:add_to, p.pool) && !song.pool_ids.include?(p.pool.id)}%>
+      <% if poss.size > 0 %>
+        <div class='add' style='top:80px;'>
+          <%= link_to "[add to pool]", '#' %>
+          <ul>
+            <% poss.each do |playlist| %>
+              <li>
+                <%= link_to playlist.name, add_song_playlist_pool_path(playlist, song), :class => 'remote-replace' %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
 </div>

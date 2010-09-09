@@ -1,77 +1,78 @@
 <ul>
-	<li>
-		<% if current_user.nil? %>
-			<%= link_to 'Home', login_path %>
-		<% else %>
-			<%= link_to "Playlists", playlists_path %>
-			<ul style='width:180px'>
-				<% Playlist.all.each do |playlist| %>
-					<li><%= link_to playlist.name, playlist %></li>
-				<% end %>
-				<li><%= link_to raw('New &raquo;'), new_playlist_path %></li>
-			</ul>
-		<% end %>
+  <li>
+    <% if current_user.nil? %>
+      <%= link_to 'Home', login_path %>
+    <% else %>
+      <%= link_to "Playlists", playlists_path %>
+      <ul style='width:180px'>
+        <% Playlist.all.each do |playlist| %>
+          <li><%= link_to playlist.name, playlist %></li>
+        <% end %>
+        <li><%= link_to raw('New &raquo;'), new_playlist_path %></li>
+      </ul>
+    <% end %>
 
-	</li>
-	
-	<% if can? :read, Song %>
-		<li>
-			<%= link_to 'Songs', songs_path %>
-			<ul>
-				<li><%= link_to "By Play Count", play_count_songs_path %></li>
-				<li><%= link_to "Upload", new_song_path %></li>
-				<li><%= link_to "Search", search_songs_path %></li>
-			</ul>
-		</li>
-		<li>
-			<%= link_to 'Artists', artists_path %>
-		</li>
-		<li>
-			<%= link_to 'Albums', albums_path %>
-		</li>
-	<% end %>
-	
-	<% if can? :download, Fargo %>
-		<li>
-			<span>Fargo</span>
-			<ul>
-				<% if fargo_running? %>
-					<% if can? :manage, Fargo %>
-						<% if fargo_connected? %>
-							<li><%= link_to 'Disconnect', {:controller => 'fargo/commands', :action => 'disconnect'}, :confirm => "Are you sure?" %></li>
-						<% else %>
-							<li><%= link_to 'Connect', :controller => 'fargo/commands', :action => 'connect' %></li>
-						<% end %>
-					<% end %>
-					<% if fargo_connected? %>
-						<li><%= link_to "Downloads", fargo_downloads_path %></li>
-						<li><%= link_to "Search", fargo_search_path %></li>
-					<% end %>
-				<% else %>
-					<li style='width:180px'><span>Fargo is not running.</span></li>
-				<% end %>
-			</ul>
-		</li>
-	<% end %>
-	
-	<% if can? :manage, Radio %>
-		<li>
-			<span>Radio</span>
-			<ul>
-				<% if radio_running? %>
-					<% if radio_connected? %>
-						<li><%= link_to 'Disconnect', {:controller => 'radio/commands', :action => 'disconnect'}, :confirm => "Are you sure?" %></li>
-						<li><%= link_to "Status", :controller => 'radio/status' %></li>
-					<% else %>
-						<li><%= link_to 'Connect', :controller => 'radio/commands', :action => 'connect' %></li>
-					<% end %>
-				<% else %>
-					<li style='width: 180px'><span>Radio is not running.</span></li>
-				<% end %>
-			</ul>
-		</li>
-	<% end %>
-	<% if can? :manage, Activation %>
-		<li><%= link_to 'Activations', edit_activation_path %></li>
-	<% end %>
+  </li>
+
+  <% if can? :read, Song %>
+    <li>
+      <%= link_to 'Songs', songs_path %>
+      <ul>
+        <li><%= link_to 'Play Count', songs_path(:order => 'play_count') %></li>
+        <li><%= link_to 'Rating', songs_path(:order => 'rating') %></li>
+        <li><%= link_to 'Upload', new_song_path %></li>
+        <li><%= link_to 'Search', search_songs_path %></li>
+      </ul>
+    </li>
+    <li>
+      <%= link_to 'Artists', artists_path %>
+    </li>
+    <li>
+      <%= link_to 'Albums', albums_path %>
+    </li>
+  <% end %>
+
+  <% if can? :download, Fargo %>
+    <li>
+      <span>Fargo</span>
+      <ul>
+        <% if fargo_running? %>
+          <% if can? :manage, Fargo %>
+            <% if fargo_connected? %>
+              <li><%= link_to 'Disconnect', {:controller => 'fargo/commands', :action => 'disconnect'}, :confirm => "Are you sure?" %></li>
+            <% else %>
+              <li><%= link_to 'Connect', :controller => 'fargo/commands', :action => 'connect' %></li>
+            <% end %>
+          <% end %>
+          <% if fargo_connected? %>
+            <li><%= link_to "Downloads", fargo_downloads_path %></li>
+            <li><%= link_to "Search", fargo_search_path %></li>
+          <% end %>
+        <% else %>
+          <li style='width:180px'><span>Fargo is not running.</span></li>
+        <% end %>
+      </ul>
+    </li>
+  <% end %>
+
+  <% if can? :manage, Radio %>
+    <li>
+      <span>Radio</span>
+      <ul>
+        <% if radio_running? %>
+          <% if radio_connected? %>
+            <li><%= link_to 'Disconnect', {:controller => 'radio/commands', :action => 'disconnect'}, :confirm => "Are you sure?" %></li>
+            <li><%= link_to "Status", :controller => 'radio/status' %></li>
+          <% else %>
+            <li><%= link_to 'Connect', :controller => 'radio/commands', :action => 'connect' %></li>
+          <% end %>
+        <% else %>
+          <li style='width: 180px'><span>Radio is not running.</span></li>
+        <% end %>
+      </ul>
+    </li>
+  <% end %>
+  <% if can? :manage, Activation %>
+    <li><%= link_to 'Activations', edit_activation_path %></li>
+  <% end %>
 </ul>
