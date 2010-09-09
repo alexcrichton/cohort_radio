@@ -5,19 +5,19 @@ rails_root = "/srv/http/cohort_radio/current"
 
     w.name  = "cradio-#{daemon}"
     w.group = "cradio"
-    w.interval = 30.seconds # default      
-  
-    w.start   = "cd #{rails_root}; RAILS_ENV=production script/#{daemon} start"
-    w.stop    = "cd #{rails_root}; RAILS_ENV=production script/#{daemon} stop"
-    w.restart = "cd #{rails_root}; RAILS_ENV=production script/#{daemon} restart"
-  
+    w.interval = 30.seconds # default
+
+    w.start   = "cd #{rails_root}; RAILS_ENV=production bundle exec script/#{daemon} start"
+    w.stop    = "cd #{rails_root}; RAILS_ENV=production bundle exec script/#{daemon} stop"
+    w.restart = "cd #{rails_root}; RAILS_ENV=production bundle exec script/#{daemon} restart"
+
     w.pid_file = File.join(rails_root, "tmp/pids/#{daemon}.pid")
-  
+
     w.behavior(:clean_pid_file)
-  
+
     w.uid = 'capistrano'
     w.gid = 'http'
-  
+
     # retart if memory gets too high
     w.transition(:up, :restart) do |on|
       on.condition(:memory_usage) do |c|
@@ -39,7 +39,7 @@ rails_root = "/srv/http/cohort_radio/current"
         c.running = true
         c.interval = 5.seconds
       end
-  
+
       # failsafe
       on.condition(:tries) do |c|
         c.times = 5
@@ -55,5 +55,5 @@ rails_root = "/srv/http/cohort_radio/current"
       end
     end
   end
-  
+
 end
