@@ -2,33 +2,33 @@
 
 <%= form_for @playlist do |f| %>
 
-  <%= render "shared/error_messages", :target => f.object %>
+  <%= render 'shared/error_messages', :target => f.object %>
 
   <dl>
     <dt><%= f.label :name %></dt>
     <dd><%= f.text_field :name %></dd>
     <dt><%= f.label :private %></dt>
     <dd><%= f.check_box :private %></dd>
-		<dt><%= f.label :description %></dt>
-		<dd><%= f.text_area :description %></dd>
-	</dl>
+    <dt><%= f.label :description %></dt>
+    <dd><%= f.text_area :description %></dd>
+  </dl>
 
-  <p><%= f.submit "Submit" %></p>
+  <p><%= f.submit %></p>
 <% end %>
 
 <% unless @playlist.new_record? %>
-	<h3>Users Allowed to this Playlist</h3>
-	<div id='memberships'>
-		<ul>
-			<% @playlist.memberships.each do |membership| %>
-				<li class='remove'><%= membership.user.name %> <%= link_to '[remove]', [@playlist, membership], :class => 'remote-remove' %></li>
-			<% end %>
-		</ul>
-		<%= form_for @playlist.memberships.build, :url => [@playlist, :memberships] do |f| %>
-			<div>
-				<%= text_field_tag :q %>
-				<%= f.submit 'Add' %>
-			</div>
-		<% end %>
-	</div>
+  <h3>Users Allowed to this Playlist</h3>
+  <div id='memberships'>
+    <ul>
+      <% @playlist.memberships.each do |membership| %>
+        <li class='remove'><%= membership.user.name %> <%= link_to '[remove]', [@playlist, membership], :class => 'remote-remove' %></li>
+      <% end %>
+    </ul>
+    <%= form_for @playlist.memberships.build, :url => [@playlist, :memberships] do |f| %>
+      <div>
+        <%= text_field_tag :q %>
+        <%= f.submit 'Add' %>
+      </div>
+    <% end %>
+  </div>
 <% end %>
