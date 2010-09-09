@@ -38,12 +38,27 @@ module CohortRadio
     end
 
     # Configure the default encoding used in templates for Ruby 1.9.
-    config.encoding = "utf-8"
+    config.encoding = 'utf-8'
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password, :password_confirmation]
 
     config.to_prepare do
+      $LOAD_PATH << File.expand_path('../../lib', __FILE__)
+
+      require 'acts_as_slug'
+
+      require 'radio'
+      require 'fargo/proxy_daemon'
+      require 'fargo/proxy_helper'
+
+      require 'radio'
+      require 'radio/utils'
+      require 'radio/stream'
+      require 'radio/daemon'
+      require 'radio/proxy_daemon'
+      require 'radio/proxy_helper'
+
       require 'drb'
       DRb.start_service
     end
