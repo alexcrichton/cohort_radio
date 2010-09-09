@@ -9,6 +9,7 @@ set :user, 'capistrano'
 set :use_sudo, false
 set :rails_env do (ENV['RAILS_ENV'] || 'production').to_sym end
 set :rvm_ruby_string, '1.8.7'
+set :bundle_flags, '--deployment'
 
 set :scm, :git
 set :repository, 'git://github.com/alexcrichton/cohort_radio.git'
