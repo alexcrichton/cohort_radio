@@ -1,25 +1,26 @@
-<% song = @song unless defined? song %>
+<% song = @song unless defined?(song) && song %>
 
 <%= form_for song, :html => {:multipart => true} do |f| %>
   <%= render 'shared/error_messages', :target => f.object %>
 
-	<% if song.new_record? %>
-	  <p>
-	    <%= f.label :audio, 'Audio File' %><br />
-	    <%= f.file_field :audio %>
-	  </p>
-	  <p><%= f.submit 'Submit' %></p>
-	<% else %>
-		<div class='hide'><%= f.hidden_field :custom_set, :value => true %></div>
-		<dl>
-			<dt><%= f.label :title, 'Title' %></dt>
-		  <dd><%= f.text_field :title %></dd>
-		  <dt><%= f.label :artist_name, 'Artist' %></dt>
-		  <dd><%= f.text_field :artist_name, :value => song.artist.try(:name) %></dd>
-		  <dt><%= f.label :album_name, 'Album' %></dt>
-		  <dd><%= f.text_field :album_name, :value => song.album.try(:name) %></dd>
-			<dt><%= f.submit 'Submit' %></dt>
-			<dd><%= link_to 'cancel', song, :class => 'cancel' %></dd>
-		</dl>
-	<% end %>
+  <% if song.new_record? %>
+    <p>
+      <%= f.label :audio, 'Audio File' %><br />
+      <%= f.file_field :audio %>
+      <%= f.hidden_field :audio_cache %>
+    </p>
+    <p><%= f.submit %></p>
+  <% else %>
+    <div class='hide'><%= f.hidden_field :custom_set, :value => true %></div>
+    <dl>
+      <dt><%= f.label :title, 'Title' %></dt>
+      <dd><%= f.text_field :title %></dd>
+      <dt><%= f.label :artist_name, 'Artist' %></dt>
+      <dd><%= f.text_field :artist_name, :value => song.artist.try(:name) %></dd>
+      <dt><%= f.label :album_name, 'Album' %></dt>
+      <dd><%= f.text_field :album_name, :value => song.album.try(:name) %></dd>
+      <dt><%= f.submit %></dt>
+      <dd><%= link_to 'cancel', song, :class => 'cancel' %></dd>
+    </dl>
+  <% end %>
 <% end %>
