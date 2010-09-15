@@ -38,10 +38,10 @@
       <span class='score'><%= song.rating.to_i %></span>
     </div>
     <div class='rating'>
-      <% rating = song.ratings.by(current_user).first %>
-      <ul class='user' data-rating="<%= rating.try(:score) %>">
+      <% rating = song.ratings.by(current_user).first.try(:score) || 0 %>
+      <ul class='user' data-rating="<%= rating %>">
         <% (1..10).each do |score| %>
-          <li<%= raw(' class="selected"') if score > 10 - song.rating %>>
+          <li<%= raw(' class="selected"') if score > 10 - rating %>>
             &nbsp;
           </li>
         <% end %>
