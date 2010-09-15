@@ -38,7 +38,6 @@ end
 
 group :production, :staging do
   gem 'mysql2'
-  gem 'exception_notifier'
 end
 
 group :test do
