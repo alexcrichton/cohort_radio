@@ -8,6 +8,9 @@ gem 'authlogic', :git => 'git://github.com/odorcicd/authlogic.git', :branch => '
 gem 'carrierwave', '>= 0.5.0.beta'
 gem 'ruby-mp3info', :require => 'mp3info'
 gem 'flacinfo-rb', :require => 'flacinfo'
+gem 'mp4info', :git => 'git://github.com/danielwestendorf/ruby-mp4info',
+  :ref => '7e8131719e'
+
 gem 'delayed_job'
 gem 'scrobbler'
 

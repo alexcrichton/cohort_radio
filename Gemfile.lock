@@ -17,6 +17,13 @@ GIT
       sprockets
 
 GIT
+  remote: git://github.com/danielwestendorf/ruby-mp4info
+  revision: 7e8131719eca31ab7949c34ad59d5bdc26a0e384
+  ref: 7e8131719e
+  specs:
+    mp4info (1.7.3)
+
+GIT
   remote: git://github.com/huerlisi/will_paginate.git
   revision: ef54916d38bdecd1b5030a16cb620438c62b758d
   branch: rails3
@@ -168,6 +175,7 @@ DEPENDENCIES
   factory_girl_rails
   fargo!
   flacinfo-rb
+  mp4info!
   mysql2
   paste!
   rails (= 3.0.0)
