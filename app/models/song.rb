@@ -36,6 +36,8 @@ class Song < ActiveRecord::Base
 
   def ensure_artist_and_album
     file = audio.path
+    return if file.nil? # We have a processing error or something like that
+
     artist, album = nil, nil
 
     tag = Mp3Info.new(file).tag
