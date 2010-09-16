@@ -103,6 +103,8 @@ class Radio
       m.add 'song',   @@tag_recoder.iconv(string)
       m.add 'artist', @@tag_recoder.iconv(song.artist.name) if song.artist
       m.add 'album',  @@tag_recoder.iconv(song.album.name)  if song.album
+      m.add 'bitrate', Mp3Info.new(song.audio.path).bitrate
+      m.add 'genre', 'awesome'
 
       [song, m, queue_item]
     end
