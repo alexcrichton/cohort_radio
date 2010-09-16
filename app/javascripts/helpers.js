@@ -2,11 +2,12 @@
 //= require <jquery/form>
 
 $(function() {
-  $('#comments > .links .add, #comments > .links .cancel').click(function() {
-    $(this).parents('.links').children().toggle();
-    return false;
+  $('#comments > .links .add, #comments > .links .cancel').live('click',
+    function() {
+      $(this).parents('.links').children().toggle();
+      return false;
   });
-  
+
   $('#comments > .links form').ajaxForm({
     beforeSubmit: function() {
       $($['small-ajax']).insertAfter($('#comments > .links form input[type=submit]').attr('disabled', 'disabled'));
@@ -60,7 +61,7 @@ $(function() {
     var par = parent($(this), img, 'remove');
     $.ajax({
       type: $(this).is('.get') ? 'GET' : 'DELETE',
-      url: $(this).attr('href'), 
+      url: $(this).attr('href'),
       success: function(data) {
         par.slideUp(function(){
           par.remove();
@@ -74,7 +75,7 @@ $(function() {
     var img = $($['small-ajax']);
     var par = parent($(this), img, 'replace');
     $.ajax({
-      url: $(this).attr('href'), 
+      url: $(this).attr('href'),
       success: function(data) {
         par.replaceWith(data);
       }
