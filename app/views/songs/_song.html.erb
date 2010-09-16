@@ -63,7 +63,7 @@
           Queued by: <%= item.user.name if item.user %>
         </p>
       <% end %>
-      <%= link_to '[download]', [:download, song] if can? :download, song %>
+      <%= link_to '[download]', song_url(song, :format => 'mp3') %>
       <%= link_to '[edit]', [:edit, song], :class => 'edit' if can? :update, song %>
       <%= link_to '[destroy]', song, :method => :delete, :confirm => 'are you sure?' if can? :destroy, song %>
 

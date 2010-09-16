@@ -17,7 +17,7 @@ class Ability
     elsif user.confirmed?
       can [:read, :create], Playlist
       can [:update, :add, :next, :stop], Playlist, :user_id => user.id
-      can [:download, :create, :search, :update, :rate], Song
+      can [:create, :search, :update, :rate], Song
       can :manage, user
       can [:read, :logout], User
       can [:search, :download], Fargo

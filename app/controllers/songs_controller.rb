@@ -29,6 +29,9 @@ class SongsController < ApplicationController
   end
 
   def show
+    respond_with @song do |format|
+      format.mp3 { send_file @song.audio.path, :type => 'audio/mpeg' }
+    end
   end
 
   def new
@@ -68,10 +71,6 @@ class SongsController < ApplicationController
     else
       respond_with @song
     end
-  end
-
-  def download
-    send_file @song.audio.path, :type => 'audio/mpeg'
   end
 
   def destroy

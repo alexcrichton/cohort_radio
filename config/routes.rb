@@ -11,7 +11,6 @@ CohortRadio::Application.routes.draw do
   resources :songs do
     resources :comments
     get :search, :on => :collection
-    get :download, :on => :member
     put :rate, :on => :member
   end
 
