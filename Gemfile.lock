@@ -145,11 +145,11 @@ GEM
     rspec-rails (2.0.0.beta.20)
       rspec (= 2.0.0.beta.20)
     ruby-mp3info (0.6.13)
+    ruby-shout (2.2.0.pre2)
     rvm (1.0.4)
     scrobbler (0.2.3)
       activesupport (>= 1.4.2)
       hpricot (>= 0.4.86)
-    shout (2.1.1)
     spork (0.8.4)
     sprockets (1.0.2)
     sqlite3-ruby (1.3.1)
@@ -179,9 +179,9 @@ DEPENDENCIES
   rails (= 3.0.0)
   rspec-rails (>= 2.0.0.beta.19)
   ruby-mp3info
+  ruby-shout (>= 2.2.0.pre2)
   rvm (>= 0.1.43)
   scrobbler
-  shout (= 2.1.1)
   spork
   sqlite3-ruby
   will_paginate!

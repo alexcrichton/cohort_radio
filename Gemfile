@@ -16,7 +16,7 @@ gem 'scrobbler'
 
 gem 'will_paginate', :git => 'git://github.com/huerlisi/will_paginate.git', :branch => 'rails3'
 gem 'daemons'
-gem 'shout', '2.1.1'
+gem 'ruby-shout', '>= 2.2.0.pre2', :require => 'shout'
 gem 'bluecloth'
 
 gem 'fargo', :git => 'git://github.com/alexcrichton/fargo.git'
