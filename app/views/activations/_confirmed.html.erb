@@ -9,7 +9,7 @@
   </td>
   <td>
     <% id += '_admin' %>
-    <%= form_for user, :url => [user, :adminize], :html => {:method => :put, :id => id} do |f| %>
+    <%= form_for user, :url => [:adminize, user], :html => {:method => :put, :id => id} do |f| %>
       <div>
         <%= f.check_box :admin, :id => id + '_admin' %>
         <span></span>
