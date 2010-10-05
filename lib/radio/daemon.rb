@@ -1,8 +1,6 @@
 class Radio
   class Daemon
-    
-    include Radio::Utils
-    
+
     def initialize(args)
       @files_to_reopen = []
 
@@ -11,7 +9,7 @@ class Radio
       end
       @args = opts.parse!(args)
     end
-    
+
     def daemonize
       ObjectSpace.each_object(File) do |file|
         @files_to_reopen << file unless file.closed?
@@ -19,7 +17,7 @@ class Radio
 
       @files_to_reopen += [$stdout, $stderr]
 
-      Daemons.run_proc(daemon_name, :dir => "#{::Rails.root}/tmp/pids", :dir_mode => :normal, :ARGV => @args) do |*args|  
+      Daemons.run_proc(daemon_name, :dir => "#{::Rails.root}/tmp/pids", :dir_mode => :normal, :ARGV => @args) do |*args|
         Dir.chdir Rails.root
 
         # re-open file handles
@@ -38,15 +36,15 @@ class Radio
           exit 1
         end
       end
-    end      
-    
+    end
+
     def run
       raise "Not implemented yet!"
     end
-    
+
     def daemon_name
       raise "Not implemented yet!"
     end
-    
+
   end
 end

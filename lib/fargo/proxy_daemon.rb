@@ -13,15 +13,11 @@ module Fargo
       client.config.download_dir = Rails.root.join('tmp', 'fargo').to_s
 
       # If a download just finished, we're going to want to convert the
-      # file to put it in our database. Do this in separate threads
-      # to not hang things up.
+      # file to put it in our database.
       client.channel.subscribe do |type, hash|
         if type == :download_finished
-          spawn_thread {
-            Fargo.logger.info "Converting: #{hash.inspect}"
-            convert_song hash[:file]
-            thread_complete
-          }
+          Fargo.logger.info "Converting: #{hash.inspect}"
+          convert_song hash[:file]
         end
       end
 
