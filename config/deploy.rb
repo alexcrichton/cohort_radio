@@ -1,5 +1,4 @@
 require 'rvm/capistrano'
-require 'paste/capistrano'
 require 'bundler/capistrano'
 
 server 'eve.alexcrichton.com', :app, :web, :db, :primary => true

@@ -32,19 +32,9 @@ gem 'paste', :git => 'git://github.com/alexcrichton/paste.git'
 group :development do
   gem 'rvm', '>=0.1.43'
   gem 'capistrano'
-end
-
-group :development, :test do
   gem 'sqlite3-ruby', :require => 'sqlite3'
 end
 
-group :production, :staging do
+group :production do
   gem 'mysql2'
-end
-
-group :test do
-  gem 'rspec-rails', '>=2.0.0.beta.19'
-  gem 'factory_girl_rails'
-
-  gem 'spork'
 end
