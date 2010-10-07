@@ -18,7 +18,6 @@ CohortRadio::Application.routes.draw do
 
     resources :downloads, :only => [:index, :destroy] do
       get :retry, :on => :collection
-      get :remove, :on => :member
       get :try, :on => :collection
     end
 
