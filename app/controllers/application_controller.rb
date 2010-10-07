@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
     flash[:error] = 'Access denied.'
     store_location unless current_user
 
-    redirect_to current_user ? playlists_path : login_url
+    redirect_to current_user ? playlists_path : new_user_session_path
   end
 
   private

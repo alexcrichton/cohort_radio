@@ -10,7 +10,6 @@ class Ability
       can :login, User
       can :create, User
       can :reset, 'password'
-      can [:create, :read, :activate], Activation
     elsif user.admin
       can :manage, :all
       cannot :reset, 'password' # need to be logged out (don't want to mess with other users)
