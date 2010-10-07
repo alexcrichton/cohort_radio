@@ -41,7 +41,10 @@ $(function() {
     }
 
     if (data.type == 'playlist.removed_item') {
-      $('#s' + data.song_id).slideUp(function() { $(this).remove(); });
+      console.log('.song[data-queue-id=' + data.queue_id + ']');
+      $('.song[data-queue-id=' + data.queue_id + ']').slideUp(function() {
+        $(this).remove();
+      });
     } else if (data.type == 'playlist.added_item') {
       $('#songs').replaceWith(data.html);
     }

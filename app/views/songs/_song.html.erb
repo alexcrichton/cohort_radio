@@ -2,7 +2,9 @@
 
 <% playlists = Playlist.scoped.includes(:pool) %>
 
-<div class="song remove inline-edit" id="s<%= song.id %>">
+<div class="song remove inline-edit"
+     id="s<%= song.id %>"
+     data-queue-id="<%= defined?(item) ? item.id : '' %>">
   <div class='image'>
     <%= link_to [song.artist, song.album] do %>
       <%= image_tag song.album.cover_url, :width => '126' %>

@@ -20,7 +20,7 @@ class QueueItemsController < ApplicationController
   def destroy
     @playlist.queue_items.delete @queue_item
 
-    push :type => 'playlist.removed_item', :song_id => @queue_item.song_id,
+    push :type => 'playlist.removed_item', :queue_id => @queue_item.id,
       :playlist_id => @playlist.to_param
 
     respond_with @playlist
