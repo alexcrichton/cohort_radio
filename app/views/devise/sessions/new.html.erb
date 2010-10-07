@@ -1,11 +1,11 @@
 <% stylesheet 'login' %>
 
 <section class="login">
-  <%= form_for @user_session, :url => login_path do |f| %>
+  <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
     <dl>
       <dt><%= f.label :email, 'email' %></dt>
       <dd>
-        <% if @user_session.email.blank? %>
+        <% if resource.email.blank? %>
           <%= f.text_field :email, :autofocus => true %>
         <% else %>
           <%= f.text_field :email %>
@@ -13,7 +13,7 @@
       </dd>
       <dt><%= f.label :password, 'password' %></dt>
       <dd>
-        <% if @user_session.email.blank? %>
+        <% if resource.email.blank? %>
           <%= f.password_field :password %>
         <% else %>
           <%= f.password_field :password, :autofocus => true %>
@@ -21,12 +21,13 @@
       </dd>
       <dt><%= f.check_box :remember_me %></dt>
       <dd><%= f.label :remember_me, 'remember' %></dt>
-      <dd><%= f.submit "Login" %></dd>
+      <dd><%= f.submit 'Login' %></dd>
     </dl>
   <% end %>
   <div id="links">
-    <%= link_to 'create an account', [:new, :user] %><br />
-    <%= link_to 'forgot password?', [:new, :password_reset] %><br />
-    <%= link_to 'resend activation', [:new, :activation] %>
+    <%= render :partial => "devise/shared/links" %>
+    <%#= link_to 'create an account', [:new, :user] %><br />
+    <%#= link_to 'forgot password?', [:new, :password_reset] %><br />
+    <%#= link_to 'resend activation', [:new, :activation] %>
   </div>
 </section>

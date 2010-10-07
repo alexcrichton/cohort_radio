@@ -6,7 +6,7 @@ class Ability
 
     can :home, User
 
-    if user.nil? || user.activation.nil? || user.activation.pending?
+    if user.nil? || user.confirmed_at.nil?
       can :login, User
       can :create, User
       can :reset, 'password'
@@ -14,7 +14,7 @@ class Ability
     elsif user.admin
       can :manage, :all
       cannot :reset, 'password' # need to be logged out (don't want to mess with other users)
-    elsif user.confirmed?
+    else
       can [:read, :create], Playlist
       can [:update, :add, :next, :stop], Playlist, :user_id => user.id
       can [:create, :search, :update, :rate], Song

@@ -1,8 +1,0 @@
-<div class="hide">
-  <%= f.hidden_field :id, :id => id + '_id' %>
-  <%= hidden_field_tag :op, op, :id => id + "op" %>
-</div>
-<div>
-	<%= link_to link, '#', :class => op %>
-	<%= link_to "[destroy]", f.object, :method => :delete, :confirm => "Are you sure?" %>
-</div>

@@ -10,14 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101007013004) do
-
-  create_table "activations", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "state"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
+ActiveRecord::Schema.define(:version => 20101007153922) do
 
   create_table "albums", :force => true do |t|
     t.string   "name"
@@ -113,16 +106,13 @@ ActiveRecord::Schema.define(:version => 20101007013004) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "name",                                                :null => false
-    t.boolean  "admin",                            :default => false, :null => false
-    t.string   "email",                                               :null => false
-    t.string   "crypted_password"
+    t.string   "name",                                                 :null => false
+    t.boolean  "admin",                             :default => false, :null => false
+    t.string   "email",                                                :null => false
+    t.string   "encrypted_password"
     t.string   "password_salt"
-    t.string   "persistence_token",                                   :null => false
-    t.string   "single_access_token",                                 :null => false
-    t.string   "perishable_token",                                    :null => false
-    t.integer  "login_count",                      :default => 0,     :null => false
-    t.integer  "failed_login_count",               :default => 0,     :null => false
+    t.integer  "login_count",                       :default => 0,     :null => false
+    t.integer  "failed_login_count",                :default => 0,     :null => false
     t.datetime "last_request_at"
     t.datetime "current_login_at"
     t.datetime "last_login_at"
@@ -130,10 +120,20 @@ ActiveRecord::Schema.define(:version => 20101007013004) do
     t.string   "last_login_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "facebook_uid",        :limit => 8
+    t.integer  "facebook_uid",         :limit => 8
+    t.string   "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string   "reset_password_token"
+    t.string   "remember_token"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",                     :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email"
-  add_index "users", ["perishable_token"], :name => "index_users_on_perishable_token"
 
 end

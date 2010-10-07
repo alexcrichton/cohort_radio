@@ -1,0 +1,21 @@
+<%= devise_error_messages! %>
+
+<dl>
+  <dt><%= f.label :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+  <dt><%= f.label :email %></dt>
+  <dd><%= f.email_field :email %></dd>
+  <% if resource.new_record? %>
+    <dt><%= f.label :password %></dt>
+    <dd><%= f.password_field :password %></dd>
+    <dt><%= f.label :password_confirmation %></dt>
+    <dd><%= f.password_field :password_confirmation %></dd>
+  <% else %>
+  <dt><%= f.label :password %> <em>(leave blank if you don't want to change it)</em></dt>
+  <dd><%= f.password_field :password %></dd>
+  <dt><%= f.label :password_confirmation %></dt>
+  <dd><%= f.password_field :password_confirmation %></dd>
+  <dt><%= f.label :current_password %> <em>(we need your current password to confirm your changes)</em></dt>
+  <dd><%= f.password_field :current_password %></dd>
+  <% end %>
+</dl>

@@ -1,7 +1,7 @@
 <ul>
   <li>
     <% if current_user.nil? %>
-      <%= link_to 'Home', login_path %>
+      <%= link_to 'Home', new_user_session_path %>
     <% else %>
       <%= link_to "Playlists", playlists_path %>
       <ul style='width:180px'>
@@ -71,8 +71,5 @@
         <% end %>
       </ul>
     </li>
-  <% end %>
-  <% if can? :manage, Activation %>
-    <li><%= link_to 'Activations', edit_activation_path %></li>
   <% end %>
 </ul>

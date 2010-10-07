@@ -20,9 +20,9 @@
         <div style='float:right'>
           <% if current_user %>
             Logged in as: <%= current_user.name %> |
-            <%= link_to 'Logout', logout_path %>
+            <%= link_to 'Logout', destroy_user_session_path %>
           <% else %>
-            <%= link_to "Login", login_path %>
+            <%= link_to 'Login', new_user_session_path %>
           <% end %>
         </div>
       </header>

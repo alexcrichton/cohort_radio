@@ -1,4 +1,5 @@
 CohortRadio::Application.routes.draw do
+  devise_for :users
 
   resources :albums
 
@@ -49,20 +50,7 @@ CohortRadio::Application.routes.draw do
   # other playlist actions defined below
   resources :playlists, :only => [:index, :create, :new]
 
-  resource :user, :except => [:show] do
-    get 'adminize/:id' => 'users#adminize', :as => 'adminize'
-    get 'activate/:token' => 'activations#activate', :as => 'activate'
-    delete ':id' => 'users#destroy'
-  end
   get 'users/search'
-
-  resource :activation, :except => [:destroy]
-  get 'activation/form/:user_id' => 'activations#form', :as => 'activation_form'
-
-  resources :password_resets, :only => [:new, :create, :edit, :update]
-  get 'logout' => "user_sessions#destroy"
-  get 'login' => "user_sessions#new"
-  post 'login' => 'user_sessions#create'
 
   root :to => 'users#home'
 

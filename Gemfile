@@ -4,7 +4,7 @@ gem 'rails', '3.0.0'
 
 # Authentication
 gem 'cancan'
-gem 'authlogic', :git => 'git://github.com/odorcicd/authlogic.git', :branch => 'rails3'
+gem 'devise'
 
 # Upload/audio processing gems
 gem 'carrierwave', '>= 0.5.0.beta'
