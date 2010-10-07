@@ -1,6 +1,6 @@
 class ArtistsController < ApplicationController
 
-  authorize_resource
+  load_and_authorize_resource :find_by => :slug
 
   respond_to :html
 
@@ -23,6 +23,10 @@ class ArtistsController < ApplicationController
 
   def update
     @artist.update_attributes params[:artist]
-    render @artist
+
+    respond_with @artist do
+      format.html { render @artist }
+    end
   end
+
 end

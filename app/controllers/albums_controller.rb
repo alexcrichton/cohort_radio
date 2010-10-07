@@ -1,26 +1,31 @@
 class AlbumsController < ApplicationController
-  
-  authorize_resource
-  
+
+  load_and_authorize_resource :artist, :find_by => :slug
+  load_and_authorize_resource :find_by => :slug
+
   respond_to :html
-  
+
   def index
     @albums = Album.order('name').includes(:artist)
     @albums = @albums.where("name LIKE ?", "#{params[:letter]}%") if params[:letter]
-    
+
     @albums = @albums.paginate :page => params[:page]
-          
+
     respond_with @albums unless request.xhr?
   end
-  
+
   def show
-    @album  = @artist.albums.find_by_slug params[:id]
-    @songs  = @album.songs.paginate :page => params[:page], :per_page => 10
+    @songs = @album.songs.paginate :page => params[:page], :per_page => 10
+
+    respond_with @album
   end
-  
+
   def update
     @album.update_attributes params[:album]
-    render @album
+
+    respond_with @album do |format|
+      format.html { render @album }
+    end
   end
-  
+
 end

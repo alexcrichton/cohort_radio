@@ -15,6 +15,10 @@ class Playlist < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :if => :name_changed?, :case_sensitive => false
 
+  def to_param
+    self[:slug]
+  end
+
   def ice_mount_point
     return "/#{slug}" if Rails.env.production?
     "/#{slug}-#{Rails.env}"

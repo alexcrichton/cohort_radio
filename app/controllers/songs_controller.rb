@@ -1,6 +1,6 @@
 class SongsController < ApplicationController
 
-  authorize_resource
+  load_and_authorize_resource
 
   respond_to :html
   respond_to :js, :only => :rate
@@ -22,10 +22,6 @@ class SongsController < ApplicationController
     @songs = @songs.paginate :page => params[:page], :per_page => 10
 
     respond_with @songs unless request.xhr?
-  end
-
-  def artists
-    @artists = Song.order(:artist).group(:artist).paginate :page => params[:page]
   end
 
   def show
