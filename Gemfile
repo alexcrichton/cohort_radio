@@ -3,7 +3,7 @@ source :rubygems
 gem 'rails', '3.0.0'
 
 # Authentication
-gem 'cancan', '>= 1.3'
+gem 'cancan'
 gem 'authlogic', :git => 'git://github.com/odorcicd/authlogic.git', :branch => 'rails3'
 
 # Upload/audio processing gems
@@ -19,7 +19,7 @@ gem 'scrobbler'   # Album art for songs
 # Daemons and we stream to icecast using ruby-shout
 gem 'daemons'
 gem 'fargo', :git => 'git://github.com/alexcrichton/fargo.git' # DC Client
-gem 'ruby-shout', '>= 2.2.0.pre2', :require => 'shout'
+gem 'ruby-shout', :require => 'shout'
 
 # Display helpers
 gem 'will_paginate', :git => 'git://github.com/huerlisi/will_paginate.git', :branch => 'rails3'
