@@ -13,7 +13,6 @@ gem 'flacinfo-rb', :require => 'flacinfo'
 gem 'mp4info', :git => 'git://github.com/danielwestendorf/ruby-mp4info',
   :ref => '7e8131719e'
 
-gem 'delayed_job' # Background conversion jobs
 gem 'scrobbler'   # Album art for songs
 
 # Daemons and we stream to icecast using ruby-shout

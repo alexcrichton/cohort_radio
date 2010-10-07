@@ -6,7 +6,6 @@
     <li><a href="#current">Current</a></li>
     <li><a href="#finished">Finished</a></li>
     <li><a href="#failed">Failed</a></li>
-    <li><a href="#waiting">Awaiting Conversion</a></li>
     <% if can? :manage, Fargo %>
       <li><a href="#connections">Persistent Connections</a></li>
     <% end %>
@@ -43,34 +42,6 @@
   <div id='failed'>
     <%= link_to "[Clear these]", :controller => 'fargo/commands', :action => "clear_failed_downloads" if can? :manage, Fargo %>
     <%= render 'download_list', :downloads => @failed_downloads, :failed => true %>
-  </div>
-
-  <div id='waiting'>
-    <table>
-      <tr>
-        <th>File</th>
-        <th>Next Run</th>
-        <th>Running?</th>
-        <th>Last Error</th>
-        <th>Attempts</th>
-      </tr>
-      <% @jobs.each do |job| %>
-        <tr class='download remove'>
-          <td><%= File.basename job.payload_object.file if job.payload_object.file %></td>
-          <td><%= job.run_at %></td>
-          <td><%= !job.locked_at.nil? %></td>
-          <td title="<%= job.last_error %>">
-            <%= truncate job.last_error.split("\n").first unless job.last_error.nil? %>
-          </td>
-          <td><%= job.attempts %></td>
-          <td class='links'>
-            <% if can? :manage, Fargo %>
-              <%= link_to "Remove", remove_fargo_download_path(job.id), :class => 'remote-remove get' %>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </table>
   </div>
 
   <% if can? :manage, Fargo %>

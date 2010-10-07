@@ -1,6 +1,6 @@
 rails_root = "/srv/http/cohort_radio/current"
 
-%w{radio delayed_job fargo}.each do |daemon|
+%w{radio fargo}.each do |daemon|
   God.watch do |w|
 
     w.name  = "cradio-#{daemon}"

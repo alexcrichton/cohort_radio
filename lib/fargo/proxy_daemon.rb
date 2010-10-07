@@ -34,7 +34,7 @@ module Fargo
       @@enqueue_lock.synchronize {
         Fargo.logger.info "Queueing create song job for: #{file.inspect}"
         ActiveRecord::Base.verify_active_connections!
-        Delayed::Job.enqueue CreateSongJob.new(file)
+        CreateSongJob.new(file).perform
       }
     end
 
