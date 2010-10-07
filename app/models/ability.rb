@@ -27,10 +27,6 @@ class Ability
 
       can :manage, Comment, :user_id => user.id
 
-      # can :create, QueueItem do |queue_item|
-      #   parent.nil? || (parent.is_a?(Playlist) && can?(:add_to, parent.pool))
-      # end
-
       can :manage, Pool do |action, pool|
         !pool.playlist.private || pool.playlist.user_id == user.id || pool.playlist.user_ids.include?(user.id)
       end
