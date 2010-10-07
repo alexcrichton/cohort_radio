@@ -19,6 +19,7 @@ gem 'scrobbler'   # Album art for songs
 gem 'daemons'
 gem 'fargo', :git => 'git://github.com/alexcrichton/fargo.git' # DC Client
 gem 'ruby-shout', :require => 'shout'
+gem 'em-websocket'
 
 # Display helpers
 gem 'will_paginate', :git => 'git://github.com/huerlisi/will_paginate.git', :branch => 'rails3'
