@@ -7,11 +7,9 @@ class ApplicationController < ActionController::Base
   # nil for AJAX
   layout Proc.new { |controller| controller.request.xhr? ? nil : 'application' }
 
-  before_filter :load_models
-
   # Authlogic stuff
   helper_method :current_user_session, :current_user
-  
+
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = 'Access denied.'
     store_location unless current_user
@@ -20,20 +18,21 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
   def require_fargo_connected
     return true if fargo_connected?
-    
+
     flash[:error] = "Fargo is not connected!"
     redirect_to playlists_path
   end
 
   def require_radio_running
     return true if radio_running?
-    
+
     flash[:error] = "Radio is not running!"
     redirect_to playlists_path
   end
-  
+
   def current_user_session
     return @current_user_session if defined?(@current_user_session)
     @current_user_session = UserSession.find
@@ -43,7 +42,7 @@ class ApplicationController < ActionController::Base
     return @current_user if defined?(@current_user)
     @current_user = current_user_session && current_user_session.user
   end
-  
+
   def current_ability
     @current_ability ||= Ability.new current_user, @parent
   end
@@ -54,31 +53,8 @@ class ApplicationController < ActionController::Base
 
   def redirect_back_or_default default, *options
     redirect_to session[:return_to] || request.referrer || default, *options
-    
+
     session[:return_to] = nil
-  end
-
-  def load_models
-    @current = find_model params[:id]
-    instance_variable_set "@#{controller_name.singularize}", @current
-
-    regex = /^(.+)_id$/
-    params.keys.each do |key|
-      next unless regex.match(key)
-      @parent = find_model params[key], regex.match(key)[1]
-      instance_variable_set "@#{regex.match(key)[1]}", @parent
-    end
-  end
-  
-  def find_model id, name = controller_name
-    return nil if id.blank?
-    klass = name.to_s.classify.constantize
-    if klass.include? Acts::Slug::InstanceMethods
-      klass.find_by_slug id
-    else
-      klass.find(id.to_i)
-    end
-  rescue NameError => e # id doesn't mean for this controller
   end
 
 end

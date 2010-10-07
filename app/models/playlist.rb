@@ -1,43 +1,37 @@
-require 'acts_as_slug'
-
 class Playlist < ActiveRecord::Base
-  
-  include Acts::Slug # ugly, I know
-  
-  acts_with_slug
-  
   has_many :queue_items, :order => 'priority ASC, created_at ASC', :dependent => :destroy
   has_many :songs, :through => :queue_items
 
   has_many :memberships, :dependent => :destroy
   has_many :users, :through => :memberships
-  
+
   belongs_to :user
-  
+
   has_one :pool, :dependent => :destroy
-  
+
   after_create :create_pool
-  
+  before_validation :set_slug
+
   validates_presence_of :name
   validates_uniqueness_of :name, :if => :name_changed?, :case_sensitive => false
-    
+
   def ice_mount_point
     return "/#{slug}" if Rails.env.production?
     "/#{slug}-#{Rails.env}"
   end
-  
+
   def ice_name
     return "Cohort Radio - #{name}" if Rails.env.production?
     "#{name} - #{Rails.env}"
   end
-  
+
   def stream_url
     url = 'http://'
     url << Radio.config[:radio][:remote_host]
     url << ice_mount_point
     url
   end
-  
+
   def enqueue song, user
     items = self.queue_items
     return items.create :song => song, :user => user, :priority => 0 if items.size == 0
@@ -47,11 +41,16 @@ class Playlist < ActiveRecord::Base
 
     pl = index < items.size ? items[index].priority : 0
     pr = index + 1 < items.size ? items[index + 1].priority : pl + 128
-    
+
     items.create :song => song, :user => user, :priority => (pl / 2 + pr / 2)
   end
-  
-  private
+
+  protected
+
+  def set_slug
+    self[:slug] = self[:name].parameterize
+  end
+
   def index_to_insert id, ids
     return 0 if ids.length == 0
 
@@ -73,9 +72,9 @@ class Playlist < ActiveRecord::Base
 
     (l + r) / 2
   end
-  
+
   def create_pool
     Pool.create! :playlist => self
   end
-  
+
 end
