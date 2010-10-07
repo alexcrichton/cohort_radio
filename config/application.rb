@@ -58,6 +58,8 @@ module CohortRadio
 
       require 'drb'
       DRb.start_service
+
+      require 'pusher'
     end
   end
 end

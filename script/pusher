@@ -36,7 +36,7 @@ EventMachine.run {
 
       if user_id
         sid = @channel.subscribe do |data|
-          ws.send data[:data] unless data[:except].includes?(user_id[1])
+          ws.send data[:data] unless data[:except].include?(user_id[1])
         end
 
         ws.onclose { @channel.unsubscribe sid }
