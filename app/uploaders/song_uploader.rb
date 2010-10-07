@@ -37,7 +37,7 @@ class SongUploader < CarrierWave::Uploader::Base
         # Lame doesn't preserve tags, re-write them now that we converted the
         # file
         info = Mp3Info.new(current_path)
-        into.tag['artist'] = artist
+        info.tag['artist'] = artist
         info.tag['album']  = album
         info.tag['title']  = title
         info.close
