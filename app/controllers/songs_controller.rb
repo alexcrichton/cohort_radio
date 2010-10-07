@@ -78,7 +78,7 @@ class SongsController < ApplicationController
       @songs = @songs.paginate :page => params[:page], :per_page => 10
     end
 
-    @songs = @songs.limit params[:limit] if params[:limit]
+    @songs = @songs.limit params[:limit] || 10
 
     respond_with @songs do |format|
       format.json {
