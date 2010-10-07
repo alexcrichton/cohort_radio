@@ -1,0 +1,7 @@
+<%= form_for @album, :remote => true do |f| %>
+  <div>
+    <%= f.text_field :name %>
+    <%= f.submit 'Submit', :disable_with => 'Submitting' %>
+    <%= link_to '[cancel]', @album, :remote => true %>
+  </div>
+<% end %>

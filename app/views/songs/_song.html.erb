@@ -1,4 +1,4 @@
-<% javascript 'helpers', 'songs/show', 'rails' %>
+<% javascript 'rails', 'songs/show' %>
 
 <% playlists = Playlist.scoped.includes(:pool) %>
 
@@ -64,38 +64,51 @@
         </p>
       <% end %>
       <%= link_to '[download]', song_url(song, :format => 'mp3') %>
-      <%= link_to '[edit]', [:edit, song], :class => 'edit' if can? :update, song %>
-      <%= link_to '[destroy]', song, :method => :delete, :confirm => 'are you sure?' if can? :destroy, song %>
+
+      <% if can? :update, song %>
+        <%= link_to '[edit]', [:edit, song], :class => 'edit',
+              :remote => true  %>
+      <% end %>
+
+      <% if can? :destroy, song %>
+        <%= link_to '[destroy]', song, :method => :delete,
+              :confirm => 'are you sure?', :remote => true %>
+      <% end %>
 
       <% if defined?(item) && can?(:destroy, item) %>
-        <br/><%= link_to '[remove]', [@playlist, :dequeue, item], :class => 'remote-remove' %>
+        <br/>
+        <%= link_to '[remove]', [@playlist, :dequeue, item],
+              :method => :delete, :remote => true %>
       <% end %>
     </p>
 
     <% if @pool %>
-      <%= link_to "[remove from pool]", [@playlist, :pool, :remove, song], :class => 'remote-remove get' if can? :remove_from, @pool %>
+      <%= link_to '[remove from pool]', [@playlist, :pool, :remove, song], :class => 'remote-remove get' if can? :remove_from, @pool %>
     <% end %>
 
     <% if @playlist.nil? %>
-      <div class='add'>
+      <div class='add queue'>
         <%= link_to "[add to queue]", '#' %>
         <ul>
           <% playlists.each do |playlist| %>
             <% next if cannot? :add_to, playlist.pool %>
-            <li>
-              <%= link_to playlist.name, [playlist, :enqueue, song], :class => 'remote-replace' %>
+
+            <li class='p<%= playlist.id %>'>
+              <%= link_to playlist.name, [playlist, :enqueue, song],
+                    :remote => true %>
             </li>
           <% end %>
         </ul>
       </div>
+
       <% poss = playlists.select{ |p| can?(:add_to, p.pool) && !song.pool_ids.include?(p.pool.id)}%>
       <% if poss.size > 0 %>
-        <div class='add' style='top:80px;'>
+        <div class='add pool' style='top:80px;'>
           <%= link_to "[add to pool]", '#' %>
           <ul>
             <% poss.each do |playlist| %>
               <li>
-                <%= link_to playlist.name, add_song_playlist_pool_path(playlist, song), :class => 'remote-replace' %>
+                <%= link_to playlist.name, add_song_playlist_pool_path(playlist, song), :remote => true %>
               </li>
             <% end %>
           </ul>

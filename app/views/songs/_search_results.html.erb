@@ -1,0 +1,5 @@
+<div id='search-response' class='pagination-container'>
+  <%= paginated_section @songs, :outer_window => 3, :inner_window => 8 do %>
+    <%= render @songs %>
+  <% end %>
+</div>

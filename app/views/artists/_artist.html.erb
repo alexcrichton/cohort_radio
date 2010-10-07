@@ -1,15 +1,9 @@
-<% javascript 'helpers' %>
+<% javascript 'rails' %>
 
-<li class='artist inline-edit mini'>
-	<%= link_to artist.name, artist, :class => 'content' %>
-	<% if can? :update, artist %>
-		<%= link_to '[edit]', '#', :class => 'edit links' %>
-		<%= form_for artist, :html => {:class => 'form'} do |f| %>
-			<div>
-				<%= f.text_field :name %>
-				<%= f.submit 'Submit' %>
-				<%= link_to '[cancel]', '#', :class => 'cancel' %>
-			</div>
-		<% end %>
-	<% end %>
+<li class='artist inline-edit mini' id='ar<%= artist.id %>'>
+  <%= link_to artist.name, artist, :class => 'content' %>
+
+  <% if can? :update, artist %>
+    <%= link_to '[edit]', [:edit, artist], :class => 'links', :remote => true %>
+  <% end %>
 </li>

@@ -1,0 +1,5 @@
+<% if @song.errors.any? %>
+  <%= render :template => 'songs/edit' %>
+<% else %>
+  <%= render :template => 'songs/show' %>
+<% end %>

@@ -257,6 +257,10 @@ input[type=submit]:active {
   overflow: auto;
   border: 5px solid #ccc;
   @include border-radius(20px);
+
+  legend {
+    padding: 5px;
+  }
 }
 
 #search fieldset .nick {
@@ -292,6 +296,7 @@ footer {
   text-align: center;
   height: 20px;
   padding: 10px;
+  clear: both;
 
   @include linear-gradient(color-stops(#fff, #ccc));
   @include border-bottom-radius(20px);
@@ -299,7 +304,7 @@ footer {
 
 section#content {
   margin: 20px;
-  overflow: auto;
+/*  overflow: auto;*/
 }
 
 header {
@@ -383,7 +388,6 @@ ul.block > li .links {
 
 ul.block > li:hover {
   background: #bbb;
-
 }
 
 ul.block > li.all > a {

@@ -1,15 +1,16 @@
-<% javascript 'fargo/search' %>
+<% javascript 'rails' %>
 
 <h1>Searching Fargo</h1>
 
 <div class='search' id='fargo-search'>
-	<%= form_tag(fargo_search_path, :method => :get) do %>
-		<p>
-			<%= text_field_tag :q, params[:q], :placeholder => 'Search query' %>
-			<%= submit_tag 'Submit' %>
-		</p>
-	<% end %>
+  <%= form_tag(fargo_search_path, :method => :get, :remote => true) do %>
+    <p>
+      <%= text_field_tag :q, params[:q], :placeholder => 'Search query' %>
+      <%= submit_tag 'Submit', :disable_with => 'Searching...' %>
+    </p>
+  <% end %>
 </div>
+
 <div id='search-response'>
-	
+
 </div>

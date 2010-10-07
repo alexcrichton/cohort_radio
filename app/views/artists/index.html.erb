@@ -1,17 +1,17 @@
 <% javascript 'pagination' %>
 
 <div class=' pagination'>
-	<%= link_to 'All', artists_path %>
-	<% ('A'..'Z').each do |letter| %>
-		<%= link_to letter, artists_path + '?' + {:letter => letter}.to_query %>
-	<% end %>
+  <%= link_to 'All', artists_path %>
+  <% ('A'..'Z').each do |letter| %>
+    <%= link_to letter, artists_path(:letter => letter) %>
+  <% end %>
 </div>
 
 <%= paginated_section @artists, :outer_window => 3, :inner_window => 8 do %>
-	<% left = (right = @artists.dup).slice!(0, (@artists.size / 2.0).ceil) %>
-	<div style='overflow:auto'>
-		<% [left, right].each do |arr| %>
-			<ul class='column block'><%= render arr %></ul>
-		<% end %>
-	</div>
+  <% left = (right = @artists.dup).slice!(0, (@artists.size / 2.0).ceil) %>
+  <div style='overflow:auto'>
+    <% [left, right].each do |arr| %>
+      <ul class='column block'><%= render arr %></ul>
+    <% end %>
+  </div>
 <% end %>

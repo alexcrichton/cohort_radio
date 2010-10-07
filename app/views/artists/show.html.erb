@@ -1,12 +1,10 @@
-<% javascript 'helpers' %>
-
 <h1><%= @artist.name %></h1>
 
 <%= link_to '[all artists]', :artists %>
 <ul class='block'>
-	<li class='all'>
-		<%= link_to "All #{@artist.songs.count} Songs", [@artist, :songs], :class => 'content' %>
-	</li>
+  <li class='all'>
+    <%= link_to "All #{@artist.songs.count} Songs", [@artist, :songs], :class => 'content' %>
+  </li>
 
-	<%= render @albums %>
+  <%= render @albums %>
 </ul>

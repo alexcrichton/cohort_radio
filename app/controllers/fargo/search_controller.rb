@@ -5,8 +5,12 @@ class Fargo::SearchController < ApplicationController
 
   before_filter :require_fargo_connected
 
+  respond_to :js, :html
+
   def index
     fargo.search @search if @search
+
+    respond_with @search
   end
 
   def results

@@ -1,8 +1,8 @@
 CohortRadio::Application.routes.draw do
 
-  resources :albums, :only => [:update, :index]
+  resources :albums
 
-  resources :artists, :only => [:update, :show, :index] do
+  resources :artists do
     resources :songs, :only => [:index]
   end
 
@@ -76,8 +76,8 @@ CohortRadio::Application.routes.draw do
   end
 
   scope :as => 'playlist' do
-    post ':playlist_id/enqueue' => 'queue_items#new', :as => 'enqueue'
-    get ':playlist_id/enqueue/:song_id' => 'queue_items#new', :as => 'enqueue_song'
+    post ':playlist_id/enqueue' => 'queue_items#create', :as => 'enqueue'
+    get ':playlist_id/enqueue/:song_id' => 'queue_items#create', :as => 'enqueue_song'
     delete ':playlist_id/dequeue/:id' => 'queue_items#destroy', :as => 'dequeue_queue_item'
   end
 end

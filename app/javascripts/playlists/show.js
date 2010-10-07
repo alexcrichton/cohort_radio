@@ -1,38 +1,29 @@
-//= require <jquery/form>
-//= require <jquery/autocomplete>
-
-$.fn.extend({
-  bindSearchForms: function() {
-    $(this).find("form").ajaxForm({
-      beforeSubmit: function(args, form){
-        $(form).find('input[type=submit]').replaceWith($['small-ajax']);      
-      },
-      success: function(data) {
-        $('img.loading').replaceWith(data);
-      }
-    });
-    return $(this);
-  }
-});
+//= require <jquery/ui>
 
 $(function() {
-  $('#search .result').bindSearchForms();
-
-  $("#song-search #q").autocomplete('/songs/search', {
-    matchContains: true,
-    extraParams: {
-      playlist_id:$('.search #playlist_id').attr('value'),
-      completion:'true'
+  $("#song-search #q").autocomplete({
+    minLength: 2,
+    source: function(request, response) {
+      $.get('/songs/search.json',
+        {q:request.term, completion:'true',
+          playlist_id: $('.search #playlist_id').attr('value')},
+      function(data) {
+        response(data);
+      });
     },
-    cacheLength: 50,
-    formatItem: function(row) {
-      return row[0].replace(/\(\d+\)/, '');
+    select: function(event, ui) {
+      $(this).prev('input:hidden').val(ui.item.value);
+      $(this).val(ui.item.title);
+      return false;
     },
-    formatResult: function(arr) {
-      return arr[0].replace(/<img.*?\/>\s*/, '').replace(/\s*\(\d+\)$/, '');
+    focus: function(event, ui) {
+      $(this).val(ui.item.title);
+      return false;
     }
-  }).result(function(event, data, formatted) {
-    var id = formatted.match(/\((\d+)\)/)[1];
-    $('<input type="hidden" value="' + id + '" name="song_id" />').insertAfter($(this));
-  });
+  }).data('autocomplete')._renderItem = function(ul, item) {
+    return $('<li/>').data('item.autocomplete', item)
+              .append('<a>' + item.image + " " + item.title + " - " +
+                      item.artist + '</a>')
+              .appendTo(ul);
+  };
 });

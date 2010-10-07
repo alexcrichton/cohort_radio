@@ -1,0 +1,5 @@
+<% if @artist.errors.any? %>
+  <%= render :template => 'artists/edit' %>
+<% else %>
+  <%= render :template => 'artists/show' %>
+<% end %>

@@ -2,8 +2,7 @@ class SongsController < ApplicationController
 
   load_and_authorize_resource
 
-  respond_to :html
-  respond_to :js, :only => :rate
+  respond_to :html, :js, :json
 
   def index
     top_level = Song
@@ -31,11 +30,10 @@ class SongsController < ApplicationController
   end
 
   def new
-    respond_with @song = Song.new
+    respond_with @song
   end
 
   def create
-    @song = Song.new(params[:song])
     flash[:notice] = 'Song created!' if @song.save
     respond_with @song
   end
@@ -61,29 +59,34 @@ class SongsController < ApplicationController
   end
 
   def update
-    flash[:notice] = "Song updated!" if @song.update_attributes params[:song]
-    if request.xhr?
-      render @song
-    else
-      respond_with @song
-    end
+    @song.update_attributes params[:song]
+
+    respond_with @song
   end
 
   def destroy
     @song.destroy
 
-    redirect_back_or_default songs_path, :notice => "Successfully destroyed song."
+    respond_with @song do |format|
+      format.html { redirect_back_or_default songs_path }
+    end
   end
 
   def search
     @songs = params[:q].blank? ? [] : Song.search(params[:q])
-    @songs = @songs.paginate :page => params[:page], :per_page => 10 if params[:completion].blank?
+    if params[:completion].blank?
+      @songs = @songs.paginate :page => params[:page], :per_page => 10
+    end
 
-    if request.xhr?
-      if params[:completion]
-        @songs = @songs.limit params[:limit]
-        render :text => @songs.map { |s| "<img src='#{s.album.cover_url}' height='30px'/> #{s.title} - #{s.artist.name} (#{s.id})" }.join("\n")
-      end
+    @songs = @songs.limit params[:limit] if params[:limit]
+
+    respond_with @songs do |format|
+      format.json {
+        render :json => @songs.map{ |s|
+          {:value => s.id, :title => s.title, :artist => s.artist.name,
+            :image => "<img src='#{s.album.cover_url}' height='30px'/>"}
+        }
+      }
     end
   end
 

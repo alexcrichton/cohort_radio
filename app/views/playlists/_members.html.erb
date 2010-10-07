@@ -1,0 +1,9 @@
+<ul id='allowed_users'>
+  <% @playlist.memberships.each do |membership| %>
+    <li class='remove' id='m<%= membership.id %>'>
+      <%= membership.user.name %>
+      <%= link_to '[remove]', [@playlist, membership], :remote => true,
+            :method => :delete %>
+    </li>
+  <% end %>
+</ul>

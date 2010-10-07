@@ -1,0 +1,5 @@
+<% if @album.errors.any? %>
+  <%= render :template => 'albums/edit' %>
+<% else %>
+  <%= render :template => 'albums/show' %>
+<% end %>

@@ -1,0 +1,12 @@
+$('#q, input[type=submit]').attr('disabled', 'disabled');
+
+if(timeoutId != null) clearTimeout(timeoutId);
+
+$('#search-response').html('Searching Fargo...');
+
+var timeoutId = setTimeout(function(){
+  var url = "<%= escape_javascript fargo_search_results_path(:q => params[:q]) %>";
+  $('#search-response').load(url, function(){
+    $('#q, input[type=submit]').removeAttr('disabled');
+  });
+}, 1000);

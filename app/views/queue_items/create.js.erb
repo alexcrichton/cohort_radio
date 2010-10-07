@@ -1,0 +1,7 @@
+<% if params[:q] %>
+  $('#songs').replaceWith("<%= escape_javascript(render 'playlists/queue') %>");
+  $('#q, #song_id').val('')
+<% else %>
+  $('#s<%= @song.id %> .add.queue .p<%= @playlist.id %>').html(
+      '<span class="notice">Queued!</span>');
+<% end %>

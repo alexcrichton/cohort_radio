@@ -29,7 +29,12 @@ class Song < ActiveRecord::Base
   }
 
   def update_rating
-    self[:rating] = ratings.sum(:score).to_f / ratings.size
+    if ratings.size == 0
+      self[:rating] = 0
+    else
+      self[:rating] = ratings.sum(:score).to_f / ratings.size
+    end
+
     save
     self[:rating]
   end

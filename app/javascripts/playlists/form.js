@@ -1,17 +1,25 @@
-//= require <jquery/autocomplete>
+//= require <jquery/ui>
 
 $(function() {
-  $("#memberships form #q").autocomplete('/users/search', {
-    matchContains: true,
-    cacheLength: 50,
-    formatItem: function(row) {
-      return row[0].replace(/\(\d+\)/, '');
+  $("#memberships form #q").autocomplete({
+    minLength: 2,
+    source: function(request, response) {
+      $.get('/users/search.json', {q:request.term}, function(data) {
+        response(data);
+      });
     },
-    formatResult: function(arr) {
-      return arr[0].replace(/&.*$/, '');
+    select: function(event, ui) {
+      $(this).prev('input:hidden').val(ui.item.id);
+      $(this).val(ui.item.name);
+      return false;
+    },
+    focus: function(event, ui) {
+      $(this).val(ui.item.name);
+      return false;
     }
-  }).result(function(event, data, formatted) {
-    var id = formatted.match(/\((\d+)\)/)[1];
-    $('<input type="hidden" value="' + id + '" name="user_id" />').insertAfter($(this));
-  });  
+  }).data('autocomplete')._renderItem = function(ul, item) {
+    return $('<li/>').data('item.autocomplete', item)
+              .append('<a>' + item.name + '</a>')
+              .appendTo(ul);
+  };
 });

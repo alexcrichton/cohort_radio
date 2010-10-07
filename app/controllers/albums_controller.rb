@@ -3,7 +3,7 @@ class AlbumsController < ApplicationController
   load_and_authorize_resource :artist, :find_by => :slug
   load_and_authorize_resource :find_by => :slug
 
-  respond_to :html
+  respond_to :html, :js
 
   def index
     @albums = Album.order('name').includes(:artist)
@@ -17,6 +17,10 @@ class AlbumsController < ApplicationController
   def show
     @songs = @album.songs.paginate :page => params[:page], :per_page => 10
 
+    respond_with @album
+  end
+
+  def edit
     respond_with @album
   end
 

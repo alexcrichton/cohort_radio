@@ -1,4 +1,4 @@
-<% javascript 'playlists/form', 'helpers' %>
+<% javascript 'playlists/form', 'rails' %>
 
 <%= form_for @playlist do |f| %>
 
@@ -13,21 +13,19 @@
     <dd><%= f.text_area :description %></dd>
   </dl>
 
-  <p><%= f.submit %></p>
+  <p><%= f.submit :disable_with => 'Updating...' %></p>
 <% end %>
 
 <% unless @playlist.new_record? %>
   <h3>Users Allowed to this Playlist</h3>
   <div id='memberships'>
-    <ul>
-      <% @playlist.memberships.each do |membership| %>
-        <li class='remove'><%= membership.user.name %> <%= link_to '[remove]', [@playlist, membership], :class => 'remote-remove' %></li>
-      <% end %>
-    </ul>
-    <%= form_for @playlist.memberships.build, :url => [@playlist, :memberships] do |f| %>
+    <%= render 'members' %>
+
+    <%= form_for [@playlist, @playlist.memberships.build], :remote => true do |f| %>
       <div>
+        <%= f.hidden_field :user_id %>
         <%= text_field_tag :q %>
-        <%= f.submit 'Add' %>
+        <%= f.submit 'Add', :disable_with => 'Adding...' %>
       </div>
     <% end %>
   </div>

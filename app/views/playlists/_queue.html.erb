@@ -1,0 +1,5 @@
+<section id='songs'>
+  <% @playlist.queue_items.includes(:user, :song => [:artist, :album]).each do |queue_item| %>
+    <%= render queue_item.song, :item => queue_item %>
+  <% end %>
+</section>
