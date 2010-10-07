@@ -6,9 +6,6 @@
     <li><a href="#current">Current</a></li>
     <li><a href="#finished">Finished</a></li>
     <li><a href="#failed">Failed</a></li>
-    <% if can? :manage, Fargo %>
-      <li><a href="#connections">Persistent Connections</a></li>
-    <% end %>
   </ul>
 
   <div id='queued'>
@@ -44,40 +41,4 @@
     <%= render 'download_list', :downloads => @failed_downloads, :failed => true %>
   </div>
 
-  <% if can? :manage, Fargo %>
-    <div id='connections'>
-      <table>
-        <tr>
-          <th>Nick</th>
-          <th>Action</th>
-        </tr>
-        <tr>
-          <td colspan='2' class='header'>
-            Persistent
-          </td>
-        </tr>
-        <% @connections.each do |nick| %>
-          <tr class='remove'>
-            <td><%= nick %></td>
-            <td>
-              <%= link_to "Disconnect", {:controller => 'fargo/commands', :action => :disconnect, :nick => nick}, :class => 'disconnect remote-remove' %>
-            </td>
-          </tr>
-        <% end %>
-        <tr>
-          <td colspan='2' class='header'>
-            Timed Out
-          </td>
-        </tr>
-        <% @timed_out.each do |nick| %>
-          <tr class='timeout remove'>
-            <td><%= nick %></td>
-            <td>
-              <%= link_to "Try again", {:controller => 'fargo/downloads', :action => :try, :nick => nick}, :class => 'remote-remove' %>
-            </td>
-          </tr>
-        <% end %>
-      </table>
-    </div>
-  <% end %>
 </div>
