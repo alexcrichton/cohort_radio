@@ -30,7 +30,7 @@ gem 'compass'
 gem 'paste', :git => 'git://github.com/alexcrichton/paste.git'
 
 group :development do
-  gem 'rvm', '>=0.1.43'
+  gem 'rvm'
   gem 'capistrano'
   gem 'sqlite3-ruby', :require => 'sqlite3'
 end
