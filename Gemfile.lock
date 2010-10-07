@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/alexcrichton/fargo.git
-  revision: 5be862210e6f1413a40c894bb9cbe4f78e88a9a9
+  revision: 1c8df015268e944ddb774fa7f2441b3e07ff82c6
   specs:
     fargo (0.3.0)
       activesupport (>= 3.0.0)
@@ -131,7 +131,7 @@ GEM
     rake (0.8.7)
     ruby-mp3info (0.6.13)
     ruby-shout (2.2.0)
-    rvm (1.0.13)
+    rvm (1.0.14)
     scrobbler (0.2.3)
       activesupport (>= 1.4.2)
       hpricot (>= 0.4.86)
