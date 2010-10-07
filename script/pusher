@@ -32,7 +32,7 @@ EventMachine.run {
         session = {}
       end
 
-      user_id = session['warden.user.user.key']
+      user_id = session['warden.user.user.key'] # of the form [klass_str, id]
 
       if user_id
         sid = @channel.subscribe do |data|
