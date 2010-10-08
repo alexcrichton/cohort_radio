@@ -1,3 +1,5 @@
+require 'drb'
+
 module Pusher
   def push data, options = {}
     @channel ||= DRbObject.new_with_uri 'druby://localhost:8081'

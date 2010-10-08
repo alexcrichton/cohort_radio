@@ -18,6 +18,8 @@ class Radio
       @files_to_reopen += [$stdout, $stderr]
 
       Daemons.run_proc(daemon_name, :dir => "#{::Rails.root}/tmp/pids", :dir_mode => :normal, :ARGV => @args) do |*args|
+        Thread.abort_on_exception = true
+
         Dir.chdir Rails.root
 
         # re-open file handles

@@ -103,7 +103,7 @@ class Radio
       m.add 'song',   @@tag_recoder.iconv(string)
       m.add 'artist', @@tag_recoder.iconv(song.artist.name) if song.artist
       m.add 'album',  @@tag_recoder.iconv(song.album.name)  if song.album
-      m.add 'bitrate', Mp3Info.new(song.audio.path).bitrate
+      m.add 'bitrate', Mp3Info.new(song.audio.path).bitrate.to_s
       m.add 'genre', 'awesome'
 
       [song, m, queue_item]
@@ -136,9 +136,9 @@ class Radio
       @next = false
 
       while !@next && data = file.read(BLOCKSIZE)
-        Rails.logger.info "Stream: #{@playlist.name} sending block...:#{connected?.inspect}"
+        Rails.logger.debug "Stream: #{@playlist.name} sending block...:#{connected?.inspect}"
         self.send data
-        Rails.logger.info "Stream: #{@playlist.name} - Block sent: #{file.pos.to_f / size} #{connected?.inspect}"
+        Rails.logger.debug "Stream: #{@playlist.name} - Block sent: #{file.pos.to_f / size} #{connected?.inspect}"
 
         # Do not call self.sync! This will cause the entire process to freeze
         # and do weird things (freeze all other running threads). Instead
@@ -146,17 +146,17 @@ class Radio
         d = self.delay.to_f
 
         if d > 0
-          Rails.logger.info "Stream: #{@playlist.name} - sleeping #{d}ms"
+          Rails.logger.debug "Stream: #{@playlist.name} - sleeping #{d}ms"
           # Different sizes for different songs will cause sleeping for
           # different periods of time. Make sure that the icecast server won't
           # time out if we sleep for too long
           sleep d / 1000
         else
-          Rails.logger.info "Stream: #{@playlist.name} - negative delay..."
+          Rails.logger.debug "Stream: #{@playlist.name} - negative delay..."
         end
       end
 
-      Rails.logger.info "Stream: #{@playlist.name} - done playing file #{path}"
+      Rails.logger.debug "Stream: #{@playlist.name} - done playing file #{path}"
     ensure
       file.close if file
     end

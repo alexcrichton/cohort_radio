@@ -17,6 +17,7 @@ class Radio::CommandsController < ApplicationController
     radio.add @playlist.id
 
     respond_with @playlist do |format|
+      format.html { redirect_to @playlist }
       format.js { render 'replace_row' }
     end
   end

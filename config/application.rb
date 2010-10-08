@@ -56,9 +56,6 @@ module CohortRadio
       require 'radio/proxy_daemon'
       require 'radio/proxy_helper'
 
-      require 'drb'
-      DRb.start_service
-
       require 'pusher'
     end
   end
