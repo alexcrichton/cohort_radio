@@ -25,13 +25,14 @@ class SongUploader < CarrierWave::Uploader::Base
       # sounds better in 320, just convert all songs up to 320 and we won't lose
       # anything from those mp3's in 128 and we won't lose as much from flac's
       # and m4a/mp4's
-      if Mp3Info.open(current_path).bitrate != 320
+      i = Mp3Info.open(current_path)
+      if i.bitrate != 320 || i.samplerate != 48000
         info = Mp3Info.new(current_path)
         artist, album, title = info.tag['artist'], info.tag['album'], info.tag['title']
         info.close
 
         t = Tempfile.new('converting')
-        safe_system "lame --quiet -h -b 320 '#{current_path}' '#{t.path}'"
+        safe_system "lame #{lame_opts} '#{current_path}' '#{t.path}'"
         safe_system "cp '#{t.path}' '#{current_path}'"
 
         # Lame doesn't preserve tags, re-write them now that we converted the
@@ -53,11 +54,15 @@ class SongUploader < CarrierWave::Uploader::Base
 
   protected
 
+  def lame_opts
+    '--quiet -h -b 320 --resample 48000'
+  end
+
   def convert_extension ext, title, artist, album, command
     filename = File.basename(current_path, '.' + ext) + '.mp3'
     f = File.dirname(current_path) + '/' + filename
 
-    safe_system "#{command} #{current_path} | lame --quiet -h -b 320 - #{f}"
+    safe_system "#{command} #{current_path} | lame #{lame_opts} - #{f}"
 
     info = Mp3Info.new(f)
     info.tag['artist'] = artist
