@@ -55,6 +55,8 @@ class SongsController < ApplicationController
 
     @song.reload # Our rating has changed
 
+    push :type => 'song.rating', :song_id => @song.id, :rating => @song.rating
+
     respond_with @song
   end
 

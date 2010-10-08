@@ -26,3 +26,15 @@ $(function() {
     $(this).find('.score').text(num);
   });
 });
+
+$pipe.bind('song.rating', function(data) {
+  $('#s' + data.song_id + ' .rating .overall li').each(function(i, el) {
+    if (i >= 10 - data.rating) {
+      $(el).addClass('selected');
+    } else {
+      $(el).removeClass('selected');
+    }
+  });
+
+  $('#s' + data.song_id + ' .rating .overall.score').text(data.rating);
+});

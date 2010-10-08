@@ -1,4 +1,5 @@
 //= require <jquery/ui>
+//= require <pipe>
 
 $(function() {
   var query = $("#song-search #q");
@@ -31,21 +32,17 @@ $(function() {
     };
   }
 
-  var ws = new WebSocket('ws://localhost:8080');
-
-  ws.onmessage = function(event) {
-    var data = JSON.parse(event.data);
-
-    if (data.playlist_id != playlist_id) {
-      return;
-    }
-
-    if (data.type == 'playlist.removed_item') {
+  $pipe.bind('playlist.removed_item', function(data) {
+    if (data.playlist_id == playlist_id) {
       $('.song[data-queue-id=' + data.queue_id + ']').slideUp(function() {
         $(this).remove();
       });
-    } else if (data.type == 'playlist.added_item') {
+    }
+  });
+
+  $pipe.bind('playlist.added_item', function(data) {
+    if (data.playlist_id == playlist_id) {
       $('#songs').load(data.url + ' #songs');
     }
-  };
+  });
 });

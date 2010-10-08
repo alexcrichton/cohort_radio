@@ -37,7 +37,7 @@
           </li>
         <% end %>
       </ul>
-      <span class='score'><%= song.rating.to_i %></span>
+      <span class='score overall'><%= song.rating.to_i %></span>
     </div>
     <div class='rating'>
       <% rating = song.ratings.by(current_user).first.try(:score) || 0 %>
@@ -48,7 +48,7 @@
           </li>
         <% end %>
       </ul>
-      <span class='score'><%= rating %></span>
+      <span class='score user'><%= rating %></span>
     </div>
   </div>
 
@@ -59,12 +59,13 @@
   <% end %>
 
   <div class='links'>
+    <% if defined?(item) %>
+      <p>
+        Queued by: <%= item.user.name if item.user %>
+      </p>
+    <% end %>
+
     <p>
-      <% if defined?(item) %>
-        <p>
-          Queued by: <%= item.user.name if item.user %>
-        </p>
-      <% end %>
       <%= link_to '[download]', song_url(song, :format => 'mp3') %>
 
       <% if can? :update, song %>
