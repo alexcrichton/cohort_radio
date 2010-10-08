@@ -2,9 +2,9 @@ require 'drb'
 
 module Fargo
   module ProxyHelper
-    
+
     def fargo
-      @fargo_client ||= DRbObject.new_with_uri('drbunix:///tmp/fargo.sock')
+      @fargo_client ||= DRbObject.new_with_uri('druby://localhost:8082')
     end
 
     def fargo_running?
