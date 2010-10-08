@@ -12,5 +12,11 @@ class User < ActiveRecord::Base
   attr_accessible :name, :email, :password, :password_confirmation
 
   scope :admins, where(:admin => true)
-  scope :search, Proc.new{ |query| where('name LIKE :q or email LIKE :q', :q => "%#{query}%") }
+  scope :search, Proc.new{ |query|
+    if query.blank?
+      where(:id => 0)
+    else
+      where('name LIKE :q or email LIKE :q', :q => "%#{query}%")
+    end
+  }
 end

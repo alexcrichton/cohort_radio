@@ -16,11 +16,7 @@ class UsersController < ApplicationController
   end
 
   def search
-    if params[:q].blank?
-      @users = []
-    else
-      @users = User.search(params[:q]).limit(params[:limit])
-    end
+    @users = User.search(params[:q]).limit(params[:limit])
 
     respond_with @users do |format|
       format.json {
