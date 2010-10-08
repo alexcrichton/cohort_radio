@@ -3,7 +3,7 @@ class SongsController < ApplicationController
   load_resource :artist, :find_by => :slug
   load_and_authorize_resource
 
-  respond_to :html, :js, :json
+  respond_to :html, :js
 
   def index
     top_level = Song

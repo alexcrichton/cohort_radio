@@ -10,7 +10,6 @@ CohortRadio::Application.routes.draw do
   get 'artists/:artist_id/:id' => 'albums#show', :as => 'artist_album'
 
   resources :songs do
-    resources :comments
     get :search, :on => :collection
     put :rate, :on => :member
   end

@@ -2,7 +2,6 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :confirmable, :recoverable, :rememberable,
     :trackable, :validatable, :registerable
 
-  has_many :comments, :dependent => :destroy
   has_many :queue_items, :dependent => :destroy
   has_many :memberships, :dependent => :destroy
   has_many :playlists, :through => :memberships

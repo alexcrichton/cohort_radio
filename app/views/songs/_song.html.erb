@@ -12,9 +12,7 @@
   </div>
 
   <div class='content'>
-    <h3>
-      <%= link_to truncate(song.title), song %>
-    </h3>
+    <h3><%= truncate(song.title) %></h3>
 
     <% if song.artist %>
       <h5><%= link_to truncate(song.artist.name), song.artist %></h5>

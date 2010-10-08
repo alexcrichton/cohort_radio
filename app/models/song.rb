@@ -4,7 +4,6 @@ class Song < ActiveRecord::Base
 
   belongs_to :artist
   belongs_to :album
-  has_many :comments, :dependent => :destroy, :order => 'created_at DESC'
   has_many :queue_items, :dependent => :destroy
   has_many :playlists, :through => :queue_items
   has_many :ratings, :dependent => :destroy, :class_name => 'Song::Rating'
