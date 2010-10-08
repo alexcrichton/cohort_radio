@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/alexcrichton/fargo.git
-  revision: 1c8df015268e944ddb774fa7f2441b3e07ff82c6
+  revision: 74ecbf7b5d7320f9fbf84e2c7adb83ca393ec6c6
   specs:
     fargo (0.3.0)
       activesupport (>= 3.0.0)
@@ -93,7 +93,7 @@ GEM
     hpricot (0.8.2)
     i18n (0.4.1)
     libxml-ruby (1.1.4)
-    mail (2.2.6.1)
+    mail (2.2.7)
       activesupport (>= 2.3.6)
       mime-types
       treetop (>= 1.4.5)
