@@ -1,6 +1,6 @@
 require 'drb'
 
-class Radio
+module Radio
   module ProxyHelper
 
     def radio

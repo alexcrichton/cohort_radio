@@ -16,7 +16,6 @@ gem 'mp4info', :git => 'git://github.com/danielwestendorf/ruby-mp4info',
 gem 'scrobbler'   # Album art for songs
 
 # Daemons and we stream to icecast using ruby-shout
-gem 'daemons'
 gem 'fargo', :git => 'git://github.com/alexcrichton/fargo.git' # DC Client
 gem 'ruby-shout', :require => 'shout'
 gem 'em-websocket'

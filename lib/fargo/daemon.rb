@@ -1,16 +1,17 @@
 require 'drb'
 
 module Fargo
-  class ProxyDaemon < Radio::Daemon
+  module Daemon
 
     @@enqueue_lock = Mutex.new
 
-    def run
+    def self.run
+      Radio.setup_logging 'fargo.log'
+
       Fargo.logger = Rails.logger
       ActiveRecord::Base.connection.reconnect!
 
       client = Fargo::Client.new
-      client.config.download_dir = Rails.root.join('tmp', 'fargo').to_s
 
       # If a download just finished, we're going to want to convert the
       # file to put it in our database.
@@ -27,7 +28,7 @@ module Fargo
       EventMachine.run{ client.connect }
     end
 
-    def convert_song file
+    def self.convert_song file
       # Only enqueue one thing at a time. There was problems running into the
       # connection pool running low as a result of many downloads finishing
       # simultaneously. A pool of 10 ran out very quickly.
@@ -36,10 +37,6 @@ module Fargo
         ActiveRecord::Base.verify_active_connections!
         CreateSongJob.new(file).perform
       }
-    end
-
-    def daemon_name
-      'fargo'
     end
 
   end

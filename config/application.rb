@@ -47,16 +47,10 @@ module CohortRadio
       $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 
       require 'radio'
-      require 'fargo/proxy_daemon'
-      require 'fargo/proxy_helper'
-
-      require 'radio'
-      require 'radio/stream'
-      require 'radio/daemon'
-      require 'radio/proxy_daemon'
       require 'radio/proxy_helper'
-
       require 'pusher'
+      require 'fargo/proxy_helper'
+      require 'fargo/daemon'
     end
   end
 end

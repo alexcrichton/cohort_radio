@@ -1,52 +1,19 @@
-class Radio
+module Radio
   class Daemon
 
-    def initialize(args)
-      @files_to_reopen = []
+    def self.run
+      Radio.setup_logging 'radio.log'
 
-      opts = OptionParser.new do |opts|
-        opts.banner = "Usage: #{File.basename($0)} [options] start|stop|restart|run"
-      end
-      @args = opts.parse!(args)
-    end
+      ActiveRecord::Base.connection.reconnect!
 
-    def daemonize
-      ObjectSpace.each_object(File) do |file|
-        @files_to_reopen << file unless file.closed?
-      end
+      radio = Radio::Giraffe.new
 
-      @files_to_reopen += [$stdout, $stderr]
+      DRb.start_service 'druby://127.0.0.1:8083', radio
+      Rails.logger.info 'Connecting radio...'
 
-      Daemons.run_proc(daemon_name, :dir => "#{::Rails.root}/tmp/pids", :dir_mode => :normal, :ARGV => @args) do |*args|
-        Thread.abort_on_exception = true
+      radio.connect
 
-        Dir.chdir Rails.root
-
-        # re-open file handles
-        @files_to_reopen.each do |file|
-          file.reopen File.join(Rails.root, 'log', "#{daemon_name}.log"), 'a+'
-          file.sync = true
-        end
-        # needed to log for some reason in production mode
-        Rails.logger.auto_flushing = true
-
-        begin
-          run
-        rescue => e
-          Rails.logger.fatal e
-          Rails.logger.fatal e.backtrace.join("\n")
-          STDERR.puts e.message
-          exit 1
-        end
-      end
-    end
-
-    def run
-      raise "Not implemented yet!"
-    end
-
-    def daemon_name
-      raise "Not implemented yet!"
+      DRb.thread.join
     end
 
   end
