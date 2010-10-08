@@ -52,12 +52,6 @@
     </div>
   </div>
 
-  <% if can? :update, song %>
-    <div class='form'>
-      <%= render 'songs/form', :song => song %>
-    </div>
-  <% end %>
-
   <div class='links'>
     <% if defined?(item) %>
       <p>
