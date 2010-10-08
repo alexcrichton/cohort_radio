@@ -12,7 +12,7 @@ class Radio
     def initialize radio, playlist_id
       super()
       @radio    = radio
-      @playlist = playlist_id
+      @playlist_id = playlist_id
     end
 
     def connect
