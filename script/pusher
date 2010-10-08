@@ -6,6 +6,9 @@ require File.expand_path('../../config/initializers/secret_token', __FILE__)
 require 'em-websocket'
 require 'active_support/message_verifier'
 require 'drb'
+require 'radio'
+
+Radio.setup_logging 'pusher.log'
 
 @key      = Rails.application.config.secret_token
 @channel  = EventMachine::Channel.new

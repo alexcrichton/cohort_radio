@@ -7,16 +7,7 @@ rails_root = "/srv/http/cohort_radio/current"
     w.group = "cradio"
     w.interval = 30.seconds # default
 
-    if daemon != 'pusher'
-      w.start   = "cd #{rails_root}; RAILS_ENV=production script/#{daemon} start"
-      w.stop    = "cd #{rails_root}; RAILS_ENV=production script/#{daemon} stop"
-      w.restart = "cd #{rails_root}; RAILS_ENV=production script/#{daemon} restart"
-
-      w.pid_file = File.join(rails_root, "tmp/pids/#{daemon}.pid")
-      w.behavior(:clean_pid_file)
-    else
-      w.start = "cd #{rails_root}; RAILS_ENV=production script/#{daemon}"
-    end
+    w.start = "cd #{rails_root}; RAILS_ENV=production script/#{daemon} -d"
 
     w.uid = 'capistrano'
     w.gid = 'http'
