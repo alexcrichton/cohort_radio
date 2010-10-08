@@ -21,7 +21,7 @@ EventMachine.error_handler{ |e|
 }
 
 EventMachine.run {
-  EventMachine::start_server('127.0.0.1', 8080,
+  EventMachine::start_server('0.0.0.0', 8080,
       EventMachine::WebSocket::Connection, {}) do |ws|
     ws.onopen {
       cookies = Rack::Utils.parse_query ws.request['Cookie']
