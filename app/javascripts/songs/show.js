@@ -27,6 +27,15 @@ $(function() {
   });
 });
 
+$pipe.bind('song.updated', function(data) {
+  if ($('#s' + data.song_id).length > 0) {
+    $.ajax({
+      url: data.url,
+      dataType: 'script'
+    });
+  }
+});
+
 $pipe.bind('song.rating', function(data) {
   $('#s' + data.song_id + ' .rating .overall li').each(function(i, el) {
     if (i >= 10 - data.rating) {

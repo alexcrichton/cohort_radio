@@ -3,7 +3,9 @@ module Pusher
     @channel ||= DRbObject.new_with_uri 'druby://localhost:8081'
 
     options[:except] ||= [current_user.id]
-    @channel << options.merge(:data => data.to_json)
+    push = options.merge(:data => data.to_json)
+    @channel << push
+    Rails.logger.debug "Pushed data: #{push.inspect}"
   rescue DRb::DRbConnError
   end
 end

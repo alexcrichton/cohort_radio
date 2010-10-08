@@ -63,6 +63,8 @@ class SongsController < ApplicationController
   def update
     @song.update_attributes params[:song]
 
+    push :type => 'song.updated', :song_id => @song.id, :url => url_for(@song)
+
     respond_with @song
   end
 
