@@ -1,6 +1,9 @@
 require 'drb'
 
 module Pusher
+
+  autoload :Daemon, 'pusher/daemon'
+
   def push data, options = {}
     @channel ||= DRbObject.new_with_uri 'druby://127.0.0.1:8081'
 
@@ -15,6 +18,7 @@ module Pusher
     Rails.logger.debug "Pushed data: #{push.inspect}"
   rescue DRb::DRbConnError
   end
+
 end
 
 ActionController::Base.send :include, Pusher
