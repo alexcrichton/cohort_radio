@@ -15,7 +15,10 @@ class SongsController < ApplicationController
     else
       @songs = top_level.order 'title'
     end
-    @songs = @songs.where("title LIKE ?", "#{params[:letter]}%") if params[:letter]
+
+    if params[:letter]
+      @songs = @songs.where("title LIKE ?", "#{params[:letter]}%")
+    end
 
     @songs = @songs.includes(:album, :artist)
     @songs = @songs.paginate :page => params[:page], :per_page => 10

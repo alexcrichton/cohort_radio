@@ -8,16 +8,18 @@
   <div class='image'>
     <%= link_to [song.artist, song.album] do %>
       <%= image_tag song.album.cover_url, :width => '126' %>
-    <% end if song.album && song.album.cover_url%>
+    <% end if song.album && song.album.cover_url %>
   </div>
 
   <div class='content'>
     <h3>
       <%= link_to truncate(song.title), song %>
     </h3>
+
     <% if song.artist %>
       <h5><%= link_to truncate(song.artist.name), song.artist %></h5>
     <% end %>
+
     <% unless song.album.blank? %>
       <h5>
         <%= link_to truncate(song.album.name), [song.artist, song.album] %>
