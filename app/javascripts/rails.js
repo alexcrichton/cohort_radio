@@ -15,11 +15,11 @@ $.extend($, {
 });
 
 $(function() {
-  $('*[data-remote]').live('ajax:loading', function () {
-    $($['ajax-small']).insertAfter(this);
+  $('a[data-remote]').live('ajax:loading', function () {
+    $($['small-ajax']).insertAfter(this);
   });
 
-  $('*[data-remote]').live('ajax:success ajax:complete ajax:failure', function () {
-    $(this).next('img').remove();
+  $('a[data-remote]').live('ajax:success ajax:complete ajax:failure', function () {
+    $(this).next('img.loading').remove();
   });
 });
