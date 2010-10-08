@@ -24,8 +24,12 @@ class Song < ActiveRecord::Base
   after_destroy :destroy_invalid_artist_and_album
 
   scope :search, Proc.new{ |query|
-    where('title LIKE :q or artists.name LIKE :q or albums.name LIKE :q',
-        :q => "%#{query}%").includes(:artist, :album)
+    if query.blank?
+      where(:id => 0)
+    else
+      where('title LIKE :q or artists.name LIKE :q or albums.name LIKE :q',
+          :q => "%#{query}%").includes(:artist, :album)
+    end
   }
 
   def update_rating

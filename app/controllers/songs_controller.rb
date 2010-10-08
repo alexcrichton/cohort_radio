@@ -82,12 +82,13 @@ class SongsController < ApplicationController
   end
 
   def search
-    @songs = params[:q].blank? ? [] : Song.search(params[:q])
+    @songs = Song.search(params[:q])
+
+    @songs = @songs.limit params[:limit] || 10
+
     if params[:completion].blank?
       @songs = @songs.paginate :page => params[:page], :per_page => 10
     end
-
-    @songs = @songs.limit params[:limit] || 10
 
     respond_with @songs do |format|
       format.json {

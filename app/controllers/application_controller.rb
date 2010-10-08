@@ -1,14 +1,5 @@
-# Filters added to this controller apply to all controllers in the application.
-# Likewise, all the methods added will be available for all controllers.
-
 class ApplicationController < ActionController::Base
-  protect_from_forgery # See ActionController::RequestForgeryProtection for details
-
-  # nil for AJAX
-  layout Proc.new { |controller| controller.request.xhr? ? nil : 'application' }
-
-  # Authlogic stuff
-  helper_method :current_user_session, :current_user
+  protect_from_forgery
 
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = 'Access denied.'
