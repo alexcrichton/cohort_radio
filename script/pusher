@@ -11,7 +11,7 @@ require 'drb'
 @channel  = EventMachine::Channel.new
 @verifier = ActiveSupport::MessageVerifier.new @key
 
-DRb.start_service 'druby://localhost:8081', @channel
+DRb.start_service 'druby://127.0.0.1:8081', @channel
 
 EventMachine.epoll
 

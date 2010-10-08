@@ -4,7 +4,7 @@ class Radio
   module ProxyHelper
 
     def radio
-      @radio_client ||= DRbObject.new_with_uri('druby://localhost:8083')
+      @radio_client ||= DRbObject.new_with_uri('druby://127.0.0.1:8083')
     end
 
     def radio_running?

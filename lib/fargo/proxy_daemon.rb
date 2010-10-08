@@ -23,7 +23,7 @@ module Fargo
 
       trap('EXIT') { Fargo.logger.info 'Exiting...'; client.disconnect }
 
-      DRb.start_service 'druby://localhost:8082', client
+      DRb.start_service 'druby://127.0.0.1:8082', client
       EventMachine.run{ client.connect }
     end
 

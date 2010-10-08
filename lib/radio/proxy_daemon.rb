@@ -13,7 +13,7 @@ class Radio
 
       radio = Radio.new
 
-      DRb.start_service 'druby://localhost:8083', radio
+      DRb.start_service 'druby://127.0.0.1:8083', radio
       Rails.logger.info 'Connecting radio...'
 
       DRb.thread.join
