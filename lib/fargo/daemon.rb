@@ -25,7 +25,11 @@ module Fargo
       trap('EXIT') { Fargo.logger.info 'Exiting...'; client.disconnect }
 
       DRb.start_service 'druby://127.0.0.1:8082', client
-      EventMachine.run{ client.connect }
+
+      EventMachine.run {
+        client.share_directory FARGO_SHARE_DIR if defined? FARGO_SHARE_DIR
+        client.connect
+      }
     end
 
     def self.convert_song file
