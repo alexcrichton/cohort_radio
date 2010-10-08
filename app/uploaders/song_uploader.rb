@@ -11,7 +11,7 @@ class SongUploader < CarrierWave::Uploader::Base
   end
 
   def extension_white_list
-    %w(mp3 flac m4a)
+    %w(mp3 flac m4a MP3 mP3 Mp3 M4A m4A M4a FLAC)
   end
 
   def encode_to_mp3
