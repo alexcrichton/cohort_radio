@@ -22,10 +22,6 @@ class Ability
       can [:search, :download], Fargo
       can :read, :all
 
-      can :create, Comment
-
-      can :manage, Comment, :user_id => user.id
-
       can :manage, Pool do |pool|
         !pool.playlist.private || pool.playlist.user_id == user.id || pool.playlist.user_ids.include?(user.id)
       end
