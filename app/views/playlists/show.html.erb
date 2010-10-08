@@ -7,10 +7,12 @@
 
     <% if can?(:add, @playlist) && radio_connected? %>
       <% if radio.playing? @playlist.id %>
-        <%= link_to '[Stop streaming]', :controller => 'radio/commands',
-                :action => 'stop', :playlist_id => @playlist.slug %>
-        <%= link_to '[Next Song]', :controller => 'radio/commands',
-                :action => 'next', :playlist_id => @playlist.slug %>
+        <%= link_to '[Stop streaming]', {:controller => 'radio/commands',
+                :action => 'stop', :playlist_id => @playlist.slug},
+                :remote => true %>
+        <%= link_to '[Next Song]', {:controller => 'radio/commands',
+                :action => 'next', :playlist_id => @playlist.slug},
+                :remote => true %>
       <% else %>
         <%= link_to "[Start streaming]", :controller => 'radio/commands',
                 :action => 'add', :playlist_id => @playlist.slug %>

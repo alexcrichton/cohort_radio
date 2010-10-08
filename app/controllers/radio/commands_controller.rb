@@ -18,7 +18,7 @@ class Radio::CommandsController < ApplicationController
 
     respond_with @playlist do |format|
       format.html { redirect_to @playlist }
-      format.js { render 'replace_row' }
+      format.js   { render 'replace_row' }
     end
   end
 
