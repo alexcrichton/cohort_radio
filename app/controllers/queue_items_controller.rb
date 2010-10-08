@@ -10,7 +10,7 @@ class QueueItemsController < ApplicationController
     @playlist.enqueue @song, current_user
 
     push :type => 'playlist.added_item', :playlist_id => @playlist.to_param,
-      :url => url_for([:queue, @playlist])
+      :url => polymorphic_path([:queue, @playlist])
 
     respond_with @playlist
   end
