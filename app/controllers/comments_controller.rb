@@ -1,26 +1,26 @@
 class CommentsController < ApplicationController
-  
+
   authorize_resource
-  
+
   respond_to :html
-  
+
   def index
     @comments = @song.comments.paginate(:page => params[:page])
-    respond_with @comments unless request.xhr?
+    respond_with @comments
   end
-  
+
   def show
     respond_with @comment
   end
-  
+
   def new
     respond_with @comment = @song.comments.build
   end
-    
+
   def create
     @comment = @song.comments.new(params[:comment])
-    @comment.user = current_user 
-    
+    @comment.user = current_user
+
     if @comment.save
       flash[:notice] = "Successfully created comment."
       if request.xhr?
@@ -28,19 +28,19 @@ class CommentsController < ApplicationController
       else
         redirect_to @song
       end
-    else      
+    else
       if request.xhr?
-        render :text => @comment.errors 
+        render :text => @comment.errors
       else
         render :action => 'new'
       end
     end
   end
-  
+
   def edit
     respond_with @comment
   end
-  
+
   def update
     if @comment.update_attributes(params[:comment])
       if request.xhr?
@@ -57,7 +57,7 @@ class CommentsController < ApplicationController
       end
     end
   end
-  
+
   def destroy
     @comment.destroy
     if request.xhr?
@@ -66,5 +66,5 @@ class CommentsController < ApplicationController
       redirect_to @song, :notice => "Successfully destroyed comment."
     end
   end
-  
+
 end

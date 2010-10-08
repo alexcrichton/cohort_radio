@@ -1,0 +1,17 @@
+<% if params[:order].blank? %>
+  <div class='alphabet pagination'>
+    <% if params[:letter].blank? %>
+      <em>All</em>
+    <% else %>
+      <%= link_to 'All', url %>
+    <% end %>
+
+    <% ('A'..'Z').each do |letter| %>
+      <% if params[:letter] == letter %>
+        <em><%= letter %></em>
+      <% else %>
+        <%= link_to letter, url + '?' + {:letter => letter}.to_query %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

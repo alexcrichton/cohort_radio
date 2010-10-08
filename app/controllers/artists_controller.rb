@@ -12,7 +12,7 @@ class ArtistsController < ApplicationController
 
     @artists = @artists.paginate :page => params[:page]
 
-    respond_with @artists unless request.xhr?
+    respond_with @artists
   end
 
   def edit

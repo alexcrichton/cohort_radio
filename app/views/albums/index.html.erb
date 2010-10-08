@@ -1,17 +1,12 @@
 <% javascript 'pagination' %>
 
-<div class='pagination'>
-	<%= link_to 'All', albums_path %>
-	<% ('A'..'Z').each do |letter| %>
-		<%= link_to letter, albums_path + '?' + {:letter => letter}.to_query %>
-	<% end %>
-</div>
+<%= render 'shared/alphabet', :url => albums_path %>
 
 <%= paginated_section @albums, :outer_window => 3, :inner_window => 8 do %>
-	<% left = (right = @albums.dup).slice!(0, (@albums.size / 2.0).ceil) %>
-	<div style='overflow:auto'>
-		<% [left, right].each do |arr| %>
-			<ul class='column block'><%= render arr %></ul>
-		<% end %>
-	</div>
+  <% left = (right = @albums.dup).slice!(0, (@albums.size / 2.0).ceil) %>
+  <div style='overflow:auto'>
+    <% [left, right].each do |arr| %>
+      <ul class='column block'><%= render arr %></ul>
+    <% end %>
+  </div>
 <% end %>

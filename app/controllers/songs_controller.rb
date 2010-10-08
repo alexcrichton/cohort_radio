@@ -1,12 +1,13 @@
 class SongsController < ApplicationController
 
+  load_resource :artist, :find_by => :slug
   load_and_authorize_resource
 
   respond_to :html, :js, :json
 
   def index
     top_level = Song
-    top_level = @parent.songs if @parent
+    top_level = @artist.songs if @artist
 
     if params[:order] == 'play_count'
       @songs = top_level.order 'play_count DESC'
@@ -23,7 +24,7 @@ class SongsController < ApplicationController
     @songs = @songs.includes(:album, :artist)
     @songs = @songs.paginate :page => params[:page], :per_page => 10
 
-    respond_with @songs unless request.xhr?
+    respond_with @songs
   end
 
   def show

@@ -11,7 +11,7 @@ class AlbumsController < ApplicationController
 
     @albums = @albums.paginate :page => params[:page]
 
-    respond_with @albums unless request.xhr?
+    respond_with @albums
   end
 
   def show

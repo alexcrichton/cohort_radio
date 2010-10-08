@@ -1,15 +1,8 @@
 <% javascript 'pagination' %>
 
-<%= content_tag :h2, @parent.name if @parent %>
+<%= content_tag :h2, @artist.name if @artist %>
 
-<% if params[:order].blank? %>
-  <div class='alphabet pagination'>
-    <%= link_to 'All', :songs %>
-    <% ('A'..'Z').each do |letter| %>
-      <%= link_to letter, songs_path + '?' + {:letter => letter}.to_query %>
-    <% end %>
-  </div>
-<% end %>
+<%= render 'shared/alphabet', :url => url_for([@artist, :songs]) %>
 
 <%= paginated_section @songs, :outer_window => 3, :inner_window => 8 do %>
   <%= render @songs %>
