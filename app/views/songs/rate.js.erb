@@ -1,1 +1,2 @@
-$("#s<%= @song.id %>").replaceWith("<%= escape_javascript render(@song) %>");
+var html = $("<%= escape_javascript render(@song) %>");
+$("#s<%= @song.id %> .ratings").replaceWith(html.find('.ratings'));
