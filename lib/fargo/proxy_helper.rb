@@ -19,3 +19,6 @@ module Fargo
 
   end
 end
+
+ActionController::Base.class_eval { include Fargo::ProxyHelper }
+ActionView::Base.class_eval       { include Fargo::ProxyHelper }
