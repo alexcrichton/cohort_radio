@@ -10,7 +10,7 @@ GIT
 
 GIT
   remote: git://github.com/alexcrichton/paste.git
-  revision: 8454a02c155ae396e7bfd899f56bef442deafd20
+  revision: 229001b25140ae516aa0587366b94d0a1962a01d
   specs:
     paste (0.3.0)
       activesupport (>= 3.0.0.beta4)
