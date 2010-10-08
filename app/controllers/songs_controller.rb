@@ -74,6 +74,8 @@ class SongsController < ApplicationController
   def destroy
     @song.destroy
 
+    push :type => 'song.destroyed', :song_id => @song.id
+
     respond_with @song do |format|
       format.html { redirect_back_or_default songs_path }
     end

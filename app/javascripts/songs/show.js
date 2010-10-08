@@ -27,6 +27,12 @@ $(function() {
   });
 });
 
+$pipe.bind('song.destroyed', function(data) {
+  $('#s' + data.song_id).slideUp(function() {
+    $(this).remove();
+  });
+});
+
 $pipe.bind('song.updated', function(data) {
   if ($('#s' + data.song_id).length > 0) {
     $.ajax({
