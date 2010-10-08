@@ -9,12 +9,6 @@ class UsersController < ApplicationController
     redirect_to current_user ? playlists_path : new_user_session_path
   end
 
-  def adminize
-    @user.admin = params[:user][:admin]
-    Notifier.send_later :deliver_admin_notification, @user if @user.save
-    render :text => (@user.admin ? 'Adminized' : 'Revoked')
-  end
-
   def search
     @users = User.search(params[:q]).limit(params[:limit])
 
