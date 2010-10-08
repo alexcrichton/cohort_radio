@@ -61,6 +61,10 @@ CohortRadio::Application.routes.draw do
     end
 
     resources :memberships, :only => [:create, :destroy]
+
+    member do
+      get :queue
+    end
   end
 
   scope :as => 'playlist' do

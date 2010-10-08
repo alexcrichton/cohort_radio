@@ -9,10 +9,8 @@ class QueueItemsController < ApplicationController
   def create
     @playlist.enqueue @song, current_user
 
-    with_format 'html' do
-      push :type => 'playlist.added_item', :playlist_id => @playlist.to_param,
-        :html => render_to_string(:partial => 'playlists/queue')
-    end
+    push :type => 'playlist.added_item', :playlist_id => @playlist.to_param,
+      :url => url_for([:queue, @playlist])
 
     respond_with @playlist
   end

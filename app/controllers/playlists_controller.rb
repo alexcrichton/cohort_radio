@@ -28,6 +28,10 @@ class PlaylistsController < ApplicationController
     respond_with @playlist
   end
 
+  def queue
+    respond_with @playlist
+  end
+
   def update
     if @playlist.update_attributes params[:playlist]
       flash[:notice] = 'Successfully updated playlist.'

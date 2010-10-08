@@ -47,12 +47,4 @@ class ApplicationController < ActionController::Base
     session[:return_to] = nil
   end
 
-  def with_format form
-    old_formats = formats
-    self.formats = [form]
-    yield
-    self.formats = old_formats
-    nil
-  end
-
 end
