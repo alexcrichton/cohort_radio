@@ -34,6 +34,7 @@ class Radio
           run
         rescue => e
           Rails.logger.fatal e
+          Rails.logger.fatal e.backtrace.join("\n")
           STDERR.puts e.message
           exit 1
         end
