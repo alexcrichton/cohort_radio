@@ -45,6 +45,10 @@
       </footer>
 
     </div>
-    <%= javascript_tags %>
+    <%= javascript_tags 'jquery' %>
+    <%= javascript_tag do %>
+      $['included_javascripts'] = <%= raw all_javascripts_included.to_json %>;
+      $['included_stylesheets'] = <%= raw all_stylesheets_included.to_json %>;
+    <% end %>
   </body>
 </html>

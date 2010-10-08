@@ -32,7 +32,7 @@ $(function() {
     };
   }
 
-  $pipe.bind('playlist.removed_item', function(data) {
+  $.pipe.bind('playlist.removed_item', function(data) {
     if (data.playlist_id == playlist_id) {
       $('.song[data-queue-id=' + data.queue_id + ']').slideUp(function() {
         $(this).remove();
@@ -40,7 +40,7 @@ $(function() {
     }
   });
 
-  $pipe.bind('playlist.added_item', function(data) {
+  $.pipe.bind('playlist.added_item', function(data) {
     if (data.playlist_id == playlist_id) {
       $('#songs').load(data.url + ' #songs');
     }

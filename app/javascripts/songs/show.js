@@ -1,5 +1,6 @@
 //= require <jquery>
 //= require <rails>
+//= require <pipe>
 
 $(function() {
   $('.song .ratings .user li').live('hover', function() {
@@ -27,13 +28,13 @@ $(function() {
   });
 });
 
-$pipe.bind('song.destroyed', function(data) {
+$.pipe.bind('song.destroyed', function(data) {
   $('#s' + data.song_id).slideUp(function() {
     $(this).remove();
   });
 });
 
-$pipe.bind('song.updated', function(data) {
+$.pipe.bind('song.updated', function(data) {
   if ($('#s' + data.song_id).length > 0) {
     $.ajax({
       url: data.url,
@@ -42,7 +43,7 @@ $pipe.bind('song.updated', function(data) {
   }
 });
 
-$pipe.bind('song.rating', function(data) {
+$.pipe.bind('song.rating', function(data) {
   $('#s' + data.song_id + ' .rating .overall li').each(function(i, el) {
     if (i >= 10 - data.rating) {
       $(el).addClass('selected');
