@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101008021100) do
+ActiveRecord::Schema.define(:version => 20101008230751) do
 
   create_table "albums", :force => true do |t|
     t.string   "name"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(:version => 20101008021100) do
     t.datetime "updated_at"
   end
 
+  add_index "albums", ["artist_id"], :name => "index_albums_on_artist_id"
   add_index "albums", ["slug"], :name => "index_albums_on_slug"
 
   create_table "artists", :force => true do |t|
@@ -49,6 +50,8 @@ ActiveRecord::Schema.define(:version => 20101008021100) do
     t.boolean  "private",     :default => false
   end
 
+  add_index "playlists", ["slug"], :name => "index_playlists_on_slug"
+
   create_table "playlists_users", :id => false, :force => true do |t|
     t.integer "playlist_id"
     t.integer "user_id"
@@ -74,6 +77,9 @@ ActiveRecord::Schema.define(:version => 20101008021100) do
     t.datetime "updated_at"
   end
 
+  add_index "queue_items", ["playlist_id"], :name => "index_queue_items_on_playlist_id"
+  add_index "queue_items", ["song_id"], :name => "index_queue_items_on_song_id"
+
   create_table "song_ratings", :force => true do |t|
     t.integer  "user_id"
     t.integer  "score"
@@ -82,20 +88,22 @@ ActiveRecord::Schema.define(:version => 20101008021100) do
     t.datetime "updated_at"
   end
 
+  add_index "song_ratings", ["song_id"], :name => "index_song_ratings_on_song_id"
+
   create_table "songs", :force => true do |t|
     t.string   "title"
-    t.integer  "play_count",         :default => 0
+    t.integer  "play_count",      :default => 0
     t.string   "audio_file_name"
-    t.string   "audio_content_type"
-    t.integer  "audio_file_size"
-    t.datetime "audio_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "custom_set"
     t.integer  "artist_id"
     t.integer  "album_id"
-    t.float    "rating",             :default => 0.0
+    t.float    "rating",          :default => 0.0
   end
+
+  add_index "songs", ["album_id"], :name => "index_songs_on_album_id"
+  add_index "songs", ["artist_id"], :name => "index_songs_on_artist_id"
 
   create_table "users", :force => true do |t|
     t.string   "name",                                                 :null => false
