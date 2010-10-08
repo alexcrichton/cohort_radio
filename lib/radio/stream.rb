@@ -2,6 +2,8 @@ class Radio
 
   class Stream < Shout
 
+    include Pusher
+
     BLOCKSIZE = (1 << 16).freeze
 
     @@tag_recoder = Iconv.new('utf-8', 'utf-8')
@@ -11,7 +13,7 @@ class Radio
 
     def initialize radio, playlist_id
       super()
-      @radio    = radio
+      @radio       = radio
       @playlist_id = playlist_id
     end
 
@@ -111,6 +113,8 @@ class Radio
       @current_song = song.title
 
       self.metadata = metadata
+      push :type => 'playlist.playing', :playlist_id => @playlist.to_param,
+        :song => song.title
 
       stream_song song.audio.path
 

@@ -36,7 +36,10 @@
   <% if radio_connected? && radio.playing?(@playlist.id) %>
     <p>
       Stream url: <%= raw auto_link(@playlist.stream_url) %><br/>
-      Current Song: <%= truncate radio.current_song(@playlist.id) %>
+      Current Song:
+      <span id='current-song'>
+        <%= truncate radio.current_song(@playlist.id) %>
+      </span>
     </p>
   <% else %>
     This playlist is not streaming

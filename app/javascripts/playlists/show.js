@@ -40,6 +40,12 @@ $(function() {
     }
   });
 
+  $.pipe.bind('playlist.playing', function(data) {
+    if (data.playlist_id == playlist_id) {
+      $('#current-song').text(data.song);
+    }
+  });
+
   $.pipe.bind('playlist.added_item', function(data) {
     if (data.playlist_id == playlist_id) {
       $('#songs').load(data.url + ' #songs');
