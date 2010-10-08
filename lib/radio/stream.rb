@@ -6,16 +6,13 @@ class Radio
 
     @@tag_recoder = Iconv.new('utf-8', 'utf-8')
 
-    attr_accessor :options
+    attr_accessor :radio, :playlist_id
     attr_reader :current_song
 
-    def initialize options = {}
-      super
-      @options = options
-    end
-
-    def playlist_id
-      options[:playlist_id]
+    def initialize radio, playlist_id
+      super()
+      @radio    = radio
+      @playlist = playlist_id
     end
 
     def connect
@@ -24,11 +21,10 @@ class Radio
       @playlist = Playlist.find(playlist_id)
       Rails.logger.info "Stream: #{@playlist.name} connecting"
 
-      self.host         = options[:host]
-      self.port         = options[:port]        unless options[:port].nil?
-      self.user         = options[:user]        unless options[:user].nil?
-      self.pass         = options[:password]
-      self.pass       ||= options[:pass]
+      self.host         = @radio.config.host
+      self.port         = @radio.config.port
+      self.user         = @radio.config.user
+      self.pass         = @radio.config.password
       self.mount        = @playlist.ice_mount_point
       self.name         = @playlist.ice_name
       self.description  = @playlist.description if @playlist.description

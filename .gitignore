@@ -1,8 +1,5 @@
 config/database.yml
-config/exceptional.yml
-config/fargo.yml
-config/radio.yml
-vendor/plugins/fargo/asami
+config/initializers/radio.rb
 public/files/*
 private/*
 

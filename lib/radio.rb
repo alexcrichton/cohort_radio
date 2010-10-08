@@ -4,24 +4,9 @@ require 'song'
 require 'radio/stream'
 
 class Radio
+  include ActiveSupport::Configurable
 
-  def self.config
-    return @@config if defined?(@@config)
-
-    @@config = YAML.load(ERB.new(File.read("#{Rails.root}/config/radio.yml")).result)
-
-    @@config.symbolize_keys!
-    @@config.each_value do |v|
-      v.symbolize_keys! if v.respond_to? :symbolize_keys!
-    end
-
-    @@config
-  end
-
-  attr_accessor :options
-
-  def initialize options = {}
-    self.options = Radio.config[:radio].merge options
+  def initialize
     @streaming = {}
     @connected = false
   end
@@ -65,7 +50,7 @@ class Radio
 
   def add playlist_id
     return if has? playlist_id
-    stream = Radio::Stream.new options.merge(:playlist_id => playlist_id)
+    stream = Radio::Stream.new self, playlist_id
 
     @streaming[playlist_id] = stream if !connected? || stream.connect
 
