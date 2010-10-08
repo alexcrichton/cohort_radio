@@ -17,7 +17,7 @@ class SongsController < ApplicationController
     end
 
     if params[:letter]
-      @songs = @songs.where("title LIKE ?", "#{params[:letter]}%")
+      @songs = @songs.where('title LIKE ?', "#{params[:letter]}%")
     end
 
     @songs = @songs.includes(:album, :artist)
