@@ -1,4 +1,4 @@
-class Radio
+module Radio
 
   class Stream < Shout
 
