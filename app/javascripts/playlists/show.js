@@ -51,4 +51,12 @@ $(function() {
       $('#songs').load(data.url + ' #songs');
     }
   });
+
+  $.pipe.bind('playlist.queue_removed', function(data) {
+    if (data.playlist_id == playlist_id) {
+      $('.song[data-queue-id=' + data.queue_id + ']').slideUp(function() {
+        $(this).remove();
+      });
+    }
+  });
 });

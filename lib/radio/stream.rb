@@ -127,6 +127,9 @@ module Radio
 
       queue_item.song.increment! :play_count
       queue_item.destroy
+
+      push :type => 'playlist.queue_removed',
+        :playlist_id => @playlist.to_param, :queue_id => queue_item.id
     end
 
     def stream_song path
