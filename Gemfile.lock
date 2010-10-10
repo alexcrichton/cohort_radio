@@ -1,10 +1,11 @@
 GIT
   remote: git://github.com/alexcrichton/fargo.git
-  revision: 4174cf3e55ee3e91170664d1900e5b98ef2671b8
+  revision: 2377f9de90fd51aa7f9e709021c21be57a48d5b0
   specs:
     fargo (0.3.0)
       activesupport (>= 3.0.0)
       bzip2-ruby
+      em-websocket
       eventmachine
       libxml-ruby
 
