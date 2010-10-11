@@ -10,7 +10,7 @@ rails_root = '/srv/http/cohort_radio/current'
     w.interval = 30.seconds # default
 
     w.start = "script/#{daemon} -d"
-    w.dir   = Pathname.new(rails_root).realpath.to_s
+    w.dir   = rails_root
     w.env   = { 'RAILS_ENV' => 'production' }
     w.log   = File.expand_path(rails_root + "/../shared/log/#{daemon}.log")
 
