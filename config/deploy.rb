@@ -32,6 +32,7 @@ namespace :db do
       "ln -nsf #{shared_path}/config/database.yml #{release_path}/config/ && " +
       "ln -nsf #{shared_path}/config/mail_auth.rb #{release_path}/config/initializers && " +
       "ln -nsf #{shared_path}/config/radio.rb #{release_path}/config/initializers && " +
+      "ln -nsf #{shared_path}/config/fargo.rb #{release_path}/config/initializers && " +
       "ln -nsf #{shared_path}/fargo #{latest_release}/tmp/fargo"
   end
 
