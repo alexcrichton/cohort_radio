@@ -39,7 +39,13 @@ module Fargo
       @@enqueue_lock.synchronize {
         Fargo.logger.info "Queueing create song job for: #{file.inspect}"
         ActiveRecord::Base.verify_active_connections!
-        CreateSongJob.new(file).perform rescue nil
+
+        begin
+          CreateSongJob.new(file).perform
+        rescue ActiveRecord::RecordInvalid => e
+          Fargo.logger.warn "Conversion of #{file.inspect} failed!"
+          Fargo.logger.warn e.message
+        end
       }
     end
 
