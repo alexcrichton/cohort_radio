@@ -1,10 +1,11 @@
 GIT
   remote: git://github.com/alexcrichton/fargo.git
-  revision: 2377f9de90fd51aa7f9e709021c21be57a48d5b0
+  revision: 09b362def4036bcd928dcc0227f68b49d474accb
   specs:
     fargo (0.3.0)
       activesupport (>= 3.0.0)
       bzip2-ruby
+      em-http-request
       em-websocket
       eventmachine
       libxml-ruby
@@ -82,6 +83,9 @@ GEM
     devise (1.1.3)
       bcrypt-ruby (~> 2.1.2)
       warden (~> 0.10.7)
+    em-http-request (0.2.14)
+      addressable (>= 2.0.0)
+      eventmachine (>= 0.12.9)
     em-websocket (0.1.4)
       addressable (>= 2.1.1)
       eventmachine (>= 0.12.9)
