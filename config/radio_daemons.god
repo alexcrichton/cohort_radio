@@ -1,16 +1,21 @@
-rails_root = "/srv/http/cohort_radio/current"
+require 'pathname'
+
+rails_root = '/srv/http/cohort_radio/current'
 
 %w{radio fargo pusher}.each do |daemon|
   God.watch do |w|
 
-    w.name  = "cradio-#{daemon}"
-    w.group = "cradio"
+    w.name     = "cradio-#{daemon}"
+    w.group    = 'cradio'
     w.interval = 30.seconds # default
 
-    w.start = "cd #{rails_root}; RAILS_ENV=production script/#{daemon} -d"
+    w.start = "script/#{daemon} -d"
+    w.dir   = Pathname.new(rails_root).realpath.to_s
+    w.env   = { 'RAILS_ENV' => 'production' }
+    w.log   = File.expand_path(rails_root + "/../shared/log/#{daemon}.log")
 
-    w.uid = 'capistrano'
-    w.gid = 'http'
+    w.uid   = 'capistrano'
+    w.gid   = 'http'
 
     # retart if memory gets too high
     w.transition(:up, :restart) do |on|
