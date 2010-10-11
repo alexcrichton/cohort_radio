@@ -18,7 +18,7 @@ module Fargo
       client.channel.subscribe do |type, hash|
         if type == :download_finished && hash[:file] =~ /(m4a|mp3|flac)$/i
           Fargo.logger.info "Converting: #{hash.inspect}"
-          convert_song hash[:file]
+          EventMachine.defer{ convert_song hash[:file] }
         end
       end
 
