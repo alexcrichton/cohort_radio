@@ -15,6 +15,14 @@ class SongUploader < CarrierWave::Uploader::Base
   end
 
   def encode_to_mp3
+    title, artist, album = tags
+    same_titles = Song.where('title LIKE ?', title)
+    same_artist = same_titles.inject(false){ |prev, song|
+      prev || song.artist.name.downcase == artist.downcase
+    }
+
+    raise CarrierWave::IntegrityError.new("Duplicate song!") if same_artist
+
     if current_path =~ /flac$/
       tags = FlacInfo.new(current_path).tags
       convert_extension 'flac', tags['TITLE'], tags['ARTIST'], tags['ALBUM'],
@@ -53,6 +61,22 @@ class SongUploader < CarrierWave::Uploader::Base
   end
 
   protected
+
+  def tags
+    if current_path =~ /flac$/
+      tags = FlacInfo.new(current_path).tags
+      [tags['TITLE'], tags['ARTIST'], tags['ALBUM']]
+    elsif current_path =~ /mp3$/
+      info = Mp3Info.new(current_path)
+      [info.tag['artist'], info.tag['album'], info.tag['title']]
+    elsif current_path =~ /m4a$/
+      tags = MP4Info.open(current_path)
+      [tags.NAM, tags.ART, tags.ALB]
+    else
+      raise CarrierWave::IntegrityError,
+          "Doesn't support #{File.basename(current_path)}"
+    end
+  end
 
   def lame_opts
     '--quiet -h -b 320 --resample 48000'
