@@ -16,7 +16,7 @@ module Fargo
       # If a download just finished, we're going to want to convert the
       # file to put it in our database.
       client.channel.subscribe do |type, hash|
-        if type == :download_finished
+        if type == :download_finished && hash[:file] =~ /(m4a|mp3|flac)$/i
           Fargo.logger.info "Converting: #{hash.inspect}"
           convert_song hash[:file]
         end
@@ -39,7 +39,7 @@ module Fargo
       @@enqueue_lock.synchronize {
         Fargo.logger.info "Queueing create song job for: #{file.inspect}"
         ActiveRecord::Base.verify_active_connections!
-        CreateSongJob.new(file).perform
+        CreateSongJob.new(file).perform rescue nil
       }
     end
 
