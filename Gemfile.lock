@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/alexcrichton/fargo.git
-  revision: 09b362def4036bcd928dcc0227f68b49d474accb
+  revision: 15a2456755c8036096d6626fe9e1e9135f6bffce
   specs:
     fargo (0.3.0)
       activesupport (>= 3.0.0)
@@ -12,7 +12,7 @@ GIT
 
 GIT
   remote: git://github.com/alexcrichton/paste.git
-  revision: 229001b25140ae516aa0587366b94d0a1962a01d
+  revision: 444e3dae3c9307f489edc76f5a2f3df4c1a5a1f5
   specs:
     paste (0.3.0)
       activesupport (>= 3.0.0.beta4)
