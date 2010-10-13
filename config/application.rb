@@ -51,6 +51,9 @@ module CohortRadio
       require 'pusher'
       require 'fargo/proxy_helper'
       require 'fargo/daemon'
+
+      require 'drb'
+      DRb.start_service
     end
   end
 end
