@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/alexcrichton/fargo.git
-  revision: 1115a62c0b450027dd25c98bd55bd64dbf3bcd8e
+  revision: abfbfe33577872d3fbb2f8e2ed806451fc4e6615
   specs:
     fargo (0.4.0)
       activesupport (>= 3.0.0)
@@ -63,11 +63,11 @@ GEM
       activesupport (= 3.0.3)
     activesupport (3.0.3)
     addressable (2.2.2)
-    arel (2.0.3)
+    arel (2.0.4)
     bcrypt-ruby (2.1.2)
     bluecloth (2.0.9)
     builder (2.1.2)
-    bzip2-ruby (0.2.6)
+    bzip2-ruby (0.2.7)
     cancan (1.4.1)
     capistrano (2.5.19)
       highline
@@ -96,9 +96,9 @@ GEM
     highline (1.6.1)
     hpricot (0.8.3)
     i18n (0.4.2)
-    mail (2.2.9.1)
+    mail (2.2.10)
       activesupport (>= 2.3.6)
-      i18n (>= 0.4.1)
+      i18n (~> 0.4.1)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.16)
@@ -133,7 +133,7 @@ GEM
     rake (0.8.7)
     ruby-mp3info (0.6.13)
     ruby-shout (2.2.0)
-    rvm (1.0.22)
+    rvm (1.1.0)
     scrobbler (0.2.3)
       activesupport (>= 1.4.2)
       hpricot (>= 0.4.86)
