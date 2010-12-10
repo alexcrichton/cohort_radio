@@ -1,5 +1,3 @@
-<% javascript 'pagination' %>
-
 <%= content_tag :h2, @artist.name if @artist %>
 
 <%= render 'shared/alphabet', :url => url_for([@artist, :songs]) %>
