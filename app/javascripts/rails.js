@@ -17,9 +17,7 @@ $.extend($, {
 $(function() {
   $('a[data-remote]').live('ajax:loading', function () {
     $($['small-ajax']).insertAfter(this);
-  });
-
-  $('a[data-remote]').live('ajax:success ajax:complete ajax:failure', function () {
+  }).live('ajax:complete', function () {
     $(this).next('img.loading').remove();
   });
 });
