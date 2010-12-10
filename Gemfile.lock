@@ -20,7 +20,7 @@ GIT
       sprockets
 
 GIT
-  remote: git://github.com/danielwestendorf/ruby-mp4info
+  remote: git://github.com/danielwestendorf/ruby-mp4info.git
   revision: 7e8131719eca31ab7949c34ad59d5bdc26a0e384
   ref: 7e8131719e
   specs:
