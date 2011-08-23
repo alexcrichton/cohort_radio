@@ -6,7 +6,7 @@ class ConvertSong
     raise "File didn't download!" unless File.exists?(file)
     io = File.open(file)
     begin
-      Song.create! :audio => File.open(file)
+      Song.create! :audio => io
     ensure
       io.close
     end
