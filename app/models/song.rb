@@ -3,7 +3,8 @@ class Song
 
   field :title
   field :custom_set, :type => Boolean
-  mount_uploader :audio, SongUploader
+  mount_uploader :audio, SongUploader, :validate_integrity => true,
+                                       :validate_processing => true
 
   # Submitted from the form, updated later
   attr_accessor :album_name, :artist_name
@@ -24,6 +25,7 @@ class Song
   validate :unique_title
   after_save :destroy_stale_artist_and_album
   after_save :write_metadata
+  after_create { |r| r.audio.process!; r.audio.store! }
   after_destroy :destroy_invalid_artist_and_album
 
   scope :search, Proc.new{ |query|
@@ -90,8 +92,6 @@ class Song
     artist.destroy if artist.songs.size == 0
   end
 
-  protected
-
   def unique_title
     return unless artist.present? && title.present?
 
@@ -100,7 +100,7 @@ class Song
     }
 
     if duplicate
-      errors[:audio] << "already exists in database."
+      errors[:audio] << "already exists in database"
     end
   end
 

@@ -3,6 +3,10 @@ require 'spec_helper'
 describe Song do
   let(:sample) { File.expand_path('../../fixtures/sample.mp3', __FILE__) }
 
+  before :each do
+    subject.audio.stub(:encode_to_mp3)
+  end
+
   it "is just invalid if no file is provided" do
     subject.save
     subject.should_not be_valid
@@ -21,9 +25,24 @@ describe Song do
   end
 
   it "doesn't allow duplicate songs" do
-    duplicate = Song.create! :audio => File.open(sample)
+    duplicate = Song.new :audio => File.open(sample)
+    duplicate.audio.stub(:encode_to_mp3)
+    duplicate.save!
+
     subject.audio = File.open(sample)
     subject.should have(1).errors_on(:audio)
+  end
+
+  it "doesn't process the audio file during validation" do
+    subject.audio.should_not_receive(:encode_to_mp3)
+    subject.audio = File.open(sample)
+    subject.valid?
+  end
+
+  it "processes the audio file upon saving" do
+    subject.audio.should_receive(:encode_to_mp3)
+    subject.audio = File.open(sample)
+    subject.save
   end
 
 end
