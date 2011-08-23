@@ -1,4 +1,11 @@
-class Album < ActiveRecord::Base
+class Album
+  include Mongoid::Document
+
+  field :name
+  field :slug
+  field :cover_url
+  index :slug
+
   belongs_to :artist
   has_many :songs
 

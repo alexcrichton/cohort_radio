@@ -1,6 +1,4 @@
-<% javascript 'rails', 'songs/show' %>
-
-<% playlists = Playlist.scoped.includes(:pool) %>
+<% playlists = Playlist.scoped %>
 
 <div class="song remove inline-edit"
      id="s<%= song.id %>"

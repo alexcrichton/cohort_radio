@@ -5,7 +5,7 @@ class PlaylistsController < ApplicationController
   respond_to :html
 
   def index
-    @playlists = @playlists.paginate(:page => params[:page])
+    @playlists = @playlists.page(params[:page]).per(10)
 
     respond_with @playlists
   end

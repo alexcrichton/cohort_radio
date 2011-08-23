@@ -1,23 +1,27 @@
-class Song < ActiveRecord::Base
+class Song
+  include Mongoid::Document
 
+  field :title
+  field :custom_set, :type => Boolean
+  mount_uploader :audio, SongUploader
+
+  # Submitted from the form, updated later
   attr_accessor :album_name, :artist_name
 
   belongs_to :artist
   belongs_to :album
-  has_many :queue_items, :dependent => :destroy
-  has_many :playlists, :through => :queue_items
-  has_many :ratings, :dependent => :destroy, :class_name => 'Song::Rating'
-  has_and_belongs_to_many :pools
+  embeds_many :ratings, :class_name => 'Song::Rating'
 
-  validates_presence_of :title, :artist
+  validates_presence_of :title, :artist, :album
   validates_uniqueness_of :title, :scope => :artist_id,
       :case_sensitive => false, :if => :title_changed?
+  validate :unique_title
 
-  mount_uploader :audio, SongUploader, :mount_on => :audio_file_name
   validates_presence_of :audio
   validates_integrity_of :audio
 
   before_validation :ensure_artist_and_album
+  validate :unique_title
   after_save :destroy_stale_artist_and_album
   after_save :write_metadata
   after_destroy :destroy_invalid_artist_and_album
@@ -31,50 +35,40 @@ class Song < ActiveRecord::Base
     end
   }
 
-  def update_rating
-    if ratings.size == 0
-      self[:rating] = 0
-    else
-      self[:rating] = ratings.sum(:score).to_f / ratings.size
-    end
-
-    save
-    self[:rating]
+  def rating
+    ratings.size == 0 ? 0 : ratings.map(&:score).sum.to_f / ratings.size
   end
 
+  protected
+
   def ensure_artist_and_album
+    if !audio.present?
+      errors[:audio] << "is required."
+      return
+    end
     file = audio.path
-    return if file.nil? # We have a processing error or something like that
 
     artist, album = nil, nil
 
-    tag = Mp3Info.new(file).tag
+    @artist_name = self.artist.try :name if @artist_name.blank?
+    @artist_name ||= audio.artist        if !custom_set
+    @artist_name = 'unknown'             if @artist_name.blank?
+    artist = Artist.where(:name => @artist_name).first ||
+             Artist.create!(:name => artist_name)
 
-    self.artist_name = self.artist.try :name if self.artist_name.blank?
-    self.artist_name ||= tag['artist']       if !custom_set && artist_name.nil?
-    self.artist_name = 'unknown'             if self.artist_name.blank?
-
-    unless artist_name.blank?
-      artist = Artist.find_by_name artist_name
-      artist = Artist.new(:name => artist_name) if artist.nil?
-    end
-
-    self.album_name = self.album.try :name if self.album_name.blank?
-    self.album_name ||= tag['album']       if !custom_set && album_name.nil?
-    self.album_name = 'unknown'            if self.album_name.blank?
-
-    unless album_name.blank?
-      album = artist.albums.find_by_name album_name
-      album = Album.new(:name => album_name, :artist => artist) if album.nil?
-    end
+    @album_name = self.album.try :name if @album_name.blank?
+    @album_name ||= audio.album        if !custom_set
+    @album_name = 'unknown'            if @album_name.blank?
+    album = artist.albums.where(:name => album_name).first ||
+            Album.create!(:name => album_name, :artist => artist)
 
     @old_artist = self.artist
-    self.artist = artist unless artist.nil?
+    self.artist = artist
 
     @old_album = self.album
-    self.album = album  unless album.nil?
+    self.album = album
 
-    self.title = tag['title'] unless custom_set
+    self.title = audio.title unless custom_set
     self.title ||= File.basename(file)
   end
 
@@ -85,8 +79,8 @@ class Song < ActiveRecord::Base
 
   def write_metadata
     info = Mp3Info.new audio.path
-    info.tag['artist'] = artist.name unless artist.nil? || artist.name == 'unknown'
-    info.tag['album']  = album.name  unless album.nil?  || album.name  == 'unknown'
+    info.tag['artist'] = artist.name unless artist.name == 'unknown'
+    info.tag['album']  = album.name  unless album.name  == 'unknown'
     info.tag['title']  = title
     info.close
   end
@@ -94,6 +88,18 @@ class Song < ActiveRecord::Base
   def destroy_invalid_artist_and_album
     album.destroy  if album.songs.size  == 0
     artist.destroy if artist.songs.size == 0
+  end
+
+  protected
+
+  def unique_title
+    duplicate = Song.where(:title => /#{title}/i).any?{ |s|
+      s.artist.name.downcase == artist.name.downcase
+    }
+
+    if duplicate
+      errors[:audio] << "already exists in database."
+    end
   end
 
 end

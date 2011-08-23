@@ -1,5 +1,3 @@
-//= require <jquery>
-
 $.pipe = $('<div/>').hide();
 
 $(function() {

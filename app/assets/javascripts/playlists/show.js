@@ -1,5 +1,5 @@
-//= require <jquery/ui>
-//= require <pipe>
+//= require pipe
+//= require songs/show
 
 $(function() {
   var query = $("#song-search #q");

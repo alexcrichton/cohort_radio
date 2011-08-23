@@ -1,15 +1,18 @@
-class User < ActiveRecord::Base
-  devise :database_authenticatable, :confirmable, :recoverable, :rememberable,
-    :trackable, :validatable, :registerable
+class User
+  include Mongoid::Document
+  devise :rememberable
 
-  has_many :queue_items, :dependent => :destroy
-  has_many :memberships, :dependent => :destroy
-  has_many :playlists, :through => :memberships
+  field :token
+  index :token
 
-  validates_presence_of :name
-  validates_uniqueness_of :name, :case_sensitive => false
+  # has_many :queue_items, :dependent => :destroy
+  # has_many :memberships, :dependent => :destroy
+  # has_many :playlists, :through => :memberships
 
-  attr_accessible :name, :email, :password, :password_confirmation
+  # validates_presence_of :name
+  # validates_uniqueness_of :name, :case_sensitive => false
+  #
+  # attr_accessible :name, :email, :password, :password_confirmation
 
   scope :admins, where(:admin => true)
   scope :search, Proc.new{ |query|

@@ -1,4 +1,4 @@
-@import "compass/css3";
+//= require menus
 
 body {
   background-color: #4B7399;
@@ -106,8 +106,6 @@ a {
   height: 190px;
   border: 3px solid #ccc;
   position: relative;
-
-  @include border-radius(20px);
 }
 
 .song div, .comment div {
@@ -153,8 +151,6 @@ a {
     display: block;
     font-size: 10px;
     border: 1px solid black;
-
-    @include border-radius(10px);
   }
 
   ul.user {
@@ -193,8 +189,6 @@ a {
   border: 1px solid black;
   border-bottom: 0px;
   z-index: 10;
-
-  @include transition(opacity, 0.2s, linear);
 }
 
 .song .add:hover ul {
@@ -241,22 +235,14 @@ input[type=submit] {
   padding: 0 8px;
   border: 1px solid #999;
 
-  @include border-radius(2px);
-  @include linear-gradient(color-stops(#fff, #ddd));
-
   font-size: 150%;
   height: 30px;
   margin: 0.5em;
 }
 
-input[type=submit]:active {
-  @include linear-gradient(color-stops(#ccc, #ddd));
-}
-
 #search fieldset {
   overflow: auto;
   border: 5px solid #ccc;
-  @include border-radius(20px);
 
   legend {
     padding: 5px;
@@ -288,18 +274,11 @@ input[type=submit]:active {
   float: left;
 }
 
-#container {
-  @include border-radius(20px);
-}
-
 footer {
   text-align: center;
   height: 20px;
   padding: 10px;
   clear: both;
-
-  @include linear-gradient(color-stops(#fff, #ccc));
-  @include border-bottom-radius(20px);
 }
 
 section#content {
@@ -308,9 +287,6 @@ section#content {
 }
 
 header {
-  @include linear-gradient(color-stops(#ccc, #ccc 70%, #fff));
-  @include border-top-radius(20px);
-
   overflow: auto;
   height: 40px;
   padding: 0 10px 0 0;
@@ -375,8 +351,6 @@ ul.block > li .content {
 
 ul.block > li {
   position: relative;
-
-  @include transition(background, 0.1s, linear);
 }
 
 ul.block > li .links {

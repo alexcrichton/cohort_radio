@@ -1,4 +1,5 @@
-//= require <jquery/rails>
+//= require jquery-ext
+//= require jquery_ujs
 
 $.extend($, {
   railsPut: function(config) {

@@ -1,6 +1,4 @@
-//= require <jquery>
-//= require <rails>
-//= require <pipe>
+//= require pipe
 
 $(function() {
   $('.song .ratings .user li').live('hover', function() {

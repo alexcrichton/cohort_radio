@@ -1,8 +1,5 @@
-config/database.yml
-config/initializers/radio.rb
 public/files/*
 private/*
-
 .bundle
 coverage
 vendor/cache
@@ -11,6 +8,3 @@ log/*.log
 tmp/**/*
 public/system
 public/uploads
-public/stylesheets/*
-public/javascripts/*
-config/database.yml

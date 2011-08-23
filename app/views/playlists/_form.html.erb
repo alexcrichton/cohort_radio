@@ -1,32 +1,17 @@
-<% javascript 'playlists/form', 'rails' %>
+<% provide :javascripts do %>
+  <%= javascript_include_tag 'playlists/form' %>
+<% end %>
 
 <%= form_for @playlist do |f| %>
 
-  <%= render 'shared/error_messages', :target => f.object %>
+  <%= render 'error_messages', :target => f.object %>
 
   <dl>
     <dt><%= f.label :name %></dt>
     <dd><%= f.text_field :name %></dd>
-    <dt><%= f.label :private %></dt>
-    <dd><%= f.check_box :private %></dd>
     <dt><%= f.label :description %></dt>
     <dd><%= f.text_area :description %></dd>
   </dl>
 
   <p><%= f.submit :disable_with => 'Updating...' %></p>
-<% end %>
-
-<% unless @playlist.new_record? %>
-  <h3>Users Allowed to this Playlist</h3>
-  <div id='memberships'>
-    <%= render 'members' %>
-
-    <%= form_for [@playlist, @playlist.memberships.build], :remote => true do |f| %>
-      <div>
-        <%= f.hidden_field :user_id %>
-        <%= text_field_tag :q %>
-        <%= f.submit 'Add', :disable_with => 'Adding...' %>
-      </div>
-    <% end %>
-  </div>
 <% end %>

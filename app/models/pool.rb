@@ -1,7 +1,6 @@
-class Pool < ActiveRecord::Base
-  
-  belongs_to :playlist
-  
-  has_and_belongs_to_many :songs
-  
+class Pool
+  include Mongoid::Document
+  field :song_ids, :type => Array
+
+  embedded_in :playlist
 end

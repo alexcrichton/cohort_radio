@@ -1,11 +1,13 @@
-<% javascript 'playlists/show', 'rails' %>
+<% provide :javascripts do %>
+  <%= javascript_include_tag 'playlists/show' %>
+<% end %>
 
 <div class="search">
   <div>
     <%= link_to '[Edit playlist]', [:edit, @playlist] if can? :update, @playlist %>
     <%= link_to '[Pool]', [@playlist, :pool] %>
 
-    <% if can?(:add, @playlist) && radio_connected? %>
+    <% if can?(:add, @playlist) && false && radio_connected? %>
       <% if radio.playing? @playlist.id %>
         <%= link_to '[Stop streaming]', {:controller => 'radio/commands',
                 :action => 'stop', :playlist_id => @playlist.slug},
@@ -33,7 +35,7 @@
 </div>
 
 <div class='status' data-id="<%= @playlist.to_param %>">
-  <% if radio_connected? && radio.playing?(@playlist.id) %>
+  <% if false && radio_connected? && radio.playing?(@playlist.id) %>
     <p>
       Stream url: <%= raw auto_link(@playlist.stream_url) %><br/>
       Current Song:

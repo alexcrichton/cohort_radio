@@ -1,5 +1,3 @@
-//= require <jquery/ui>
-
 $(function() {
   $("#memberships form #q").autocomplete({
     minLength: 2,

@@ -24,6 +24,17 @@ class ApplicationController < ActionController::Base
     redirect_to playlists_path
   end
 
+  def current_user
+    return @current_user if defined?(@current_user)
+    token = session[:token] || cookies[:token]
+    if token.nil?
+      token = cookies.permanent.signed[:token] = session[:token] =
+        SecureRandom.hex(16)
+    end
+    @current_user = User.where(:token => token).first ||
+      User.create!(:token => token)
+  end
+
   def current_ability
     @current_ability ||= Ability.new current_user, @parent
   end

@@ -12,7 +12,8 @@ Devise.setup do |config|
   # Load and configure the ORM. Supports :active_record (default) and
   # :mongoid (bson_ext recommended) by default. Other ORMs may be
   # available as additional gems.
-  require 'devise/orm/active_record'
+  # require 'devise/orm/active_record'
+  require 'devise/orm/mongoid'
 
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating an user. By default is
@@ -43,10 +44,10 @@ Devise.setup do |config|
   # from others authentication tools as :clearance_sha1, :authlogic_sha512 (then
   # you should set stretches above to 20 for default behavior) and :restful_authentication_sha1
   # (then you should set stretches to 10, and copy REST_AUTH_SITE_KEY to pepper)
-  config.encryptor = :authlogic_sha512
+  # config.encryptor = :authlogic_sha512
 
   # Setup a pepper to generate the encrypted password.
-  config.pepper = "0bcfa48c367b35c789cf75c1241f6515fad713f1507d1f6c46c54ee5d339b699ff1bcbd421f183b2b2e1f05b14a81f31efedacf03df12705c73ad99f789ece72"
+  config.pepper = ENV['PEPPER'] || '0bcfa48c367b35c789cf75c1241f6515fad713f1507d1f6c46c54ee5d339b699ff1bcbd421f183b2b2e1f05b14a81f31efedacf03df12705c73ad99f789ece72'
 
   # ==> Configuration for :confirmable
   # The time you want to give your user to confirm his account. During this time
@@ -69,7 +70,7 @@ Devise.setup do |config|
 
   # ==> Configuration for :validatable
   # Range for password length
-  config.password_length = 4..100
+  # config.password_length = 4..100
 
   # Regex to use to validate the email address
   # config.email_regexp = /^([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})$/i

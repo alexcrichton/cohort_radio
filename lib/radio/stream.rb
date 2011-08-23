@@ -1,12 +1,10 @@
-module Radio
+class Radio
 
   class Stream < Shout
 
     include Pusher
 
     BLOCKSIZE = (1 << 16).freeze
-
-    @@tag_recoder = Iconv.new('utf-8', 'utf-8')
 
     attr_accessor :radio, :playlist_id
     attr_reader :current_song
@@ -87,7 +85,7 @@ module Radio
       song       = queue_item.nil? ? random_song(playlist) : queue_item.song
 
       m = ShoutMetadata.new
-      m.add 'filename', @@tag_recoder.iconv(song.audio.path)
+      m.add 'filename', song.audio.path
 
       string = song.title
       string << ' ('
@@ -98,9 +96,9 @@ module Radio
       end
       string << ')'
 
-      m.add 'song',   @@tag_recoder.iconv(string)
-      m.add 'artist', @@tag_recoder.iconv(song.artist.name) if song.artist
-      m.add 'album',  @@tag_recoder.iconv(song.album.name)  if song.album
+      m.add 'song',   string
+      m.add 'artist', song.artist.name if song.artist
+      m.add 'album',  song.album.name  if song.album
       m.add 'bitrate', Mp3Info.new(song.audio.path).bitrate.to_s
       m.add 'genre', 'awesome'
 

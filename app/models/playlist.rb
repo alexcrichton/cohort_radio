@@ -1,13 +1,13 @@
-class Playlist < ActiveRecord::Base
-  has_many :queue_items, :order => 'priority ASC, created_at ASC', :dependent => :destroy
-  has_many :songs, :through => :queue_items
+class Playlist
+  include Mongoid::Document
 
-  has_many :memberships, :dependent => :destroy
-  has_many :users, :through => :memberships
+  field :name
+  field :description
+  field :slug
+  index :slug
 
-  belongs_to :user
-
-  has_one :pool, :dependent => :destroy
+  embeds_many :queue_items
+  embeds_one :pool
 
   after_create :create_pool
   before_validation :set_slug
@@ -15,8 +15,11 @@ class Playlist < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :if => :name_changed?, :case_sensitive => false
 
-  def to_param
-    self[:slug]
+  alias to_param slug
+
+  def self.find_by_slug! slug
+    where(:slug => slug).first or
+      raise Mongoid::Errors::DocumentNotFound.new(self, :slug => slug)
   end
 
   def ice_mount_point

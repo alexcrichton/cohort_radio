@@ -5,10 +5,6 @@ class UsersController < ApplicationController
   respond_to :html, :except => :search
   respond_to :json, :only => :search
 
-  def home
-    redirect_to current_user ? playlists_path : new_user_session_path
-  end
-
   def search
     @users = User.search(params[:q]).limit(params[:limit])
 

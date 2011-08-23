@@ -3,8 +3,10 @@
   <head>
     <%= csrf_meta_tag %>
     <title><%= content_for?(:title) ? yield(:title) : 'Cohort Radio' %></title>
-    <%= stylesheet_tags 'application', 'menus' %>
-    <%= yield :head %>
+    <%= stylesheet_link_tag 'application' %>
+    <%= yield :stylesheets %>
+    <%= javascript_include_tag 'rails' %>
+    <%= yield :javascripts %>
   </head>
   <body>
     <% if current_user && !Rails.env.development? %>
@@ -12,19 +14,12 @@
         <%= image_tag 'banner.png' %>
       </div>
     <% end %>
+
     <div id="container">
       <header>
         <nav>
           <%= render 'layouts/topnav' %>
         </nav>
-        <div style='float:right'>
-          <% if current_user %>
-            Logged in as: <%= current_user.name %> |
-            <%= link_to 'Logout', destroy_user_session_path %>
-          <% else %>
-            <%= link_to 'Login', new_user_session_path %>
-          <% end %>
-        </div>
       </header>
 
       <% flash.each do |name, msg| %>
@@ -45,10 +40,5 @@
       </footer>
 
     </div>
-    <%= javascript_tags 'jquery' %>
-    <%= javascript_tag do %>
-      $['included_javascripts'] = <%= raw all_javascripts_included.to_json %>;
-      $['included_stylesheets'] = <%= raw all_stylesheets_included.to_json %>;
-    <% end %>
   </body>
 </html>

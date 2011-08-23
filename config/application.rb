@@ -1,6 +1,9 @@
 require File.expand_path('../boot', __FILE__)
 
-require 'rails/all'
+# Explicitly don't load ActiveRecord
+require 'action_controller/railtie'
+require 'action_mailer/railtie'
+require 'active_resource/railtie'
 
 # Auto-require default libraries and those for the current Rails environment.
 Bundler.require :default, Rails.env
@@ -12,7 +15,6 @@ module CohortRadio
     # -- all .rb files in that directory are automatically loaded.
 
     # Add additional load paths for your own custom dirs
-    config.autoload_paths += %W( #{config.root}/lib )
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named
@@ -30,12 +32,14 @@ module CohortRadio
     # config.i18n.default_locale = :de
 
     # Configure generators values. Many other options are available, be sure to check the documentation.
-    config.generators do |g|
-      g.integration_tool :rspec
-      g.test_framework   :rspec
-      # g.orm             :active_record
-      # g.template_engine :erb
-    end
+    # config.generators do |g|
+    #   g.integration_tool :rspec
+    #   g.test_framework   :rspec
+    #   # g.orm             :active_record
+    #   # g.template_engine :erb
+    # end
+
+    config.assets.enabled = true
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = 'utf-8'
@@ -44,16 +48,14 @@ module CohortRadio
     config.filter_parameters += [:password, :password_confirmation]
 
     config.to_prepare do
-      $LOAD_PATH << File.expand_path('../../lib', __FILE__)
+      # require 'radio'
+      # require 'radio/proxy_helper'
+      # require 'pusher'
+      # require 'fargo/proxy_helper'
+      # require 'fargo/daemon'
 
-      require 'radio'
-      require 'radio/proxy_helper'
-      require 'pusher'
-      require 'fargo/proxy_helper'
-      require 'fargo/daemon'
-
-      require 'drb'
-      DRb.start_service
+      # require 'drb'
+      # DRb.start_service
     end
   end
 end

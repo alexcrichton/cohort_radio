@@ -1,5 +1,9 @@
+require 'resque/server'
+require 'resque/status_server'
+
 CohortRadio::Application.routes.draw do
   devise_for :users
+  mount Resque::Server => 'resque'
 
   resources :albums
 
@@ -51,7 +55,7 @@ CohortRadio::Application.routes.draw do
 
   get 'users/search'
 
-  root :to => 'users#home'
+  root :to => 'playlists#index'
 
   resources :playlists, :path => '', :except => [:index, :create, :new] do
     resource :pool, :only => [:show] do

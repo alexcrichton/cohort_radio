@@ -36,7 +36,7 @@
     <li>
       <span>Fargo</span>
       <ul>
-        <% if fargo_running? %>
+        <% if false && fargo_running? %>
           <% if can? :manage, Fargo %>
             <% if fargo_connected? %>
               <li><%= link_to 'Disconnect', {:controller => 'fargo/commands', :action => 'disconnect'}, :confirm => "Are you sure?" %></li>
@@ -59,7 +59,7 @@
     <li>
       <span>Radio</span>
       <ul>
-        <% if radio_running? %>
+        <% if false && radio_running? %>
           <% if radio_connected? %>
             <li><%= link_to 'Disconnect', {:controller => 'radio/commands', :action => 'disconnect'}, :confirm => "Are you sure?" %></li>
             <li><%= link_to "Status", :controller => 'radio/status' %></li>

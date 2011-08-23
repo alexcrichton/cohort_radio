@@ -1,5 +1,3 @@
-@import "compass/css3";
-
 nav {
   li {
     text-align: center;
@@ -19,11 +17,6 @@ nav {
   }
 
   a:hover, span:hover {
-    @include linear-gradient(color-stops(#fff, #b3b3b3), top left);
-  }
-
-  & > ul li:first-child a, & > ul li:first-child span {
-    @include border-top-left-radius(20px);
   }
 
   nav li.selected > a, nav li.selected > span {
@@ -63,8 +56,6 @@ nav {
     left: 0%;
     top: 100%;
     left: -999px;
-
-    @include transition(opacity, 0.2s, linear);
   }
 
 }
