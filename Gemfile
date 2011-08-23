@@ -49,8 +49,7 @@ group :worker, :test do
   gem 'mp4info', :git => 'git://github.com/danielwestendorf/ruby-mp4info.git',
     :ref => '7e8131719e'
 
-  gem 'scrobbler'   # Album art for songs
-
   gem 'fargo', :git => 'git://github.com/alexcrichton/fargo' # DC Client
   gem 'ruby-shout', :require => 'shout'
+  gem 'libxml-ruby' # parsing output of last.fm
 end
