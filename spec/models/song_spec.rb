@@ -5,6 +5,7 @@ describe Song do
 
   before :each do
     subject.audio.stub(:encode_to_mp3)
+    subject.audio.stub(:store!)
   end
 
   it "is just invalid if no file is provided" do
@@ -27,6 +28,7 @@ describe Song do
   it "doesn't allow duplicate songs" do
     duplicate = Song.new :audio => File.open(sample)
     duplicate.audio.stub(:encode_to_mp3)
+    duplicate.audio.stub(:store!)
     duplicate.save!
 
     subject.audio = File.open(sample)

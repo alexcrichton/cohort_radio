@@ -10,12 +10,22 @@ Spork.prefork do
   # in spec/support/ and its subdirectories.
   Dir[Rails.root.join("spec/support/**/*.rb")].each{ |f| require f }
 
+  CarrierWave.configure do |config|
+    config.cache_dir = 'tmp/carrierwave/cache'
+    config.store_dir = 'tmp/carrierwave/store'
+  end
+
   RSpec.configure do |config|
     config.mock_with :rspec
 
     config.before(:suite) do
       DatabaseCleaner.strategy = :truncation
       DatabaseCleaner.orm = "mongoid"
+    end
+
+    config.after(:suite) do
+      # Remove all cached files created at any point
+      CarrierWave::Uploader::Base.clean_cached_files! 0
     end
 
     config.before(:each) do
