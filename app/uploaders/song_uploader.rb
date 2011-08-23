@@ -19,6 +19,12 @@ class SongUploader < CarrierWave::Uploader::Base
     %w(mp3 flac m4a)
   end
 
+  def store_dir
+    # Take the hash of the ID so we get some more entropy
+    digest = Digest::MD5.hexdigest model.id.to_s
+    Rails.root.join 'private', 'audio', digest[0..2], digest
+  end
+
   def process! *args
     # Only process the model if we're persisted. We don't want to do processing
     # if there's a validation error with the model. Only afterwards do we
