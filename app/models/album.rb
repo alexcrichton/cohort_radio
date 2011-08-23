@@ -6,7 +6,7 @@ class Album
   field :cover_url
   index :slug
 
-  belongs_to :artist
+  embedded_in :artist
   has_many :songs
 
   validates_presence_of :name, :artist

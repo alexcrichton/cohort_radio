@@ -6,7 +6,7 @@ class Artist
   index :slug
 
   has_many :songs
-  has_many :albums, :dependent => :destroy
+  embeds_many :albums
 
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false, :if => :name_changed?
