@@ -13,6 +13,8 @@ Spork.prefork do
   CarrierWave.configure do |config|
     config.cache_dir = 'tmp/carrierwave/cache'
     config.store_dir = 'tmp/carrierwave/store'
+    config.storage = :file
+    config.enable_processing = false
   end
 
   RSpec.configure do |config|

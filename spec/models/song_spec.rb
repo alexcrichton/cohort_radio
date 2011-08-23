@@ -3,7 +3,16 @@ require 'spec_helper'
 describe Song do
   let(:sample) { File.expand_path('../../fixtures/sample.mp3', __FILE__) }
 
+  before do
+    SongUploader.enable_processing = true
+  end
+
+  after do
+    SongUploader.enable_processing = false
+  end
+
   before :each do
+    Resque.stub(:enqueue)
     subject.audio.stub(:encode_to_mp3)
     subject.audio.stub(:store!)
   end

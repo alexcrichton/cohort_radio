@@ -23,10 +23,8 @@ class Song
 
   before_validation :ensure_artist_and_album
   validate :unique_title
-  after_save :destroy_stale_artist_and_album
   after_save :write_metadata
   after_create { |r| r.audio.process!; r.audio.store! }
-  after_destroy :destroy_invalid_artist_and_album
 
   scope :search, Proc.new{ |query|
     if query.blank?
@@ -74,22 +72,12 @@ class Song
     self.title ||= File.basename(file)
   end
 
-  def destroy_stale_artist_and_album
-    @old_artist.destroy if @old_artist && @old_artist.id != artist.id && @old_artist.songs.size == 0
-    @old_album.destroy  if @old_album  && @old_album.id  != album.id  && @old_album.songs.size  == 0
-  end
-
   def write_metadata
     info = Mp3Info.new audio.path
     info.tag['artist'] = artist.name unless artist.name == 'unknown'
     info.tag['album']  = album.name  unless album.name  == 'unknown'
     info.tag['title']  = title
     info.close
-  end
-
-  def destroy_invalid_artist_and_album
-    album.destroy  if album.songs.size  == 0
-    artist.destroy if artist.songs.size == 0
   end
 
   def unique_title
