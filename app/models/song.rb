@@ -93,6 +93,8 @@ class Song
   protected
 
   def unique_title
+    return unless artist.present? && title.present?
+
     duplicate = Song.where(:title => /#{title}/i).any?{ |s|
       s.artist.name.downcase == artist.name.downcase
     }

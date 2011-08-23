@@ -27,9 +27,7 @@ class Album
   end
 
   def get_image
-    return if artist.nil? || name.blank?
-    album = Scrobbler::Album.new(artist.name, name, :include_info => true) rescue nil
-    self[:cover_url] = album.image_large rescue nil if album
+    Resque.enqueue ScrobbleAlbum, id
   end
 
 end
