@@ -5,12 +5,10 @@ class ConvertSong
   def self.perform file
     raise "File didn't download!" unless File.exists?(file)
     io = File.open(file)
-    begin
-      Song.create! :audio => io
-    ensure
-      io.close
-    end
+    Song.create! :audio => io
     File.delete file
+  ensure
+    io.close
   end
 
 end
