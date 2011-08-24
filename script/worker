@@ -1,13 +1,49 @@
 #!/usr/bin/env ruby
 
-$LOAD_PATH << File.expand_path('../../lib', __FILE__)
+require 'bundler'
+Bundler.setup :worker
 
 require 'fargo'
+require 'pusher'
 require 'resque'
 require 'resque/status'
 require 'eventmachine'
 
+require File.expand_path('../../config/initializers/pusher', __FILE__)
+
+sids = {}
+timers = {}
+
 EM.run {
-  radio = Radio.new
-  radio.connect
+  client = Fargo::Client.new
+  client.connect
+
+  # Process incoming search requests
+  EM.add_periodic_timer(1) do
+    job = Resque.reserve(:search)
+    next if job.nil?
+
+    search, channel = job.args
+    search = Fargo::Search.new :query => search
+
+    if timers.key?(channel)
+      timers[channel].cancel # Cancel the timer, we'll re-add it
+    else
+      # If we get a matching search result, notify over pusher
+      raise 'Should not be here' if sids.key?(channel)
+      sids[channel] = client.channel.subscribe do |type, message|
+        next if type != :search_result || !search.matches?(message)
+        Pusher[channel].trigger_async('search-result', message)
+      end
+    end
+
+    # Unsubscribe after a minute
+    timers[channel] = EM::Timer.new(60) {
+      client.channel.unsubscribe sids[channel]
+      timers.delete channel
+      sids.delete channel
+    }
+
+    client.search search
+  end
 }

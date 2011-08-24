@@ -13,4 +13,5 @@ class CleanArtists
       end
     end
   end
+
 end

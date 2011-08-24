@@ -16,17 +16,13 @@ gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'kaminari'
 gem 'redcarpet'
 
-# WebSocket notifications
-gem 'pusher'
-
 # Asset Management
-gem 'coffee-script'
-gem 'jquery-rails'
-gem 'sass-rails', '~> 3.1.0.rc'
-
-# Queued processing
-gem 'resque'
-gem 'resque-status', :require => 'resque/status'
+group :assets do
+  gem 'jquery-rails'
+  gem 'coffee-rails', '~> 3.1.0.rc'
+  gem 'sass-rails', '~> 3.1.0.rc'
+  gem 'ejs'
+end
 
 group :development, :test do
   gem 'heroku'
@@ -43,13 +39,27 @@ group :production do
   gem 'uglifier'
 end
 
+group :worker, :default do
+  # WebSocket notifications
+  gem 'pusher'
+
+  # Queued processing
+  gem 'resque'
+  gem 'resque-status', :require => 'resque/status'
+end
+
 group :worker, :test do
   gem 'ruby-mp3info', :require => 'mp3info'
   gem 'flacinfo-rb', :require => 'flacinfo'
   gem 'mp4info', :git => 'git://github.com/danielwestendorf/ruby-mp4info.git',
     :ref => '7e8131719e'
 
-  gem 'fargo', :git => 'git://github.com/alexcrichton/fargo' # DC Client
+  gem 'em-http-request' # Required for asynchronous pusher
+  gem 'fargo', :path => '../ruby/fargo'
   gem 'ruby-shout', :require => 'shout'
   gem 'libxml-ruby' # parsing output of last.fm
+end
+
+group :useful do
+  gem 'guard-livereload'
 end

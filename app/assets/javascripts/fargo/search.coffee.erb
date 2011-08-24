@@ -1,0 +1,52 @@
+#= require pusher
+#= require fargo/result
+
+window.humanize_bytes = (bytes) ->
+  suffix = 'B'
+  stop = false
+  while bytes > 1024 && !stop
+    bytes /= 1024
+    switch suffix
+      when  'B' then suffix = 'KB'
+      when 'KB' then suffix = 'MB'
+      when 'MB' then suffix = 'GB'
+      when 'GB' then suffix = 'TB'
+      when 'TB' then stop = true
+
+  bytes = parseInt bytes * 100, 10
+  bytes /= 100.0
+  bytes + ' ' + suffix
+
+jQuery ->
+  window.pusher ||= new Pusher('<%= Pusher.key %>')
+  channel = window.pusher.subscribe $(this).find('#channel').val()
+
+  channel.bind 'search-result', (data) ->
+    rendered = $(JST['fargo/result'](data))
+    rendered.data('search', data)
+
+    rendered.find('.more').bind 'click', ->
+      $(this).siblings('.coalesced').slideToggle()
+      false
+    rendered.find('.download a').bind 'click', ->
+      element = $('<span>').text('Queueing...')
+      data = $(this).closest('.result').data('search')
+      $(this).replaceWith(element)
+      $.ajax
+        url: '/fargo/download'
+        type: 'POST',
+        data: data
+        success: -> element.text('Queued!').addClass('notice')
+        error: -> element.text('Error!').addClass('error')
+
+      console.log data
+      false
+
+    duplicate = $('.result[tth="' + data.tth + '"]')
+    if duplicate.length > 0
+      duplicate.children('.coalesced').append(rendered)
+      count = duplicate.children('.coalesced').children().length
+      duplicate.children('.more').text('+ (' + count + ')')
+    else
+      rendered.attr('tth', data.tth)
+      $('#search-response').append(rendered)

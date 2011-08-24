@@ -1,4 +1,9 @@
-<% javascript 'rails' %>
+<% provide :javascripts do %>
+  <%= javascript_include_tag 'fargo/search' %>
+<% end %>
+<% provide :stylesheets do %>
+  <%= stylesheet_link_tag 'fargo/search' %>
+<% end %>
 
 <h1>Searching Fargo</h1>
 
@@ -6,11 +11,10 @@
   <%= form_tag(fargo_search_path, :method => :get, :remote => true) do %>
     <p>
       <%= text_field_tag :q, params[:q], :placeholder => 'Search query' %>
+      <%= hidden_field_tag :channel, @channel %>
       <%= submit_tag 'Submit', :disable_with => 'Searching...' %>
     </p>
   <% end %>
 </div>
 
-<div id='search-response'>
-
-</div>
+<ul id='search-response'></ul>

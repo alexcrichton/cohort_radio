@@ -1,0 +1,31 @@
+#search-response, .coalesced {
+  list-style: none;
+  padding: 0;
+}
+
+.result {
+  border: 1px solid black;
+  overflow: auto;
+
+  .more {
+    display: inline-block;
+    float: right;
+    color: green;
+    font-weight: bold;
+    text-decoration: none;
+
+    &:hover { color: lighten(green, 10%); }
+  }
+
+  .coalesced {
+    margin-top: 25px;
+    padding-left: 10px;
+    clear: both;
+    display: none;
+  }
+
+  & > div, & > a {
+    padding: 5px;
+    float: left;
+  }
+}

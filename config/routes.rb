@@ -18,26 +18,8 @@ CohortRadio::Application.routes.draw do
     put :rate, :on => :member
   end
 
-  namespace :fargo do
-
-    resources :downloads, :only => [:index, :destroy] do
-      get :retry, :on => :collection
-      get :try, :on => :collection
-    end
-
-    namespace :commands do
-      post 'download'
-      get 'clear_failed_downloads'
-      get 'clear_finished_downloads'
-      get 'connect'
-      delete 'disconnect'
-      get 'disconnect'
-    end
-
-    get 'search/results'
-    get 'search' => 'search#index'
-
-  end
+  get 'fargo/search'
+  post 'fargo/download'
 
   namespace :radio do
 

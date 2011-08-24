@@ -36,18 +36,10 @@
     <li>
       <span>Fargo</span>
       <ul>
-        <% if false && fargo_running? %>
-          <% if can? :manage, Fargo %>
-            <% if fargo_connected? %>
-              <li><%= link_to 'Disconnect', {:controller => 'fargo/commands', :action => 'disconnect'}, :confirm => "Are you sure?" %></li>
-            <% else %>
-              <li><%= link_to 'Connect', :controller => 'fargo/commands', :action => 'connect' %></li>
-            <% end %>
-          <% end %>
-          <% if fargo_connected? %>
-            <li><%= link_to "Downloads", fargo_downloads_path %></li>
-            <li><%= link_to "Search", fargo_search_path %></li>
-          <% end %>
+        <%# TODO: check if fargo is running/connected? %>
+        <% if true %>
+          <li><%#= link_to "Downloads", fargo_downloads_path %></li>
+          <li><%= link_to "Search", fargo_search_path %></li>
         <% else %>
           <li style='width:180px'><span>Fargo is not running.</span></li>
         <% end %>
