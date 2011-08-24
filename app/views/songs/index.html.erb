@@ -1,7 +1,7 @@
 <%= content_tag :h2, @artist.name if @artist %>
 
-<%= render 'shared/alphabet', :url => url_for([@artist, :songs]) %>
+<%= render 'alphabet', :url => url_for([@artist, :songs]) %>
 
-<%= paginated_section @songs, :outer_window => 3, :inner_window => 8 do %>
-  <%= render @songs %>
-<% end  %>
+<%= paginate @songs %>
+<%= render @songs %>
+<%= paginate @songs %>

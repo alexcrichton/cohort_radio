@@ -10,19 +10,18 @@ class SongsController < ApplicationController
     top_level = @artist.songs if @artist
 
     if params[:order] == 'play_count'
-      @songs = top_level.order 'play_count DESC'
+      @songs = top_level.order_by :play_count.desc
     elsif params[:order] == 'rating'
-      @songs = top_level.order 'rating DESC'
+      @songs = top_level.order_by :rating.desc
     else
-      @songs = top_level.order 'title'
+      @songs = top_level.order_by :title.asc
     end
 
     if params[:letter]
-      @songs = @songs.where('title LIKE ?', "#{params[:letter]}%")
+      @songs = @songs.where(:title => /^#{params[:letter]}/i)
     end
 
-    @songs = @songs.includes(:album, :artist)
-    @songs = @songs.paginate :page => params[:page], :per_page => 10
+    @songs = @songs.page(params[:page]).per(10)
 
     respond_with @songs
   end

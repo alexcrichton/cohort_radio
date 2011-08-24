@@ -96,19 +96,6 @@
         </ul>
       </div>
 
-      <% poss = playlists.select{ |p| can?(:add_to, p.pool) && !song.pool_ids.include?(p.pool.id)}%>
-      <% if poss.size > 0 %>
-        <div class='add pool' style='top:80px;'>
-          <%= link_to "[add to pool]", '#' %>
-          <ul>
-            <% poss.each do |playlist| %>
-              <li>
-                <%= link_to playlist.name, add_song_playlist_pool_path(playlist, song), :remote => true %>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
     <% end %>
   </div>
 </div>

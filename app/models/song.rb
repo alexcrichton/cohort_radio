@@ -2,18 +2,20 @@ class Song
   include Mongoid::Document
 
   field :title
+  field :album_name
   field :custom_set, :type => Boolean
+  field :rating, :type => Float, :default => 0.0
+  field :play_count, :type => Integer, :default => 0
   mount_uploader :audio, SongUploader, :validate_integrity => true,
                                        :validate_processing => true
 
   # Submitted from the form, updated later
-  attr_accessor :album_name, :artist_name
+  attr_accessor :artist_name
 
   belongs_to :artist
-  belongs_to :album
   embeds_many :ratings, :class_name => 'Song::Rating'
 
-  validates_presence_of :title, :artist, :album
+  validates_presence_of :title, :artist
   validates_uniqueness_of :title, :scope => :artist_id,
       :case_sensitive => false, :if => :title_changed?
   validate :unique_title
@@ -35,38 +37,39 @@ class Song
     end
   }
 
-  def rating
-    ratings.size == 0 ? 0 : ratings.map(&:score).sum.to_f / ratings.size
+  def update_rating
+    if ratings.size == 0
+      self[:rating] = 0.0
+    else
+      self[:rating] = ratings.map(&:score).sum.to_f / ratings.size
+    end
+    save!
+  end
+
+  def album
+    @album ||= artist.albums.where(:name => album_name).first
   end
 
   protected
 
   def ensure_artist_and_album
     if !audio.present?
-      errors[:audio] << "is required."
+      errors[:audio] << 'is required.'
       return
     end
     file = audio.path
 
-    artist, album = nil, nil
+    @old_artist = self.artist
 
     @artist_name = self.artist.try :name if @artist_name.blank?
     @artist_name ||= audio.artist        if !custom_set
     @artist_name = 'unknown'             if @artist_name.blank?
-    artist = Artist.where(:name => @artist_name).first ||
-             Artist.create!(:name => artist_name)
+    self.artist = Artist.where(:name => @artist_name).first ||
+                  Artist.create!(:name => @artist_name)
 
-    @album_name = self.album.try :name if @album_name.blank?
-    @album_name ||= audio.album        if !custom_set
-    @album_name = 'unknown'            if @album_name.blank?
-    album = artist.albums.where(:name => album_name).first ||
-            Album.create!(:name => album_name, :artist => artist)
-
-    @old_artist = self.artist
-    self.artist = artist
-
-    @old_album = self.album
-    self.album = album
+    self[:album_name] ||= audio.album        if !custom_set
+    self[:album_name] = 'unknown'            if album_name.blank?
+    album.present? or artist.albums.create!(:name => album_name)
 
     self.title = audio.title unless custom_set
     self.title ||= File.basename(file)
@@ -74,8 +77,8 @@ class Song
 
   def write_metadata
     info = Mp3Info.new audio.path
-    info.tag['artist'] = artist.name unless artist.name == 'unknown'
-    info.tag['album']  = album.name  unless album.name  == 'unknown'
+    info.tag['artist'] = @artist_name unless @artist_name == 'unknown'
+    info.tag['album']  = album_name   unless  album_name  == 'unknown'
     info.tag['title']  = title
     info.close
   end
