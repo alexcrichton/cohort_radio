@@ -1,49 +1,33 @@
 #!/usr/bin/env ruby
 
-require 'bundler'
-Bundler.setup :worker
-
-require 'fargo'
 require 'pusher'
+require 'fargo'
 require 'resque'
 require 'resque/status'
 require 'eventmachine'
 
 require File.expand_path('../../config/initializers/pusher', __FILE__)
-
-sids = {}
-timers = {}
+require File.expand_path('../../app/workers/fargo_search', __FILE__)
+require File.expand_path('../../app/workers/fargo_download', __FILE__)
+require File.expand_path('../../app/workers/convert_song', __FILE__)
 
 EM.run {
   client = Fargo::Client.new
+  client.config.color = true
   client.connect
+  FargoSearch.client = FargoDownload.client = client
 
-  # Process incoming search requests
+  searcher = Resque::Worker.new 'search'
+
+  # Process all pending requests
   EM.add_periodic_timer(1) do
-    job = Resque.reserve(:search)
-    next if job.nil?
-
-    search, channel = job.args
-    search = Fargo::Search.new :query => search
-
-    if timers.key?(channel)
-      timers[channel].cancel # Cancel the timer, we'll re-add it
-    else
-      # If we get a matching search result, notify over pusher
-      raise 'Should not be here' if sids.key?(channel)
-      sids[channel] = client.channel.subscribe do |type, message|
-        next if type != :search_result || !search.matches?(message)
-        Pusher[channel].trigger_async('search-result', message)
-      end
+    while job = Resque.reserve(:search)
+      searcher.perform job
     end
 
-    # Unsubscribe after a minute
-    timers[channel] = EM::Timer.new(60) {
-      client.channel.unsubscribe sids[channel]
-      timers.delete channel
-      sids.delete channel
-    }
-
-    client.search search
+    while job = Resque.reserve(:downloads)
+      downloader = Resque::Worker.new 'downloader'
+      EM.defer { downloader.perform job }
+    end
   end
 }
