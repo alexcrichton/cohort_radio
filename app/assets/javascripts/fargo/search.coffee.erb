@@ -19,7 +19,7 @@ window.humanize_bytes = (bytes) ->
 
 jQuery ->
   window.pusher ||= new Pusher('<%= Pusher.key %>')
-  channel = window.pusher.subscribe $(this).find('#channel').val()
+  channel = window.pusher.subscribe $('#channel').val()
 
   channel.bind 'search-result', (data) ->
     rendered = $(JST['fargo/result'](data))
@@ -39,7 +39,6 @@ jQuery ->
         success: -> element.text('Queued!').addClass('notice')
         error: -> element.text('Error!').addClass('error')
 
-      console.log data
       false
 
     duplicate = $('.result[tth="' + data.tth + '"]')
