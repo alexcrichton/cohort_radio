@@ -1,5 +1,5 @@
-uri = URI.parse(ENV['PUSHER_URL'] || '')
-
-Pusher.app_id = (uri.path.match(/\d+/) || '5975').to_s
-Pusher.key    = uri.user || '60ad04716e80aa8eae65'
-Pusher.secret = uri.password || '03216805993e774c89bc'
+if ENV['PUSHER_URL'].blank?
+  Pusher.app_id = '5975'
+  Pusher.key    = '60ad04716e80aa8eae65'
+  Pusher.secret = '03216805993e774c89bc'
+end
