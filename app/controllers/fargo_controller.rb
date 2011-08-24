@@ -6,7 +6,7 @@ class FargoController < ApplicationController
   def search
     @channel = params[:channel] || SecureRandom.hex(10)
     if params[:q].present?
-      Resque.push :search, :args => [params[:q], @channel]
+      Resque.enqueue FargoSearch, params[:q], @channel
     end
 
     respond_to do |format|
@@ -16,8 +16,8 @@ class FargoController < ApplicationController
   end
 
   def download
-    Resque.push :downloads, :args => [params[:nick], params[:file],
-                                      params[:tth], params[:size]]
+    FargoDownload.create params.slice(:nick, :file, :tth, :size)
+
     respond_to do |format|
       format.js { render :nothing => true }
     end
