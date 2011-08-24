@@ -30,7 +30,6 @@ describe Song do
   it "creates artist/album pairs if they don't exist" do
     subject.audio = File.open(sample)
     subject.save
-    subject.album.should be_persisted
     subject.artist.should be_persisted
   end
 
