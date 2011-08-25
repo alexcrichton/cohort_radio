@@ -1,4 +1,4 @@
-<section id='songs'>
+<section id='songs' data-id='<%= @playlist.to_param %>'>
   <% @playlist.queue_items.each do |queue_item| %>
     <%= render queue_item.song, :item => queue_item %>
   <% end %>

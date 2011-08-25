@@ -1,7 +1,7 @@
 <% playlists = Playlist.scoped %>
 
-<div class="song remove inline-edit"
-     id="s<%= song.id %>"
+<div class="song"
+     data-id="<%= song.id %>"
      data-queue-id="<%= defined?(item) ? item.id : '' %>">
   <div class='image'>
     <%= link_to [song.artist, song.album] do %>
@@ -28,8 +28,6 @@
 
   <div class='links'>
     <p>
-      <%= link_to '[download]', song_url(song, :format => 'mp3') %>
-
       <% if can? :update, song %>
         <%= link_to '[edit]', [:edit, song], :class => 'edit',
               :remote => true  %>

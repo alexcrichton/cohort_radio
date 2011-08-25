@@ -1,0 +1,12 @@
+#= require jquery
+#= require jquery_ujs
+
+jQuery ->
+  links = $('a[data-remote]')
+
+  links.live 'ajax:loading', ->
+    img = $('<img>').attr('src', '<%= asset_path "ajax-small.gif" %>')
+    img.addClass('loading')
+    img.insertAfter(this)
+
+  links.live 'ajax:complete', -> $(this).next('img.loading').remove()
