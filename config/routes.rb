@@ -19,7 +19,8 @@ CohortRadio::Application.routes.draw do
   end
 
   get 'fargo/search'
-  post 'fargo/download'
+  # post 'fargo/download'
+  post 'pusher/auth' => 'users#pusher_auth'
 
   namespace :radio do
 

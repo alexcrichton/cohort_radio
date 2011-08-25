@@ -20,7 +20,9 @@ window.humanize_bytes = (bytes) ->
 jQuery ->
   window.pusher ||= new Pusher('<%= Pusher.key %>')
   channel = window.pusher.subscribe $('#channel').val()
+  fargo_channel = window.pusher.subscribe 'private-fargo'
 
+  # On search results, display nice fancy results with events bound already.
   channel.bind 'search-result', (data) ->
     rendered = $(JST['fargo/result'](data))
     rendered.data('search', data)
@@ -32,13 +34,13 @@ jQuery ->
       element = $('<span>').text('Queueing...')
       data = $(this).closest('.result').data('search')
       $(this).replaceWith(element)
-      $.ajax
-        url: '/fargo/download'
-        type: 'POST',
-        data: data
-        success: -> element.text('Queued!').addClass('notice')
-        error: -> element.text('Error!').addClass('error')
-
+      fargo_channel.trigger('client-download',
+        file: data.file,
+        tth:  data.tth,
+        nick: data.nick,
+        size: data.size,
+        channel: channel.name
+      )
       false
 
     duplicate = $('.result[tth="' + data.tth + '"]')
@@ -49,3 +51,24 @@ jQuery ->
     else
       rendered.attr('tth', data.tth)
       $('#search-response').append(rendered)
+
+  # When we get the uuid response from the worker, then we can create the link
+  # which will send us to the status page.
+  channel.bind 'job-uuid', (data) ->
+    console.log data
+    bubble = $('.result[tth="' + data.tth + '"] .download')
+    bubble.html(
+      $('<a>').attr('href', '/resque/statuses/' + data.uuid).
+               attr('target', '_blank').
+               addClass('notice').
+               text('Queued!')
+    )
+
+  # Upon submission of the form, instead send the request over the websocket to
+  # the worker.
+  $('form').bind 'submit', ->
+    fargo_channel.trigger('client-search',
+      channel: channel.name
+      query: $('#q').val()
+    )
+    false

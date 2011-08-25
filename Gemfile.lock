@@ -107,6 +107,7 @@ GEM
       rails (>= 3.0.0)
     launchy (2.0.5)
       addressable (~> 2.2.6)
+    libwebsocket (0.1.0)
     libxml-ruby (2.2.1)
     macaddr (1.4.0)
       systemu (~> 2.2.0)
@@ -241,6 +242,7 @@ DEPENDENCIES
   heroku
   jquery-rails
   kaminari
+  libwebsocket
   libxml-ruby
   mongoid
   mp4info!

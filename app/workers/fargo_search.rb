@@ -7,8 +7,10 @@ class FargoSearch
   def self.queue; :search end
   def self.client= client; @@client = client end
 
-  def self.perform query, channel
-    search = Fargo::Search.new :query => query
+  def self.perform data
+    query   = data['query']
+    channel = data['channel']
+    search  = Fargo::Search.new :query => query
 
     if @@timers.key?(channel)
       @@timers[channel].cancel # Cancel the timer, we'll re-add it

@@ -55,6 +55,7 @@ group :worker, :test do
     :ref => '7e8131719e'
 
   gem 'em-http-request' # Required for asynchronous pusher
+  gem 'libwebsocket'
   gem 'fargo', :path => '../ruby/fargo'
   gem 'ruby-shout', :require => 'shout'
   gem 'libxml-ruby', :require => 'libxml' # parsing output of last.fm
