@@ -53,28 +53,24 @@ class Song
     end
     file = audio.path
 
-    @old_artist = self.artist
-
     @artist_name = self.artist.try :name if @artist_name.blank?
     @artist_name ||= audio.artist        if !custom_set
     @artist_name = 'unknown'             if @artist_name.blank?
     self.artist = Artist.where(:name => @artist_name).first ||
                   Artist.create!(:name => @artist_name)
 
-    self[:album_name] ||= audio.album        if !custom_set
-    self[:album_name] = 'unknown'            if album_name.blank?
-    album.present? or artist.albums.create!(:name => album_name)
+    @album_name = self.album.try :name if @album_name.blank?
+    @album_name ||= audio.album        if !custom_set
+    @album_name = 'unknown'             if @album_name.blank?
+    self.album = artist.albums.where(:name => @album_name).first ||
+                 artist.albums.create!(:name => @album_name)
 
-    self.title = audio.title unless custom_set
+    self.title ||= audio.title unless custom_set
     self.title ||= File.basename(file)
   end
 
   def write_metadata
-    info = Mp3Info.new audio.path
-    info.tag['artist'] = @artist_name unless @artist_name == 'unknown'
-    info.tag['album']  = album_name   unless  album_name  == 'unknown'
-    info.tag['title']  = title
-    info.close
+    Resque.enqueue WriteMetadata, id
   end
 
   def unique_title

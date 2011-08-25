@@ -1,6 +1,6 @@
 class ConvertSong
 
-  @queue = :convert_song
+  @queue = :songs
 
   def self.perform file
     raise "File didn't download!" unless File.exists?(file)
