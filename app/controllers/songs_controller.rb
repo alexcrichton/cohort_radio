@@ -25,9 +25,7 @@ class SongsController < ApplicationController
   end
 
   def show
-    respond_with @song do |format|
-      format.mp3 { send_file @song.audio.path, :type => :mp3 }
-    end
+    respond_with @song
   end
 
   def new
