@@ -29,7 +29,7 @@ class SongUploader < CarrierWave::Uploader::Base
     # Only process the model if we're persisted. We don't want to do processing
     # if there's a validation error with the model. Only afterwards do we
     # go through all that hard work.
-    super if model.persisted?
+    super if model.valid?
   end
 
   def encode_to_mp3
@@ -117,7 +117,8 @@ class SongUploader < CarrierWave::Uploader::Base
 
     if $?.exitstatus > 0
       raise CarrierWave::IntegrityError,
-          "Couldn't process #{File.basename(current_path)}"
+          "Couldn't process #{File.basename(current_path)}. " \
+          "Command failed: '#{args.join(' ')}'"
     end
   end
 

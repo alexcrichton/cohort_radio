@@ -26,7 +26,6 @@ class Song
   before_validation :ensure_artist_and_album
   validate :unique_title
   after_save :write_metadata
-  after_create { |r| r.audio.process!; r.audio.store! }
 
   scope :search, Proc.new{ |query|
     if query.blank?

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'tempfile'
 
 describe Song do
   let(:sample) { File.expand_path('../../fixtures/sample.mp3', __FILE__) }
@@ -33,26 +34,30 @@ describe Song do
     subject.artist.should be_persisted
   end
 
-  it "doesn't allow duplicate songs" do
-    duplicate = Song.new :audio => File.open(sample)
+  it "doesn't allow duplicate songs and doesn't process audio if invalid" do
+    duplicate = Song.new
     duplicate.audio.stub(:encode_to_mp3)
     duplicate.audio.stub(:store!)
+    duplicate.audio = File.open(sample)
     duplicate.save!
 
+    subject.audio.should_not_receive(:encode_to_mp3)
     subject.audio = File.open(sample)
     subject.should have(1).errors_on(:audio)
   end
 
-  it "doesn't process the audio file during validation" do
-    subject.audio.should_not_receive(:encode_to_mp3)
+  it "doesn't process the audio file during validation if valid" do
+    subject.audio.should_receive(:encode_to_mp3)
     subject.audio = File.open(sample)
     subject.valid?
   end
 
-  it "processes the audio file upon saving" do
-    subject.audio.should_receive(:encode_to_mp3)
+  it "doesn't save the song if there's a processing error" do
+    subject.audio.stub(:encode_to_mp3).and_raise(CarrierWave::IntegrityError)
     subject.audio = File.open(sample)
     subject.save
+
+    subject.should_not be_persisted
   end
 
 end
