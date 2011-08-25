@@ -4,7 +4,6 @@ class Song
   field :title
   field :album_name
   field :custom_set, :type => Boolean
-  field :rating, :type => Float, :default => 0.0
   field :play_count, :type => Integer, :default => 0
   mount_uploader :audio, SongUploader
 
@@ -13,7 +12,6 @@ class Song
 
   belongs_to :album
   belongs_to :artist
-  embeds_many :ratings, :class_name => 'Song::Rating'
 
   validates_presence_of :title, :artist
   validates_uniqueness_of :title, :scope => :artist_id,
@@ -33,15 +31,6 @@ class Song
           :q => "%#{query}%").includes(:artist, :album)
     end
   }
-
-  def update_rating
-    if ratings.size == 0
-      self[:rating] = 0.0
-    else
-      self[:rating] = ratings.map(&:score).sum.to_f / ratings.size
-    end
-    save!
-  end
 
   protected
 

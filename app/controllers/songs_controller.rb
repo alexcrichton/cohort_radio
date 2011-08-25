@@ -11,8 +11,6 @@ class SongsController < ApplicationController
 
     if params[:order] == 'play_count'
       @songs = top_level.order_by :play_count.desc
-    elsif params[:order] == 'rating'
-      @songs = top_level.order_by :rating.desc
     else
       @songs = top_level.order_by :title.asc
     end
@@ -44,26 +42,6 @@ class SongsController < ApplicationController
   def edit
     respond_with @song
   end
-
-  # def rate
-  #   scope = @song.ratings.by current_user
-  #
-  #   if @rating = scope.first
-  #     @rating.update_attributes! params[:rating]
-  #   else
-  #     @rating = scope.build params[:rating]
-  #     @rating.user = current_user
-  #     @rating.song = @song
-  #     @rating.save! # we expect this to work
-  #   end
-  #
-  #   @song.reload # Our rating has changed
-  #
-  #   Pusher['song'].trigger 'rating', :song_id => @song.id,
-  #                                    :rating => @song.rating
-  #
-  #   respond_with @song
-  # end
 
   def update
     @song.update_attributes params[:song]

@@ -19,7 +19,6 @@
       <%= link_to 'Songs', songs_path %>
       <ul>
         <li><%= link_to 'Play Count', songs_path(:order => 'play_count') %></li>
-        <li><%= link_to 'Rating', songs_path(:order => 'rating') %></li>
         <li><%= link_to 'Upload', new_song_path %></li>
         <li><%= link_to 'Search', search_songs_path %></li>
       </ul>

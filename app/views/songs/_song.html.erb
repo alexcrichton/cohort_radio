@@ -26,35 +26,7 @@
     </p>
   </div>
 
-  <div class='ratings' remote="<%= url_for [:rate, song] %>">
-    <div class='rating'>
-      <ul class='overall' data-rating="<%= number_to_percentage song.rating %>">
-        <% (1..10).each do |score| %>
-          <li<%= raw(' class="selected"') if score > 10 - song.rating %>>
-            &nbsp;
-          </li>
-        <% end %>
-      </ul>
-      <span class='score overall'><%= song.rating.to_i %></span>
-    </div>
-    <div class='rating'>
-      <% rating = song.ratings.by(current_user).first.try(:score) || 0 %>
-      <ul class='user' data-rating="<%= rating %>">
-        <% (1..10).each do |score| %>
-          <li<%= raw(' class="selected"') if score > 10 - rating %>>
-            &nbsp;
-          </li>
-        <% end %>
-      </ul>
-      <span class='score user'><%= rating %></span>
-    </div>
-  </div>
-
   <div class='links'>
-    <% if defined?(item) %>
-      <p>Queued by: <%= item.user.name if item.user %></p>
-    <% end %>
-
     <p>
       <%= link_to '[download]', song_url(song, :format => 'mp3') %>
 
