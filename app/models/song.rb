@@ -6,8 +6,7 @@ class Song
   field :custom_set, :type => Boolean
   field :rating, :type => Float, :default => 0.0
   field :play_count, :type => Integer, :default => 0
-  mount_uploader :audio, SongUploader, :validate_integrity => true,
-                                       :validate_processing => true
+  mount_uploader :audio, SongUploader
 
   # Submitted from the form, updated later
   attr_accessor :artist_name
@@ -18,9 +17,9 @@ class Song
   validates_presence_of :title, :artist
   validates_uniqueness_of :title, :scope => :artist_id,
       :case_sensitive => false, :if => :title_changed?
-  validates_presence_of :audio
-  validates_integrity_of :audio
 
+  validates_processing_of :audio
+  validates_integrity_of :audio
   before_validation :ensure_artist_and_album
   validate :unique_title
   after_save :write_metadata

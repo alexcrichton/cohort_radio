@@ -116,7 +116,7 @@ class SongUploader < CarrierWave::Uploader::Base
     system *args
 
     if $?.exitstatus > 0
-      raise CarrierWave::IntegrityError,
+      raise CarrierWave::ProcessingError,
           "Couldn't process #{File.basename(current_path)}. " \
           "Command failed: '#{args.join(' ')}'"
     end
