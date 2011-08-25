@@ -11,16 +11,7 @@ class FargoController < ApplicationController
 
     respond_to do |format|
       format.html
-      # format.js { render :nothing => true }
     end
   end
-
-  # def download
-  #   FargoDownload.create params.slice(:nick, :file, :tth, :size)
-  #
-  #   respond_to do |format|
-  #     format.js { render :nothing => true }
-  #   end
-  # end
 
 end
