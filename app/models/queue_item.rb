@@ -2,7 +2,6 @@ class QueueItem
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  belongs_to :user
   embedded_in :playlist
   belongs_to :song
 
