@@ -18,7 +18,7 @@ class Album
   private
 
   def get_image
-    Resque.enqueue ScrobbleAlbum, artist.id, id
+    Resque.enqueue ScrobbleAlbum, id
   end
 
 end
