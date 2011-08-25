@@ -1,12 +1,9 @@
-#= require pusher
-
-window.pusher ||= new Pusher('<%= Pusher.key %>')
 channel = pusher.subscribe 'song'
 
 channel.bind 'destroyed', (data) ->
   $('.song[data-id=' + data.id + ']').slideUp -> $(this).remove()
 
 channel.bind 'updated', (data) ->
-  song = $('.song[data-id=' + data.id + ']')
+  song = $('.song[data-id=' + data.song_id + ']')
   return if song.length == 0
-  song.load(data.url + ' .song')
+  $.get data.url + '.js'

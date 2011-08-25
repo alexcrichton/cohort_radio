@@ -1,15 +1,12 @@
-#= require pusher
-#= require songs/show
+jQuery ->
+  channel = pusher.subscribe 'playlist-' + $('#songs').data('id')
 
-window.pusher ||= new Pusher('<%= Pusher.key %>')
-channel = pusher.subscribe 'playlist-' + $('#songs').data('id')
+  channel.bind 'removed_item', (data) ->
+    $('.song[data-queue-id=' + data.queue_id + ']').slideUp -> $(this).remove()
 
-channel.bind 'removed_item', (data) ->
-  $('.song[data-queue-id=' + data.queue_id + ']').slideUp -> $(this).remove()
+  channel.bind 'playing', (data) -> $('#current-song').text data.song
 
-channel.bind 'playing', (data) -> $('#current-song').text data.song
-
-channel.bind 'added_item', (data) -> $('#songs').load(data.url + ' #songs')
+  channel.bind 'added_item', (data) -> $('#songs').load(data.url + ' #songs')
 
 # $(function() {
 #   var query = $("#song-search #q");

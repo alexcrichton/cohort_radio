@@ -1,17 +1,13 @@
-<% javascript 'rails' %>
+<h1>Searching Songs</h1>
 
-<% unless request.xhr? %>
-  <h1>Searching Songs</h1>
-
-  <div class='search' id='songs-search'>
-    <%= form_tag [:search, :songs], :method => :get, :remote => true do %>
-      <p>
-        <%= text_field_tag :q, params[:q], :placeholder => 'Search query',
-              :autocomplete => 'off' %>
-        <%= submit_tag 'Search', :disable_with => 'Searching...' %>
-      </p>
-    <% end %>
-  </div>
-<% end %>
+<div class='search' id='songs-search'>
+  <%= form_tag [:search, :songs], :method => :get, :remote => true do %>
+    <p>
+      <%= text_field_tag :q, params[:q], :placeholder => 'Search query',
+            :autocomplete => 'off' %>
+      <%= submit_tag 'Search', :disable_with => 'Searching...' %>
+    </p>
+  <% end %>
+</div>
 
 <%= render 'search_results' %>

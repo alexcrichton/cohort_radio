@@ -1,1 +1,1 @@
-$('#al<%= @album.id %>').html("<%= escape_javascript render('form') %>");
+$('.album[data-id=<%= @album.id %>]').html("<%=j render('form') %>");

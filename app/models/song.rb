@@ -3,12 +3,10 @@ class Song
 
   field :title
   field :album_name
+  field :artist_name
   field :custom_set, :type => Boolean
   field :play_count, :type => Integer, :default => 0
   mount_uploader :audio, SongUploader
-
-  # Submitted from the form, updated later
-  attr_accessor :artist_name
 
   belongs_to :album
   belongs_to :artist
@@ -27,8 +25,8 @@ class Song
     if query.blank?
       where(:id => 0)
     else
-      where('title LIKE :q or artists.name LIKE :q or albums.name LIKE :q',
-          :q => "%#{query}%").includes(:artist, :album)
+      any_of({:title => /#{query}/i}, {:artist_name => /#{query}/i},
+             {:album_name => /#{query}/i})
     end
   }
 
@@ -42,18 +40,20 @@ class Song
     end
     file = audio.path
 
-    @artist_name = self.artist.try :name if @artist_name.blank?
-    @artist_name ||= audio.artist        if !custom_set
-    @artist_name = 'unknown'             if @artist_name.blank?
-    self.artist = Artist.where(:name => @artist_name).first ||
-                  Artist.create!(:name => @artist_name)
+    artist_name = self.artist.try :name if artist_name.blank?
+    artist_name ||= audio.artist        if !custom_set
+    artist_name = 'unknown'             if artist_name.blank?
+    self.artist = Artist.where(:name => artist_name).first ||
+                  Artist.create!(:name => artist_name)
 
-    @album_name = self.album.try :name if @album_name.blank?
-    @album_name ||= audio.album        if !custom_set
-    @album_name = 'unknown'             if @album_name.blank?
-    self.album = artist.albums.where(:name => @album_name).first ||
-                 artist.albums.create!(:name => @album_name)
+    album_name = self.album.try :name if album_name.blank?
+    album_name ||= audio.album        if !custom_set
+    album_name = 'unknown'             if album_name.blank?
+    self.album = artist.albums.where(:name => album_name).first ||
+                 artist.albums.create!(:name => album_name)
 
+    self.artist_name = artist_name
+    self.album_name  = album_name
     self.title ||= audio.title unless custom_set
     self.title ||= File.basename(file)
   end
@@ -67,7 +67,7 @@ class Song
     return unless artist.present? && title.present?
 
     duplicate = Song.where(:title => /#{title}/i).any?{ |s|
-      s.artist.name.downcase == artist.name.downcase
+      s.artist_name.downcase == artist_name.downcase
     }
 
     if duplicate

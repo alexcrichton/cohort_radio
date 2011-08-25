@@ -1,1 +1,1 @@
-$('#ar<%= @artist.id %>').html("<%= escape_javascript render('form') %>");
+$('.artist[data-id=<%= @artist.id %>]').html("<%=j render('form') %>");

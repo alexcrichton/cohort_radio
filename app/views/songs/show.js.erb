@@ -1,2 +1,1 @@
-var newSong = $("<%= escape_javascript render(@song) %>");
-$('#s<%= @song.id %> .content').replaceWith(newSong.find('.content'));
+$('.song[data-id=<%= @song.id %>]').replaceWith('<%=j render(@song) %>')

@@ -25,7 +25,9 @@ class SongsController < ApplicationController
   end
 
   def show
-    respond_with @song
+    respond_with @song do |format|
+      format.html { render(@song) }
+    end
   end
 
   def new
@@ -44,8 +46,8 @@ class SongsController < ApplicationController
   def update
     @song.update_attributes params[:song]
 
-    push :type => 'song.updated', :song_id => @song.id,
-      :url => song_path(@song)
+    Pusher['song'].trigger('updated', :song_id => @song.id,
+                                      :url => song_path(@song))
 
     respond_with @song
   end
@@ -53,7 +55,7 @@ class SongsController < ApplicationController
   def destroy
     @song.destroy
 
-    push :type => 'song.destroyed', :song_id => @song.id
+    Pusher['song'].trigger('destroyed', :song_id => @song.id)
 
     respond_with @song do |format|
       format.html { redirect_back_or_default songs_path }
@@ -62,11 +64,9 @@ class SongsController < ApplicationController
 
   def search
     @songs = Song.search(params[:q])
-
     @songs = @songs.limit params[:limit] || 10
-
     if params[:completion].blank?
-      @songs = @songs.paginate :page => params[:page], :per_page => 10
+      @songs = @songs.page(params[:page]).per(10)
     end
 
     respond_with @songs do |format|

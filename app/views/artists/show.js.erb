@@ -1,2 +1,1 @@
-$('#ar<%= @artist.id %>').replaceWith(
-    "<%= escape_javascript render(@artist) %>");
+$('.artist[data-id=<%= @artist.id %>]').replaceWith("<%=j render(@artist) %>");

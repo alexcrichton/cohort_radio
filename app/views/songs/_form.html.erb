@@ -1,8 +1,7 @@
 <% song = @song unless defined?(song) && song %>
 
-<%= form_for song, :html => {:multipart => song.new_record?},
-      :remote => song.persisted? do |f| %>
-  <%= render 'shared/error_messages', :target => f.object %>
+<%= form_for song, :remote => song.persisted? do |f| %>
+  <%= render 'error_messages', :target => f.object %>
 
   <% if song.new_record? %>
     <p>

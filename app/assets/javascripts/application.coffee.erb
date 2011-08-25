@@ -1,5 +1,10 @@
 #= require jquery
 #= require jquery_ujs
+#= require pusher
+#= require_self
+#= require songs
+
+window.pusher ||= new Pusher('<%= Pusher.key %>')
 
 jQuery ->
   links = $('a[data-remote]')

@@ -5,7 +5,7 @@
     <title><%= content_for?(:title) ? yield(:title) : 'Cohort Radio' %></title>
     <%= stylesheet_link_tag 'application' %>
     <%= yield :stylesheets %>
-    <%= javascript_include_tag 'rails' %>
+    <%= javascript_include_tag 'application' %>
     <%= yield :javascripts %>
   </head>
   <body>

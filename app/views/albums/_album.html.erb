@@ -1,4 +1,4 @@
-<li class='album inline-edit mini' id='al<%= album.id %>'>
+<li class='album' data-id='<%= album.id %>'>
   <%= link_to [album.artist, album], :class => 'content' do %>
     <%= image_tag(album.cover_url, :height => 60, :width => 60) if album.cover_url %>
     <div class='name'><%= album.name %></div>
@@ -8,7 +8,7 @@
   <% end %>
 
   <% if can? :update, album %>
-    <%= link_to '[edit]', [:edit, album], :class => 'links',
+    <%= link_to '[edit]', [:edit, album.artist, album], :class => 'links',
           :remote => true %>
   <% end %>
 </li>

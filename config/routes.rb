@@ -5,13 +5,12 @@ CohortRadio::Application.routes.draw do
   devise_for :users
   mount Resque::Server => 'resque'
 
-  resources :albums
-
-  resources :artists do
+  resources :artists, :only => [:show, :update, :edit, :index] do
     resources :songs, :only => [:index]
+    resources :albums, :path => '', :only => [:show, :update, :edit]
   end
 
-  get 'artists/:artist_id/:id' => 'albums#show', :as => 'artist_album'
+  get 'albums' => 'albums#index'
 
   resources :songs do
     get :search, :on => :collection
@@ -21,7 +20,6 @@ CohortRadio::Application.routes.draw do
   post 'pusher/auth' => 'users#pusher_auth'
 
   namespace :radio do
-
     get 'commands/connect'
     get 'commands/add/:playlist_id'  => 'commands#add',  :as => 'add'
     get 'commands/stop/:playlist_id' => 'commands#stop', :as => 'stop'
@@ -44,11 +42,7 @@ CohortRadio::Application.routes.draw do
       get 'add/:song_id' => 'pools#add', :as => 'add_song'
     end
 
-    resources :memberships, :only => [:create, :destroy]
-
-    member do
-      get :queue
-    end
+    get :queue, :on => :member
   end
 
   scope :as => 'playlist' do

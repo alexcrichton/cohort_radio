@@ -1,9 +1,8 @@
 <%= render 'alphabet', :url => artists_path %>
 
 <%= paginate @artists %>
-<% left = (right = @artists.dup).slice!(0, (@artists.size / 2.0).ceil) %>
 <div style='overflow:auto'>
-  <% [left, right].each do |arr| %>
+  <% @artists.halves.each do |arr| %>
     <ul class='column block'><%= render arr %></ul>
   <% end %>
 </div>

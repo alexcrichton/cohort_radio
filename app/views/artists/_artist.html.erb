@@ -1,4 +1,4 @@
-<li class='artist inline-edit mini' id='ar<%= artist.id %>'>
+<li class='artist' data-id='<%= artist.id %>'>
   <%= link_to artist.name, artist, :class => 'content' %>
 
   <% if can? :update, artist %>

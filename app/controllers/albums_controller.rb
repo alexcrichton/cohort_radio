@@ -1,12 +1,12 @@
 class AlbumsController < ApplicationController
 
-  load_and_authorize_resource :artist, :find_by => :slug
+  load_resource :artist, :find_by => :slug
   load_and_authorize_resource :find_by => :slug
 
   respond_to :html, :js
 
   def index
-    @albums = @artist ? @artist.albums : Album.scoped
+    @albums = Album.scoped
     @albums = @albums.where(:name => /^#{params[:letter]}/i) if params[:letter]
     @albums = @albums.page(params[:page]).per(20)
 
