@@ -4,6 +4,7 @@ gem 'rails', '3.1.0.rc6'
 
 gem 'bson_ext'
 gem 'mongoid'
+gem 'mongoid_slug', :require => 'mongoid/slug'
 
 # Authentication
 gem 'cancan'

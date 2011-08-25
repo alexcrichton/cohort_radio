@@ -122,6 +122,9 @@ GEM
       activemodel (~> 3.0)
       mongo (~> 1.3)
       tzinfo (~> 0.3.22)
+    mongoid_slug (0.8.3)
+      mongoid (~> 2.0)
+      stringex (~> 1.3)
     multi_json (1.0.3)
     orm_adapter (0.0.5)
     polyglot (0.3.2)
@@ -205,6 +208,7 @@ GEM
       hike (~> 1.2)
       rack (~> 1.0)
       tilt (!= 1.3.0, ~> 1.1)
+    stringex (1.3.0)
     systemu (2.2.0)
     term-ansicolor (1.0.6)
     therubyracer-heroku (0.8.1.pre3)
@@ -245,6 +249,7 @@ DEPENDENCIES
   libwebsocket
   libxml-ruby
   mongoid
+  mongoid_slug
   mp4info!
   pusher
   rails (= 3.1.0.rc6)

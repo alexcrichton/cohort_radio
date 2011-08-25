@@ -11,6 +11,7 @@ class Song
   # Submitted from the form, updated later
   attr_accessor :artist_name
 
+  belongs_to :album
   belongs_to :artist
   embeds_many :ratings, :class_name => 'Song::Rating'
 
@@ -40,10 +41,6 @@ class Song
       self[:rating] = ratings.map(&:score).sum.to_f / ratings.size
     end
     save!
-  end
-
-  def album
-    @album ||= artist.albums.where(:name => album_name).first
   end
 
   protected

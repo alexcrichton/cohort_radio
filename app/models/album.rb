@@ -1,12 +1,12 @@
 class Album
   include Mongoid::Document
+  include Mongoid::Slug
 
   field :name
-  field :slug
   field :cover_url
-  index :slug
+  slug :name, :index => true
 
-  embedded_in :artist
+  belongs_to :artist
   has_many :songs
 
   validates_presence_of :name, :artist
@@ -14,17 +14,8 @@ class Album
     :if => :name_changed?
 
   before_save :get_image, :if => :name_changed?
-  before_validation :set_slug
-
-  def to_param
-    self[:slug]
-  end
 
   private
-
-  def set_slug
-    self[:slug] = self[:name].parameterize
-  end
 
   def get_image
     Resque.enqueue ScrobbleAlbum, artist.id, id

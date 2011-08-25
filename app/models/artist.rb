@@ -1,26 +1,14 @@
 class Artist
   include Mongoid::Document
+  include Mongoid::Slug
 
   field :name
-  field :slug
-  index :slug
+  slug :name, :index => true
 
   has_many :songs
-  embeds_many :albums
+  has_many :albums
 
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false, :if => :name_changed?
-
-  before_validation :create_slug
-
-  def to_param
-    self[:slug]
-  end
-
-  protected
-
-  def create_slug
-    self[:slug] = self[:name].parameterize
-  end
 
 end

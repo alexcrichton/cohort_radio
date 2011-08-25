@@ -3,7 +3,7 @@ class QueueItem
   include Mongoid::Timestamps
 
   belongs_to :user
-  belongs_to :playlist
+  embedded_in :playlist
   belongs_to :song
 
   scope :ordered, order_by(:priority.asc, :created_at.asc)

@@ -3,6 +3,7 @@ class User
   devise :rememberable
 
   field :token
+  field :name
   index :token
 
   # has_many :queue_items, :dependent => :destroy

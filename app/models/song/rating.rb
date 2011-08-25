@@ -3,7 +3,7 @@ class Song::Rating
 
   field :score, :type => Integer
 
-  belongs_to :song
+  embedded_in :song
   belongs_to :user
 
   validates_presence_of :song, :user
@@ -13,7 +13,7 @@ class Song::Rating
   after_destroy :update_song_rating
 
   scope :for, lambda{ |song| where(:song_id => song.id) }
-  scope :by,  lambda{ |user| where(:user_id => user.id) }
+  scope :by,  lambda{ |user| where(:user => user) }
 
   def update_song_rating
     song.update_rating

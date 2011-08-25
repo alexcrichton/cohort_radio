@@ -1,26 +1,18 @@
 class Playlist
   include Mongoid::Document
+  include Mongoid::Slug
 
   field :name
   field :description
-  field :slug
-  index :slug
+  slug :name, :index => true
 
   embeds_many :queue_items
   embeds_one :pool
 
   after_create :create_pool
-  before_validation :set_slug
 
   validates_presence_of :name
   validates_uniqueness_of :name, :if => :name_changed?, :case_sensitive => false
-
-  alias to_param slug
-
-  def self.find_by_slug! slug
-    where(:slug => slug).first or
-      raise Mongoid::Errors::DocumentNotFound.new(self, :slug => slug)
-  end
 
   def ice_mount_point
     return "/#{slug}" if Rails.env.production?
@@ -52,10 +44,6 @@ class Playlist
   end
 
   protected
-
-  def set_slug
-    self[:slug] = self[:name].parameterize
-  end
 
   def index_to_insert id, ids
     return 0 if ids.length == 0
