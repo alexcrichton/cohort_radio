@@ -12,6 +12,8 @@ class CleanArtists
         end
       end
     end
+
+    CarrierWave.clean_cached_files!
   end
 
 end
