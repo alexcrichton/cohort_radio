@@ -1,5 +1,3 @@
-<% javascript 'rails' %>
-
 <li class='album inline-edit mini' id='al<%= album.id %>'>
   <%= link_to [album.artist, album], :class => 'content' do %>
     <%= image_tag(album.cover_url, :height => 60, :width => 60) if album.cover_url %>

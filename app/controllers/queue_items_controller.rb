@@ -9,7 +9,8 @@ class QueueItemsController < ApplicationController
   def create
     @playlist.enqueue @song, current_user
 
-    push :type => 'playlist.added_item', :playlist_id => @playlist.to_param,
+    Pusher['playlist-' + @playlist.slug].trigger 'added_item',
+      :playlist_id => @playlist.to_param,
       :url => polymorphic_path([:queue, @playlist])
 
     respond_with @playlist
@@ -18,8 +19,8 @@ class QueueItemsController < ApplicationController
   def destroy
     @playlist.queue_items.delete @queue_item
 
-    push :type => 'playlist.removed_item', :queue_id => @queue_item.id,
-      :playlist_id => @playlist.to_param
+    Pusher['playlist-' + @playlist.slug].trigger 'removed_item',
+      :playlist_id => @playlist.to_param, :queued_id => @queue_item.id
 
     respond_with @playlist
   end

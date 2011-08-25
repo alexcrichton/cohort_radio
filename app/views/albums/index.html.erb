@@ -1,10 +1,10 @@
-<%= render 'shared/alphabet', :url => albums_path %>
+<%= render 'alphabet', :url => albums_path %>
 
-<%= paginated_section @albums, :outer_window => 3, :inner_window => 8 do %>
-  <% left = (right = @albums.dup).slice!(0, (@albums.size / 2.0).ceil) %>
-  <div style='overflow:auto'>
-    <% [left, right].each do |arr| %>
-      <ul class='column block'><%= render arr %></ul>
-    <% end %>
-  </div>
-<% end %>
+<%= paginate @albums %>
+<% left = (right = @albums.dup).slice!(0, (@albums.size / 2.0).ceil) %>
+<div style='overflow:auto'>
+  <% [left, right].each do |arr| %>
+    <ul class='column block'><%= render arr %></ul>
+  <% end %>
+</div>
+<%= paginate @albums %>

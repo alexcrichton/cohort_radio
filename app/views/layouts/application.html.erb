@@ -17,13 +17,10 @@
 
     <div id="container">
       <header>
-        <nav>
-          <%= render 'layouts/topnav' %>
-        </nav>
+        <nav><%= render 'layouts/topnav' %></nav>
       </header>
 
       <% flash.each do |name, msg| %>
-        <% javascript 'jquery' %>
         <%= content_tag :div, :id => "flash_#{name}", :class => 'flash' do %>
           <p><%= msg %></p>
           <%= link_to '[hide]', '#', :onclick => "$(this).parents('.flash').fadeOut('fast'); return false;" %>

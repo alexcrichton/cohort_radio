@@ -5,12 +5,11 @@ class ArtistsController < ApplicationController
   respond_to :html, :js
 
   def index
-    @artists = Artist.order('name')
+    @artists = Artist.order_by(:name)
     if params[:letter]
-      @artists = @artists.where('name LIKE ?', "#{params[:letter]}%")
+      @artists = @artists.where(:name => /^#{params[:letter]}/i)
     end
-
-    @artists = @artists.paginate :page => params[:page]
+    @artists = @artists.page(params[:page]).per(20)
 
     respond_with @artists
   end
@@ -20,7 +19,7 @@ class ArtistsController < ApplicationController
   end
 
   def show
-    @albums = @artist.albums.order('name').includes(:artist)
+    @albums = @artist.albums.order('name')
 
     respond_with @artist
   end

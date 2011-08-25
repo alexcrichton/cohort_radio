@@ -1,6 +1,6 @@
 <h1><%= @album.name %></h1>
 <h3><%= link_to @artist.name, @artist %></h3>
 
-<%= paginated_section @songs, :outer_window => 3, :inner_window => 8 do %>
-	<%= render @songs %>
-<% end %>
+<%= paginate @songs %>
+<%= render @songs %>
+<%= paginate @songs %>

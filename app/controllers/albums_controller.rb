@@ -6,16 +6,15 @@ class AlbumsController < ApplicationController
   respond_to :html, :js
 
   def index
-    @albums = Album.order('name').includes(:artist)
-    @albums = @albums.where("name LIKE ?", "#{params[:letter]}%") if params[:letter]
-
-    @albums = @albums.paginate :page => params[:page]
+    @albums = @artist ? @artist.albums : Album.scoped
+    @albums = @albums.where(:name => /^#{params[:letter]}/i) if params[:letter]
+    @albums = @albums.page(params[:page]).per(20)
 
     respond_with @albums
   end
 
   def show
-    @songs = @album.songs.paginate :page => params[:page], :per_page => 10
+    @songs = @album.songs.page(params[:page]).per(10)
 
     respond_with @album
   end

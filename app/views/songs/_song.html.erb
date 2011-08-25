@@ -52,9 +52,7 @@
 
   <div class='links'>
     <% if defined?(item) %>
-      <p>
-        Queued by: <%= item.user.name if item.user %>
-      </p>
+      <p>Queued by: <%= item.user.name if item.user %></p>
     <% end %>
 
     <p>
