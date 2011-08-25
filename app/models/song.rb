@@ -18,8 +18,6 @@ class Song
   validates_presence_of :title, :artist
   validates_uniqueness_of :title, :scope => :artist_id,
       :case_sensitive => false, :if => :title_changed?
-  validate :unique_title
-
   validates_presence_of :audio
   validates_integrity_of :audio
 
@@ -52,6 +50,7 @@ class Song
   protected
 
   def ensure_artist_and_album
+    return if audio_integrity_error || audio_processing_error
     if !audio.present?
       errors[:audio] << 'is required.'
       return
@@ -83,6 +82,7 @@ class Song
   end
 
   def unique_title
+    return if audio_integrity_error || audio_processing_error
     return unless artist.present? && title.present?
 
     duplicate = Song.where(:title => /#{title}/i).any?{ |s|
