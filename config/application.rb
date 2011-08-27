@@ -6,7 +6,7 @@ require 'action_mailer/railtie'
 require 'active_resource/railtie'
 
 # Auto-require default libraries and those for the current Rails environment.
-Bundler.require *Rails.groups(:assets)
+Bundler.require *Rails.groups(:assets => [:development, :test, :production])
 
 module CohortRadio
   class Application < Rails::Application
@@ -46,16 +46,5 @@ module CohortRadio
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password, :password_confirmation]
-
-    config.to_prepare do
-      # require 'radio'
-      # require 'radio/proxy_helper'
-      # require 'pusher'
-      # require 'fargo/proxy_helper'
-      # require 'fargo/daemon'
-
-      # require 'drb'
-      # DRb.start_service
-    end
   end
 end
