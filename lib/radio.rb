@@ -66,6 +66,5 @@ if ENV['RADIO_URL']
     config.host = uri.host
     config.port = uri.port
     config.password = uri.password
-    p uri.user, uri.password, uri.host, uri.port
   end
 end

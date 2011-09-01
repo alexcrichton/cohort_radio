@@ -1,25 +1,9 @@
 #!/usr/bin/env ruby
 
-$LOAD_PATH << File.expand_path('../../lib', __FILE__)
+require File.expand_path('../../config/environment',  __FILE__)
 
-require 'pusher'
-require 'fargo'
-require 'resque'
-require 'resque/status'
-require 'eventmachine'
-
-# Requires in 'lib/'
 require 'em/pusher'
 require 'radio'
-
-require File.expand_path('../../config/initializers/pusher', __FILE__)
-require File.expand_path('../../app/workers/fargo_search', __FILE__)
-require File.expand_path('../../app/workers/fargo_download', __FILE__)
-require File.expand_path('../../app/workers/convert_song', __FILE__)
-
-ENV['RACK_ENV'] ||= ENV['RAILS_ENV'] # Mongoid looks for a Rails.env and falls
-                                     # back to RACK_ENV
-Mongoid.load!(File.expand_path('../../config/mongoid.yml', __FILE__))
 
 EM.run {
   client = Fargo::Client.new
@@ -27,11 +11,10 @@ EM.run {
   # client.connect
   FargoSearch.client = FargoDownload.client = client
 
-  Radio.logger = Rails.logger
+  # Radio.logger = Fargo.logger = Rails.logger
   radio = Radio.new
-
-  p = Playlist.first
-  radio.add p.slug
+  # p Radio.logger.level
+  radio.add Playlist.first.slug
 
   # Worker queue to track search requests
   searcher = Resque::Worker.new 'search'

@@ -34,15 +34,15 @@ class Radio
       @playing = true
       EventMachine.next_tick{ play_song }
 
-      Rails.logger.debug "Stream: #{@playlist.name} connected"
+      Radio.logger.debug "Stream: #{@playlist.name} connected"
       true
     end
 
     def disconnect
-      Rails.logger.info "Stream: #{@playlist.name} disconnecting"
+      Radio.logger.info "Stream: #{@playlist.name} disconnecting"
 
       if @playing
-        Rails.logger.debug "Stream: #{@playlist.name} joining with the song thread"
+        Radio.logger.debug "Stream: #{@playlist.name} joining with the song thread"
         @playing = false
       end
 
@@ -63,9 +63,9 @@ class Radio
         m = ShoutMetadata.new
         m.add 'filename', song.audio.path
         info   = Mp3Info.new(song.audio.path)
-        title  = info['title']
-        artist = info['artist'] || ''
-        album  = info['album']  || ''
+        title  = info.tag['title']
+        artist = info.tag['artist'] || ''
+        album  = info.tag['album']  || ''
 
         string = title
         string << ' ('
@@ -104,11 +104,11 @@ class Radio
         @current_song = song.title
         self.metadata = metadata
 
-        Pusher['playlist-' + @playlist.slug].async_trigger('playing',
+        Pusher['playlist-' + @playlist.slug].trigger_async('playing',
           :playlist_id => @playlist.slug, :song => song.title
         )
 
-        Rails.logger.info "Stream: #{@playlist.name} - playing file #{path}"
+        Radio.logger.info "Stream: #{@playlist.name} => #{song.audio.path}"
         @file = File.open(song.audio.path, 'rb')
         @size = File.size(song.audio.path)
         @next = false
@@ -117,22 +117,23 @@ class Radio
     end
 
     def stream_song
-      return finish_stream if @next || (data = file.read(BLOCKSIZE)).nil?
+      return finish_stream if @next || (data = @file.read(BLOCKSIZE)).nil?
 
       Radio.logger.debug "Stream: #{@playlist.name} sending block..."
 
       EventMachine.defer proc {
         self.send data
-        Radio.logger.debug "Stream: #{@playlist.name}: #{file.pos.to_f / size}"
+        pct = '%.2f%%' % [@file.pos.to_f / @size * 100]
+        Radio.logger.debug "Stream: #{@playlist.name} #{pct}"
         self.delay.to_f
       }, proc { |delay|
         # If the delay is negative, the timer will immediately fire
-        EventMachine.add_timer(delay){ stream_song }
+        EventMachine.add_timer(delay / 1000.0){ stream_song }
       }
     end
 
     def finish_stream
-      Rails.logger.debug "Stream: #{@playlist.name} - done playing file #{path}"
+      Radio.logger.debug "Stream: #{@playlist.name} - done - #{@file.path}"
       @file.close
 
       if @playing
@@ -141,11 +142,11 @@ class Radio
         shout_disconnect
       end
 
-      @song.increment! :play_count
+      @song.inc :play_count, 1
       @queue_item.destroy
 
-      Pusher['playlist-' + @playlist.slug].async_trigger('queue_removed',
-        :playlist_id => @playlist.slug, :queue_id => @queue_item.title
+      Pusher['playlist-' + @playlist.slug].trigger_async('queue_removed',
+        :playlist_id => @playlist.slug, :queue_id => @queue_item.id
       )
       @song = @queue_item = @file = nil
     end
