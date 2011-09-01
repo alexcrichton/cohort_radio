@@ -1,6 +1,6 @@
 source :rubygems
 
-gem 'rails', '3.1.0.rc6'
+gem 'rails', '3.1.0'
 
 gem 'bson_ext'
 gem 'mongoid'
@@ -20,8 +20,8 @@ gem 'redcarpet'
 # Asset Management
 group :assets do
   gem 'jquery-rails'
-  gem 'coffee-rails', '~> 3.1.0.rc'
-  gem 'sass-rails', '~> 3.1.0.rc'
+  gem 'coffee-rails', '~> 3.1.0'
+  gem 'sass-rails', '~> 3.1.0'
   gem 'ejs'
 end
 
