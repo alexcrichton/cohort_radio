@@ -1,5 +1,5 @@
 #= require pusher
-#= require fargo/result
+#= require templates/fargo_result
 
 window.humanize_bytes = (bytes) ->
   suffix = 'B'
@@ -24,7 +24,7 @@ jQuery ->
 
   # On search results, display nice fancy results with events bound already.
   channel.bind 'search-result', (data) ->
-    rendered = $(JST['fargo/result'](data))
+    rendered = $(JST['templates/fargo_result'](data))
     rendered.data('search', data)
 
     rendered.find('.more').bind 'click', ->

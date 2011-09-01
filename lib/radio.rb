@@ -35,11 +35,6 @@ class Radio
     @streaming[playlist_id].next
   end
 
-  def current_song playlist_id
-    return false unless has? playlist_id
-    @streaming[playlist_id].current_song
-  end
-
   def has? playlist_id
     @streaming.has_key? playlist_id
   end

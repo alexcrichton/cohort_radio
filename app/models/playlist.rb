@@ -4,6 +4,8 @@ class Playlist
 
   field :name
   field :description
+  field :playing, :type => Boolean
+  field :current_song, :type => String
   slug :name, :index => true
 
   embeds_many :queue_items
@@ -25,9 +27,15 @@ class Playlist
   end
 
   def stream_url
-    url = 'http://music.alexcrichton.com'
-    url << ice_mount_point
-    url
+    "http://music.alexcrichton.com#{ice_mount_point}"
+  end
+
+  def random_song
+    if pool.song_ids.present? && pool.song_ids.count > 0
+      Song.find pool.song_ids.sample
+    else
+      Song.scoped.offset(rand(Song.count)).first
+    end
   end
 
   protected

@@ -4,7 +4,6 @@ class Radio
     BLOCKSIZE = (1 << 16).freeze
 
     attr_accessor :radio
-    attr_reader :current_song
 
     alias :shout_disconnect :disconnect
 
@@ -31,8 +30,12 @@ class Radio
       super
 
       # Schedule the actual playing of the song
-      @playing = true
-      EventMachine.next_tick{ play_song }
+      @playlist.playing = true
+      @playlist.current_song = nil
+      EventMachine.defer lambda{ @playlist.save! }, lambda{ |_|
+        Pusher['playlist-' + @playlist.slug].trigger_async('connected', {})
+        play_song
+      }
 
       Radio.logger.debug "Stream: #{@playlist.name} connected"
       true
@@ -41,12 +44,11 @@ class Radio
     def disconnect
       Radio.logger.info "Stream: #{@playlist.name} disconnecting"
 
-      if @playing
-        Radio.logger.debug "Stream: #{@playlist.name} joining with the song thread"
-        @playing = false
-      end
-
-      @current_song = nil
+      @next = true
+      @playlist.playing = false
+      @playlist.current_song = nil
+      EventMachine.defer { @playlist.save! }
+      Pusher['playlist-' + @playlist.slug].trigger_async('disconnected', {})
     end
 
     def next
@@ -57,7 +59,7 @@ class Radio
       EventMachine.defer proc {
         # Get a fresh copy of the playlist because the queue items are embedded
         queue_item = @playlist.reload.queue_items.first
-        song       = queue_item.nil? ? random_song : queue_item.song
+        song       = queue_item.nil? ? @playlist.random_song : queue_item.song
         [queue_item, song]
       }, proc { |queue_item, song|
         m = ShoutMetadata.new
@@ -86,33 +88,24 @@ class Radio
       }
     end
 
-    def random_song
-      if @playlist.pool.songs.count > 0
-        scope = @playlist.pool.songs
-      else
-        scope = Song.scoped
-      end
-
-      scope.offset(rand(scope.count)).first
-    end
-
     def play_song
       next_song do |song, metadata, queue_item|
         @song = song
         @queue_item = queue_item
 
-        @current_song = song.title
+        @playlist.current_song = @song.title
+        EventMachine.defer lambda{ @playlist.save! }, lambda{ |_| stream_song }
+
         self.metadata = metadata
 
         Pusher['playlist-' + @playlist.slug].trigger_async('playing',
-          :playlist_id => @playlist.slug, :song => song.title
+          :song => song.title
         )
 
         Radio.logger.info "Stream: #{@playlist.name} => #{song.audio.path}"
         @file = File.open(song.audio.path, 'rb')
         @size = File.size(song.audio.path)
         @next = false
-        stream_song
       end
     end
 
@@ -136,18 +129,20 @@ class Radio
       Radio.logger.debug "Stream: #{@playlist.name} - done - #{@file.path}"
       @file.close
 
-      if @playing
+      if @playlist.playing
         EventMachine.next_tick { play_song }
       else
         shout_disconnect
       end
 
       @song.inc :play_count, 1
-      @queue_item.destroy
+      if @queue_item
+        @queue_item.destroy
+        Pusher['playlist-' + @playlist.slug].trigger_async('queue_removed',
+          :queue_id => @queue_item.id
+        )
+      end
 
-      Pusher['playlist-' + @playlist.slug].trigger_async('queue_removed',
-        :playlist_id => @playlist.slug, :queue_id => @queue_item.id
-      )
       @song = @queue_item = @file = nil
     end
 

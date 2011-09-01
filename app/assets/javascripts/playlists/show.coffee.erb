@@ -1,5 +1,6 @@
 jQuery ->
-  channel = pusher.subscribe 'playlist-' + $('#songs').data('id')
+  slug = $('#songs').data('id')
+  channel = pusher.subscribe 'playlist-' + slug
 
   channel.bind 'removed_item', (data) ->
     $('.song[data-queue-id=' + data.queue_id + ']').slideUp -> $(this).remove()
@@ -8,35 +9,24 @@ jQuery ->
 
   channel.bind 'added_item', (data) -> $('#songs').load(data.url + ' #songs')
 
-# $(function() {
-#   var query = $("#song-search #q");
-#   var playlist_id = $('.status').attr('data-id');
-#   if (query.length > 0) {
-#     query.autocomplete({
-#       minLength: 2,
-#       source: function(request, response) {
-#         $.get('/songs/search.json',
-#           {q:request.term, completion:'true',
-#             playlist_id: playlist_id},
-#         function(data) {
-#           response(data);
-#         });
-#       },
-#       select: function(event, ui) {
-#         $(this).prev('input:hidden').val(ui.item.value);
-#         $(this).val(ui.item.title);
-#         return false;
-#       },
-#       focus: function(event, ui) {
-#         $(this).val(ui.item.title);
-#         return false;
-#       }
-#     }).data('autocomplete')._renderItem = function(ul, item) {
-#       return $('<li/>').data('item.autocomplete', item)
-#                 .append('<a>' + item.image + " " + item.title + " - " +
-#                         item.artist + '</a>')
-#                 .appendTo(ul);
-#     };
-#   }
-#
-# });
+  channel.bind 'connected', ->
+    $('.status').show()
+    $('.search .playing').show()
+    $('.search .not-playing').hide()
+
+  channel.bind 'disconnected', ->
+    $('.status').hide()
+    $('.search .playing').hide()
+    $('.search .not-playing').show()
+
+  pusher.connection.bind 'pusher:subscribe', (data) -> console.log data
+  radio = pusher.subscribe 'private-radio'
+  $('.search .start').click ->
+    radio.trigger 'client-add', playlist_id: slug
+    false
+  $('.search .stop').click ->
+    radio.trigger 'client-remove', playlist_id: slug
+    false
+  $('.search .next').click ->
+    radio.trigger 'client-next', playlist_id: slug
+    false

@@ -7,18 +7,16 @@
     <%= link_to '[Edit playlist]', [:edit, @playlist] if can? :update, @playlist %>
     <%= link_to '[Pool]', [@playlist, :pool] %>
 
-    <% if can?(:add, @playlist) && false && radio_connected? %>
-      <% if radio.playing? @playlist.id %>
-        <%= link_to '[Stop streaming]', {:controller => 'radio/commands',
-                :action => 'stop', :playlist_id => @playlist.slug},
-                :remote => true %>
-        <%= link_to '[Next Song]', {:controller => 'radio/commands',
-                :action => 'next', :playlist_id => @playlist.slug},
-                :remote => true %>
-      <% else %>
-        <%= link_to "[Start streaming]", :controller => 'radio/commands',
-                :action => 'add', :playlist_id => @playlist.slug %>
-      <% end %>
+    <% if can?(:control, @playlist) %>
+      <% style = @playlist.playing? ? '' : 'display:none' %>
+      <span class='playing' style='<%= style %>'>
+        <%= link_to '[Next Song]', '#', :class => 'next' %>
+        <%= link_to '[Stop streaming]', '#', :class => 'stop' %>
+      </span>
+      <% style = @playlist.playing? ? 'display:none' : '' %>
+      <span class='not-playing' style='<%= style %>'>
+        <%= link_to "[Start streaming]", '#', :class => 'start' %>
+      </span>
     <% end %>
   </div>
 
@@ -34,18 +32,12 @@
   <% end %>
 </div>
 
-<div class='status' data-id="<%= @playlist.to_param %>">
-  <% if false && radio_connected? && radio.playing?(@playlist.id) %>
-    <p>
-      Stream url: <%= raw auto_link(@playlist.stream_url) %><br/>
-      Current Song:
-      <span id='current-song'>
-        <%= truncate radio.current_song(@playlist.id) %>
-      </span>
-    </p>
-  <% else %>
-    This playlist is not streaming
-  <% end %>
+<% style = @playlist.playing? ? '' : 'display:none' %>
+<div class='status' data-id="<%= @playlist.to_param %>" style='<%= style %>'>
+  <p>
+    Stream url: <%= @playlist.stream_url %><br/>
+    Current Song: <span id='current-song'></span><br/>
+  </p>
 </div>
 
 <h2>Queue:</h2>
