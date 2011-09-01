@@ -19,16 +19,6 @@ CohortRadio::Application.routes.draw do
   get 'fargo/search'
   post 'pusher/auth' => 'users#pusher_auth'
 
-  namespace :radio do
-    get 'commands/connect'
-    get 'commands/add/:playlist_id'  => 'commands#add',  :as => 'add'
-    get 'commands/stop/:playlist_id' => 'commands#stop', :as => 'stop'
-    get 'commands/next/:playlist_id' => 'commands#next', :as => 'next'
-    get 'commands/disconnect'
-
-    get 'status' => 'status#index'
-  end
-
   # other playlist actions defined below
   resources :playlists, :only => [:index, :create, :new]
 

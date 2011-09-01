@@ -18,13 +18,6 @@ class ApplicationController < ActionController::Base
     redirect_to playlists_path
   end
 
-  def require_radio_running
-    return true if radio_running?
-
-    flash[:error] = "Radio is not running!"
-    redirect_to playlists_path
-  end
-
   def current_user
     return @current_user if defined?(@current_user)
     token = session[:token] || cookies[:token]

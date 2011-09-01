@@ -45,22 +45,4 @@
       </ul>
     </li>
   <% end %>
-
-  <% if can? :manage, Radio %>
-    <li>
-      <span>Radio</span>
-      <ul>
-        <% if false && radio_running? %>
-          <% if radio_connected? %>
-            <li><%= link_to 'Disconnect', {:controller => 'radio/commands', :action => 'disconnect'}, :confirm => "Are you sure?" %></li>
-            <li><%= link_to "Status", :controller => 'radio/status' %></li>
-          <% else %>
-            <li><%= link_to 'Connect', :controller => 'radio/commands', :action => 'connect' %></li>
-          <% end %>
-        <% else %>
-          <li style='width: 180px'><span>Radio is not running.</span></li>
-        <% end %>
-      </ul>
-    </li>
-  <% end %>
 </ul>
