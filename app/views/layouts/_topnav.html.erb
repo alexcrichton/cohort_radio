@@ -32,17 +32,6 @@
   <% end %>
 
   <% if can? :download, Fargo %>
-    <li>
-      <span>Fargo</span>
-      <ul>
-        <%# TODO: check if fargo is running/connected? %>
-        <% if true %>
-          <li><%#= link_to "Downloads", fargo_downloads_path %></li>
-          <li><%= link_to "Search", fargo_search_path %></li>
-        <% else %>
-          <li style='width:180px'><span>Fargo is not running.</span></li>
-        <% end %>
-      </ul>
-    </li>
+    <li><%= link_to "Fargo", fargo_search_path %></li>
   <% end %>
 </ul>
