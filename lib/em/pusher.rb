@@ -27,6 +27,11 @@ module EventMachine
     def receive_data data
       if !@hs.done?
         raise @hs.error unless @hs.parse(data)
+        # Stupid hack because the LibWebSocket library doesn't provide a method
+        # to get out extra data from the handshake...
+        if @hs.done?
+          @frame.append @hs.res.instance_variable_get(:@buffer)
+        end
       else
         @frame.append data
       end
@@ -34,6 +39,7 @@ module EventMachine
       while message = @frame.next
         json = JSON.parse(message)
         data = JSON.parse(json['data'])
+        Rails.logger.debug "Received message: #{message}"
 
         if @channels.key?(json['channel'])
           arr = @channels[json['channel']][json['event']]
@@ -42,7 +48,7 @@ module EventMachine
         elsif @globals.key?(json['event'])
           @globals[json['event']].each{ |cb| cb.call data }
         else
-          Rails.logger.debug "Ignored message: #{message}"
+          Rails.logger.info "Ignored message: #{message}"
           # ignored event...
         end
       end
@@ -67,6 +73,7 @@ module EventMachine
     protected
 
     def send_event event, data
+      Rails.logger.debug "Sending event: #{event} with: #{data}"
       send_data @frame.new(JSON.dump(:event => event, :data => data)).to_s
     end
 

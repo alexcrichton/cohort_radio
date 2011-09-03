@@ -81,5 +81,6 @@ EM.run {
     end
   end
 
+  Playlist.update_all(:playing => false)
   Rails.logger.info 'Ready to work.'
 }
