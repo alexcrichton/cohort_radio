@@ -42,6 +42,7 @@ module EventMachine
         elsif @globals.key?(json['event'])
           @globals[json['event']].each{ |cb| cb.call data }
         else
+          Rails.logger.debug "Ignored message: #{message}"
           # ignored event...
         end
       end

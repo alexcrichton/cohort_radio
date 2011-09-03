@@ -1,4 +1,3 @@
-#= require pusher
 #= require templates/fargo_result
 
 window.humanize_bytes = (bytes) ->
@@ -18,9 +17,8 @@ window.humanize_bytes = (bytes) ->
   bytes + ' ' + suffix
 
 jQuery ->
-  window.pusher ||= new Pusher('<%= Pusher.key %>')
-  channel = window.pusher.subscribe $('#channel').val()
-  fargo_channel = window.pusher.subscribe 'private-fargo'
+  channel = pusher.subscribe $('#channel').val()
+  fargo_channel = pusher.subscribe 'private-fargo'
 
   # On search results, display nice fancy results with events bound already.
   channel.bind 'search-result', (data) ->
@@ -55,7 +53,6 @@ jQuery ->
   # When we get the uuid response from the worker, then we can create the link
   # which will send us to the status page.
   channel.bind 'job-uuid', (data) ->
-    console.log data
     bubble = $('.result[tth="' + data.tth + '"] .download')
     bubble.html(
       $('<a>').attr('href', '/resque/statuses/' + data.uuid).
