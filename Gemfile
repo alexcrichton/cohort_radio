@@ -60,6 +60,7 @@ group :worker, :test do
   gem 'fargo', :git => 'git://github.com/alexcrichton/fargo'
   gem 'ruby-shout', :require => 'shout'
   gem 'libxml-ruby', :require => 'libxml' # parsing output of last.fm
+  gem 'foreman'
 end
 
 group :useful do
