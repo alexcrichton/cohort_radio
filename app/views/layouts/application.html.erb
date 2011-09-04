@@ -9,12 +9,6 @@
     <%= yield :javascripts %>
   </head>
   <body>
-    <% if current_user && !Rails.env.development? %>
-      <div style='text-align:center'>
-        <%= image_tag 'banner.png' %>
-      </div>
-    <% end %>
-
     <div id="container">
       <header>
         <nav><%= render 'layouts/topnav' %></nav>
