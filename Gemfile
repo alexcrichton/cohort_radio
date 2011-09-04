@@ -51,9 +51,6 @@ end
 
 group :worker, :test do
   gem 'ruby-mp3info', :require => 'mp3info'
-  gem 'flacinfo-rb', :require => 'flacinfo'
-  gem 'mp4info', :git => 'git://github.com/danielwestendorf/ruby-mp4info.git',
-    :ref => '7e8131719e'
 
   gem 'em-http-request' # Required for asynchronous pusher
   gem 'libwebsocket'

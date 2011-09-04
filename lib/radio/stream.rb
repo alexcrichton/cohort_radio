@@ -64,10 +64,9 @@ class Radio
       }, proc { |queue_item, song|
         m = ShoutMetadata.new
         m.add 'filename', song.audio.path
-        info   = Mp3Info.new(song.audio.path)
-        title  = info.tag['title']
-        artist = info.tag['artist'] || ''
-        album  = info.tag['album']  || ''
+        title  = song.audio.title
+        artist = song.audio.artist
+        album  = song.audio.album
 
         string = title
         string << ' ('
@@ -81,7 +80,6 @@ class Radio
         m.add 'song',   string
         m.add 'artist', artist unless artist == ''
         m.add 'album',  album  unless album  == ''
-        m.add 'bitrate', info.bitrate.to_s
         m.add 'genre', 'awesome'
 
         block.call song, m, queue_item

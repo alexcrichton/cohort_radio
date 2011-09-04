@@ -1,5 +1,7 @@
 class SongUploader < CarrierWave::Uploader::Base
 
+  include Shellwords
+
   storage :file
   process :encode_to_mp3
 
@@ -16,7 +18,7 @@ class SongUploader < CarrierWave::Uploader::Base
   end
 
   def extension_white_list
-    %w(mp3 flac m4a)
+    %w(mp3 flac m4a wav)
   end
 
   def store_dir
@@ -33,83 +35,40 @@ class SongUploader < CarrierWave::Uploader::Base
   end
 
   def encode_to_mp3
-    if current_path =~ /flac$/i
-      convert_extension 'flac', title, artist, album, 'flac -cd'
-    elsif current_path =~ /m4a$/i
-      convert_extension 'm4a', title, artist, album, 'faad -w'
-    elsif current_path =~ /mp3$/i
-      # Convert specially here because otherwise we'd be converting in-place.
-      i = Mp3Info.open(current_path)
-      if i.bitrate != bitrate || i.samplerate != samplerate
-        t = Tempfile.new('converting')
-        safe_system "lame #{lame_opts} '#{current_path}' '#{t.path}'"
-        safe_system "cp '#{t.path}' '#{current_path}'"
+    p 'here'
+    infile  = current_path
+    outfile = current_path + '.tmp'
 
-        # Lame doesn't preserve tags, re-write them now that we converted the
-        # file
-        info = Mp3Info.new(current_path)
-        info.tag['artist'] = artist
-        info.tag['album']  = album
-        info.tag['title']  = title
-        info.close
-      end
-    else
-      raise CarrierWave::IntegrityError,
-          "Doesn't support #{File.basename(current_path)}"
-    end
+    # Make sure that all songs are the same bitrate and are sampled at the same
+    # rate. The bitrate is high so we'll have large files, but hopefully not
+    # much loss of quality. The sample rate needs to be the same for the icecast
+    # server to agree with playing songs.
+    #
+    # Apparently, shout doesn't like streams with different bit rates. This
+    # causes some songs to go silent while others play. Because everything
+    # sounds better in 320, just convert all songs up to 320 and we won't lose
+    # anything from those mp3's in 128 and we won't lose as much from flac's
+    # and m4a/mp4's
+    safe_system "ffmpeg -i #{shellescape infile} -ar 48000 " \
+                "-ab 320k -f mp3 #{shellescape outfile}"
+
+    FileUtils.mv outfile, infile
+
+    # Change the @filename variable for carrierwave to make sure we preserve
+    # the right file.
+    @filename = File.basename(infile, File.extname(infile)) + '.mp3'
   end
 
   protected
 
   def tags
-    if current_path =~ /flac$/
-      tags = FlacInfo.new(current_path).tags
-      [tags['TITLE'], tags['ARTIST'], tags['ALBUM']]
-    elsif current_path =~ /mp3$/
-      info = Mp3Info.new(current_path)
-      [info.tag['title'], info.tag['artist'], info.tag['album']]
-    elsif current_path =~ /m4a$/
-      tags = MP4Info.open(current_path)
-      [tags.NAM, tags.ART, tags.ALB]
-    else
-      [nil, nil, nil]
-    end
-  end
+    # Apparently ffmpeg prints out this information to stderr?
+    info = `ffmpeg -i #{shellescape current_path} 2>&1`
+    artist = info.match(/artist\s+: (.*)/i)
+    title = info.match(/title\s+: (.*)/i)
+    album = info.match(/album\s+: (.*)/i)
 
-  # Make sure that all songs are the same bitrate and are sampled at the same
-  # rate. The bitrate is high so we'll have large files, but hopefully not much
-  # loss of quality. The sample rate needs to be the same for the icecast server
-  # to agree with playing songs.
-  #
-  # Apparently, shout doesn't like streams with different bit rates. This
-  # causes some songs to go silent while others play. Because everything
-  # sounds better in 320, just convert all songs up to 320 and we won't lose
-  # anything from those mp3's in 128 and we won't lose as much from flac's
-  # and m4a/mp4's
-  def lame_opts
-    "--quiet -h -b #{bitrate} --resample #{samplerate}"
-  end
-
-  def bitrate; 320; end
-  def samplerate; 48000; end
-
-  def convert_extension ext, title, artist, album, command
-    filename = File.basename(current_path, '.' + ext) + '.mp3'
-    f = File.dirname(current_path) + '/' + filename
-
-    safe_system "#{command} #{current_path} | lame #{lame_opts} - #{f}"
-
-    info = Mp3Info.new(f)
-    info.tag['artist'] = artist
-    info.tag['album']  = album
-    info.tag['title']  = title
-    info.close
-
-    FileUtils.mv f, current_path
-
-    # Change the @filename variable for carrierwave to make sure we preserve
-    # the right file.
-    @filename = filename
+    [title ? title[1] : nil, artist ? artist[1] : nil, album ? album[1] : nil]
   end
 
   def safe_system *args

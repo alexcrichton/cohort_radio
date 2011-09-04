@@ -9,13 +9,6 @@ GIT
       i18n
       libxml-ruby
 
-GIT
-  remote: git://github.com/danielwestendorf/ruby-mp4info.git
-  revision: 7e8131719eca31ab7949c34ad59d5bdc26a0e384
-  ref: 7e8131719e
-  specs:
-    mp4info (1.7.3)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -94,7 +87,6 @@ GEM
     eventmachine (0.12.10)
     execjs (1.2.4)
       multi_json (~> 1.0)
-    flacinfo-rb (0.4)
     foreman (0.20.0)
       term-ansicolor (~> 1.0.5)
       thor (>= 0.13.6)
@@ -263,7 +255,6 @@ DEPENDENCIES
   ejs
   em-http-request
   fargo!
-  flacinfo-rb
   foreman
   guard-livereload
   heroku
@@ -273,7 +264,6 @@ DEPENDENCIES
   libxml-ruby
   mongoid
   mongoid_slug
-  mp4info!
   pusher
   rails (= 3.1.0)
   redcarpet
