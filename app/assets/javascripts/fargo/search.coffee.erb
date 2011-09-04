@@ -24,6 +24,7 @@ jQuery ->
   channel.bind 'search-result', (data) ->
     rendered = $(JST['templates/fargo_result'](data))
     rendered.data('search', data)
+    $('.loader').remove()
 
     rendered.find('.more').bind 'click', ->
       $(this).siblings('.coalesced').slideToggle()
@@ -64,6 +65,13 @@ jQuery ->
   # Upon submission of the form, instead send the request over the websocket to
   # the worker.
   $('form').bind 'submit', ->
+    $('.loader').remove()
+    if ($('#q').val() == '')
+      return false
+    $('#search-response').children().remove()
+    loader = $('<img>').attr('src', '<%= asset_path "ajax-small.gif" %>')
+    loader.addClass('loader')
+    $(this).find('p').append(loader)
     fargo_channel.trigger('client-search',
       channel: channel.name
       query: $('#q').val()

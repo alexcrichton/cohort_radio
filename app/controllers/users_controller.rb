@@ -5,6 +5,8 @@ class UsersController < ApplicationController
   respond_to :html, :except => :search
   respond_to :json, :only => :search
 
+  skip_before_filter :verify_authenticity_token, :only => [:pusher_auth]
+
   def search
     @users = User.search(params[:q]).limit(params[:limit])
 

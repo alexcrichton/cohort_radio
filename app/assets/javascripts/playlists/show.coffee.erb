@@ -19,6 +19,8 @@ jQuery ->
     $('.search .playing').hide()
     $('.search .not-playing').show()
 
+  channel.bind 'error', (data) -> alert 'Error for playlist: ' + data.message
+
   pusher.connection.bind 'pusher:subscribe', (data) -> console.log data
   radio = pusher.subscribe 'private-radio'
   $('.search .start').click ->

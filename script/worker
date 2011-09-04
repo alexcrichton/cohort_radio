@@ -65,7 +65,12 @@ EM.run {
     # Add playlist
     ws.bind_event 'private-radio', 'client-add' do |data|
       Rails.logger.debug "Adding: #{data['playlist_id']}"
-      radio.add data['playlist_id']
+      begin
+        radio.add data['playlist_id']
+      rescue ShoutError => e
+        Pusher['playlist-' + data['playlist_id']].trigger_async('error',
+          :message => e.message)
+      end
     end
 
     # Remove playlist
