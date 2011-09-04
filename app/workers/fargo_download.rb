@@ -42,7 +42,7 @@ class FargoDownload < Resque::JobWithStatus
         if message[:failed]
           error = message[:last_error]
         else
-          if message[:file] =~ /(m4a|mp3|flac)$/i
+          if message[:file] =~ /(m4a|mp3|flac|wav)$/i
             Resque.enqueue ConvertSong, message[:file]
           end
           completed "Download finished into: #{message[:file]}"
