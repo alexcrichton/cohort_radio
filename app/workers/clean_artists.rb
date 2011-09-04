@@ -3,14 +3,12 @@ class CleanArtists
   @queue = :cleaner
 
   def self.perform
+    Album.all.each do |album|
+      album.destroy if album.songs.size == 0
+    end
+
     Artist.all.each do |artist|
-      if artist.songs.size == 0
-        artist.destroy
-      else
-        artist.albums.each do |album|
-          album.destroy if album.songs.size == 0
-        end
-      end
+      artist.destroy if artist.songs.size == 0 && artist.albums.size == 0
     end
 
     CarrierWave.clean_cached_files!
