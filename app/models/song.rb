@@ -15,8 +15,8 @@ class Song
   validates_uniqueness_of :title, :scope => :artist_id,
       :case_sensitive => false, :if => :title_changed?
 
-  validates_processing_of :audio
-  validates_integrity_of :audio
+  validates_processing_of :audio, :on => :create
+  validates_integrity_of :audio, :on => :create
   before_validation :ensure_artist_and_album
   validate :unique_title
   after_save :write_metadata
@@ -34,7 +34,7 @@ class Song
 
   def ensure_artist_and_album
     return if audio_integrity_error || audio_processing_error
-    if !audio.present?
+    if !audio.present? && persisted?
       errors[:audio] << 'is required.'
       return
     end
