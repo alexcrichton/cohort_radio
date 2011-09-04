@@ -49,7 +49,7 @@ namespace :foreman do
 
   desc 'Stop the foreman processes'
   task :stop do
-    run "cd #{current_release} && kill $(pgrep -f foreman)"
+    run "kill $(pgrep -f foreman)"
   end
 
   desc 'Restart the foreman processes'
