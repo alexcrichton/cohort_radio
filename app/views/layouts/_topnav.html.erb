@@ -31,7 +31,7 @@
     </li>
   <% end %>
 
-  <% if can? :download, Fargo %>
+  <% if can? :download, 'fargo' %>
     <li><%= link_to "Fargo", fargo_search_path %></li>
   <% end %>
 </ul>
