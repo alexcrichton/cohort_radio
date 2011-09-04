@@ -53,11 +53,49 @@ describe Song do
   end
 
   it "doesn't save the song if there's a processing error" do
-    subject.audio.stub(:encode_to_mp3).and_raise(CarrierWave::IntegrityError)
-    subject.audio = File.open(sample)
     subject.save
 
     subject.should_not be_persisted
   end
 
+  context "creating artists/albums" do
+    before :each do
+      subject.audio.stub(:encode_to_mp3).and_raise(CarrierWave::IntegrityError)
+      subject.stub(:audio_integrity_error)
+      subject.stub(:audio_processing_error)
+      subject.audio = File.open(sample)
+    end
+
+    it "creates both" do
+      subject.artist_name = 'artist'
+      subject.album_name = 'album'
+      subject.save
+
+      subject.artist.should be_persisted
+      subject.artist.name.should == 'artist'
+      subject.album.should be_persisted
+      subject.album.name.should == 'album'
+    end
+
+    it "creates both when the subject is previously saved" do
+      subject.save
+      subject.should be_persisted
+
+      subject.artist_name = 'artist'
+      subject.album_name = 'album'
+      subject.save
+      subject.artist.should be_persisted
+      subject.artist.name.should == 'artist'
+      subject.album.should be_persisted
+      subject.album.name.should == 'album'
+
+      subject.artist_name = 'artist2'
+      subject.album_name = 'album2'
+      subject.save
+      subject.artist.should be_persisted
+      subject.artist.name.should == 'artist2'
+      subject.album.should be_persisted
+      subject.album.name.should == 'album2'
+    end
+  end
 end

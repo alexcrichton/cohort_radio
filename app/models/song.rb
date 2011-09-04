@@ -40,20 +40,22 @@ class Song
     end
     file = audio.path
 
-    artist_name = self.artist.try :name if artist_name.blank?
-    artist_name ||= audio.artist        if !custom_set
-    artist_name = 'unknown'             if artist_name.blank?
-    self.artist = Artist.where(:name => artist_name).first ||
-                  Artist.create!(:name => artist_name)
+    art = artist_name
+    art = self.artist.try :name if art.blank?
+    art ||= audio.artist        if !custom_set
+    art = 'unknown'             if art.blank?
+    self.artist = Artist.where(:name => art).first ||
+                  Artist.create!(:name => art)
 
-    album_name = self.album.try :name if album_name.blank?
-    album_name ||= audio.album        if !custom_set
-    album_name = 'unknown'             if album_name.blank?
-    self.album = artist.albums.where(:name => album_name).first ||
-                 artist.albums.create!(:name => album_name)
+    alb = album_name
+    alb = self.album.try :name if alb.blank?
+    alb ||= audio.album        if !custom_set
+    alb = 'unknown'            if alb.blank?
+    self.album = artist.albums.where(:name => alb).first ||
+                 artist.albums.create!(:name => alb)
 
-    self.artist_name = artist_name
-    self.album_name  = album_name
+    self.artist_name = art
+    self.album_name  = alb
     self.title ||= audio.title unless custom_set
     self.title ||= File.basename(file)
   end

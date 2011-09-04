@@ -35,7 +35,6 @@ class SongUploader < CarrierWave::Uploader::Base
   end
 
   def encode_to_mp3
-    p 'here'
     infile  = current_path
     outfile = current_path + '.tmp'
 
