@@ -7,7 +7,6 @@ class ConvertSong
     io = File.open(file)
     begin
       s = Song.new :audio => io
-      File.delete s.audio.path if s.audio_processing_error
       s.save!
       File.delete file
     ensure
