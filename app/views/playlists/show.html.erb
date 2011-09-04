@@ -36,7 +36,8 @@
 <div class='status' data-id="<%= @playlist.to_param %>" style='<%= style %>'>
   <p>
     Stream url: <%= @playlist.stream_url %><br/>
-    Current Song: <span id='current-song'></span><br/>
+    Current Song:
+    <span id='current-song'><%= @playlist.current_song %></span>
   </p>
 </div>
 

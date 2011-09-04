@@ -5,7 +5,7 @@ class Playlist
   field :name
   field :description
   field :playing, :type => Boolean
-  field :current_song, :type => String
+  field :current_song
   slug :name, :index => true
 
   embeds_many :queue_items
