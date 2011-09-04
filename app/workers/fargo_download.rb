@@ -30,6 +30,7 @@ class FargoDownload < Resque::JobWithStatus
     raise 'Could not start the download!' if @download.nil?
 
     finished = Fargo::BlockingCounter.new 1
+    completion = nil
     block = lambda do |args|
       type, message = args
       next unless message[:download] == @download
@@ -39,14 +40,7 @@ class FargoDownload < Resque::JobWithStatus
       elsif type == :download_progress
         EM.schedule { at message[:percent], 1 }
       elsif type == :download_finished
-        if message[:failed]
-          error = message[:last_error]
-        else
-          if message[:file] =~ /(m4a|mp3|flac|wav)$/i
-            Resque.enqueue ConvertSong, message[:file]
-          end
-          completed "Download finished into: #{message[:file]}"
-        end
+        completion = message
         finished.decrement
       end
     end
@@ -56,7 +50,26 @@ class FargoDownload < Resque::JobWithStatus
     EventMachine.schedule { @sid = @@client.channel.subscribe block }
     finished.wait # Block until the download is finished
     EventMachine.schedule { @@client.channel.unsubscribe @sid }
-    raise error if error
+
+    raise completion[:last_error] if completion[:failed]
+
+    if completion[:file] =~ /(m4a|mp3|flac|wav)$/i
+      Resque.enqueue ConvertSong, completion[:file]
+      completed "#{completion[:file]} queued for processing"
+    elsif ENV['FARGO_DESTINATION'] &&
+          File.writable?(ENV['FARGO_DESTINATION'])
+      i = ''
+      begin
+        destination = File.join ENV['FARGO_DESTINATION'],
+                                i + File.basename(completion[:file])
+        i += 'x'
+      end while File.exists?(destination)
+
+      FileUtils.mv completion[:file], destination
+      completed "#{completion[:file]} moved to #{destination}"
+    else
+      completed "Download finished into #{completion[:file]}"
+    end
   end
 
 end
