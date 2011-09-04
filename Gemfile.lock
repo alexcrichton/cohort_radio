@@ -1,12 +1,6 @@
 GIT
-  remote: git://github.com/danielwestendorf/ruby-mp4info.git
-  revision: 7e8131719eca31ab7949c34ad59d5bdc26a0e384
-  ref: 7e8131719e
-  specs:
-    mp4info (1.7.3)
-
-PATH
-  remote: ../ruby/fargo
+  remote: git://github.com/alexcrichton/fargo
+  revision: 8e1d81954af1eec7210f85c16fd6752c1f86e67a
   specs:
     fargo (0.4.0)
       activesupport (>= 3.0.3)
@@ -14,6 +8,13 @@ PATH
       eventmachine
       i18n
       libxml-ruby
+
+GIT
+  remote: git://github.com/danielwestendorf/ruby-mp4info.git
+  revision: 7e8131719eca31ab7949c34ad59d5bdc26a0e384
+  ref: 7e8131719e
+  specs:
+    mp4info (1.7.3)
 
 GEM
   remote: http://rubygems.org/
