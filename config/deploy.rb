@@ -40,7 +40,7 @@ namespace :foreman do
   end
 
   task :stop do
-    run "cd #{current_release} && kill $(pgrep -f 'foreman master')"
+    run "cd #{current_release} && kill $(pgrep -f foreman)"
   end
 
   task :restart do
