@@ -23,6 +23,7 @@ group :assets do
   gem 'coffee-rails', '~> 3.1.0'
   gem 'sass-rails', '~> 3.1.0'
   gem 'ejs'
+  gem 'uglifier'
 end
 
 group :development, :test do
@@ -35,9 +36,8 @@ group :test do
   gem 'database_cleaner'
 end
 
-group :production do
+group :heroku do
   gem 'therubyracer-heroku'
-  gem 'uglifier'
 end
 
 group :worker, :default do
@@ -64,4 +64,5 @@ end
 
 group :useful do
   gem 'guard-livereload'
+  gem 'capistrano'
 end
