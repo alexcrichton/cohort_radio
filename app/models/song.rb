@@ -34,7 +34,7 @@ class Song
 
   def ensure_artist_and_album
     return if audio_integrity_error || audio_processing_error
-    if !audio.present? && persisted?
+    if !audio.present? && new_record?
       errors[:audio] << 'is required.'
       return
     end
