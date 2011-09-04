@@ -1,3 +1,5 @@
+require 'net/http'
+
 class ScrobbleAlbum
 
   @queue = :songs
@@ -7,9 +9,14 @@ class ScrobbleAlbum
   def self.perform id
     album = Album.find(id)
     url = API_URL % [CGI.escape(album.artist.name), CGI.escape(album.name)]
-    xml = LibXML::XML::Document.file url
-    album.cover_url = xml.find_first('//coverart/large').content
-    album.save!
+    uri = URI.parse url
+    res = Net::HTTP.start(uri.host, uri.port) { |http| http.get(uri.path) }
+
+    if res.is_a?(Net::HTTPSuccess)
+      doc = LibXML::XML::Document.string res.body
+      album.cover_url = doc.find_first('//coverart/large').content
+      album.save!
+    end
   end
 
 end
