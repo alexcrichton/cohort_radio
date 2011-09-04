@@ -1,6 +1,5 @@
 class FargoController < ApplicationController
 
-  authorize_resource :class => Fargo
   before_filter :require_fargo_connected
 
   def search
