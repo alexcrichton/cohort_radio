@@ -1,2 +1,0 @@
-module Radio::StatusHelper
-end

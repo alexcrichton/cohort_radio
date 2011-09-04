@@ -1,2 +1,0 @@
-module Radio::CommandsHelper
-end
