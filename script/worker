@@ -60,6 +60,13 @@ EM.run {
       EM.defer { downloader.perform job }
     end
 
+    # Failed download jobs get placed back into normal resque queues when
+    # they're done. These aren't very high priority jobs, so they don't need
+    # the special treatment they're given above (immediate download initiation,
+    # parallel downloading from different nicks, etc.). These are just jobs
+    # that naturally fail, but still need to be restarted.
+    EM.defer { Resque::Worker.new('downloads').work }
+
     # ========== Radio Events ==============
 
     # Add playlist
