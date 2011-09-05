@@ -60,13 +60,6 @@ EM.run {
       EM.defer { downloader.perform job }
     end
 
-    # Failed download jobs get placed back into normal resque queues when
-    # they're done. These aren't very high priority jobs, so they don't need
-    # the special treatment they're given above (immediate download initiation,
-    # parallel downloading from different nicks, etc.). These are just jobs
-    # that naturally fail, but still need to be restarted.
-    EM.defer { Resque::Worker.new('download').work }
-
     # ========== Radio Events ==============
 
     # Add playlist
@@ -92,6 +85,21 @@ EM.run {
       radio.next data['playlist_id']
     end
   end
+
+  # Failed download jobs get placed back into normal resque queues when
+  # they're done. These aren't very high priority jobs, so they don't need
+  # the special treatment they're given above (immediate download initiation,
+  # parallel downloading from different nicks, etc.). These are just jobs
+  # that naturally fail, but still need to be restarted.
+  queue = Resque::Worker.new('download')
+  work = lambda {
+    if job = queue.reserve
+      EM.defer { queue.perform job }, lambda { EM.add_timer 5, work }
+    else
+      EM.add_timer 5, work
+    end
+  }
+  work.call
 
   Playlist.update_all(:playing => false)
   Rails.logger.info 'Ready to work.'

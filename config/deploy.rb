@@ -57,5 +57,5 @@ namespace :foreman do
     foreman.stop
     foreman.start
   end
-  after 'deploy:symlink', 'foreman:restart'
+  after 'deploy:restart', 'foreman:restart'
 end
