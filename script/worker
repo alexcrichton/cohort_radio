@@ -65,7 +65,7 @@ EM.run {
     # the special treatment they're given above (immediate download initiation,
     # parallel downloading from different nicks, etc.). These are just jobs
     # that naturally fail, but still need to be restarted.
-    EM.defer { Resque::Worker.new('downloads').work }
+    EM.defer { Resque::Worker.new('download').work }
 
     # ========== Radio Events ==============
 
