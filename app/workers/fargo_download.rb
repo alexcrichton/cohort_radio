@@ -65,6 +65,7 @@ class FargoDownload < Resque::JobWithStatus
         i += 'x'
       end while File.exists?(destination)
 
+      set_status "Moving downloaded file to #{destination}"
       FileUtils.mv completion[:file], destination
       completed "#{completion[:file]} moved to #{destination}"
     else
