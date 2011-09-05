@@ -49,7 +49,7 @@ namespace :foreman do
 
   desc 'Stop the foreman processes'
   task :stop do
-    run "kill $(pgrep -f foreman)"
+    run "pkill -f foreman; true"
   end
 
   desc 'Restart the foreman processes'
