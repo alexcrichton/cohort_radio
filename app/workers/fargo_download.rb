@@ -26,7 +26,7 @@ class FargoDownload < Resque::JobWithStatus
       finished.decrement
     }
     finished.wait
-    raise e if error
+    raise error if error
     raise 'Could not start the download!' if @download.nil?
 
     finished = Fargo::BlockingCounter.new 1
