@@ -20,7 +20,7 @@ server 'eve.alexcrichton.com', :app, :web, :db, :primary => true
 # FARGO_DESTINATION, and MONGOHQ_URL
 envfile = File.expand_path('../../.env', __FILE__)
 if File.exists?(envfile)
-  env = {'RAILS_ENV' => 'production'}
+  env = {'RAILS_ENV' => 'production', 'RAILS_GROUPS' => 'worker'}
   File.readlines(envfile).each { |line|
     key, value = line.split('=', 2)
     env[key] = value.chomp
