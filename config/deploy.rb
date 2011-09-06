@@ -50,7 +50,7 @@ end
 namespace :workers do
   task :start_queue do
     run "cd #{current_release} && " \
-        "nohup bundle exec rake resque:work" \
+        "nohup bundle exec rake environment resque:work " \
         "QUEUE=cleaner,convert_song,scrobble,songs --trace " \
         "&>> log/queue.log &|"
   end
