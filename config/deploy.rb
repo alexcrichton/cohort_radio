@@ -18,12 +18,12 @@ server 'eve.alexcrichton.com', :app, :web, :db, :primary => true
 
 # Should contain RADIO_URL, REDISTOGO_URL, PUSHER_URL,
 # FARGO_DESTINATION, and MONGOHQ_URL
-envfile = File.expand_path('../../.env')
+envfile = File.expand_path('../../.env', __FILE__)
 if File.exists?(envfile)
   env = {'RAILS_ENV' => 'production'}
-  File.readlines(envfiles).each { |line|
+  File.readlines(envfile).each { |line|
     key, value = line.split('=', 2)
-    env[key] = value
+    env[key] = value.chomp
   }
   set :default_environment, env
 end
@@ -57,7 +57,7 @@ namespace :workers do
 
   task :start_fargo do
     run "cd #{current_release} && " \
-        "nohup bundle exec script/worker &>> log/fargo.log"
+        "nohup bundle exec script/worker &>> log/fargo.log &|"
   end
 
   task :start do

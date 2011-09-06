@@ -2,6 +2,7 @@
 
 ENV['RAILS_GROUPS'] ||= 'worker'
 ENV['RAILS_ENV'] ||= 'development'
+puts 'Starting fargo worker..'
 
 require File.expand_path('../../config/environment',  __FILE__)
 
