@@ -94,7 +94,7 @@ EM.run {
   queue = Resque::Worker.new('download')
   work = lambda {
     if job = queue.reserve
-      EM.defer lambda { queue.perform job }, lambda { EM.add_timer 5, work }
+      EM.defer lambda { queue.perform job }, lambda { |_| EM.add_timer 5, work }
     else
       EM.add_timer 5, work
     end
