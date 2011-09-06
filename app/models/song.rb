@@ -25,6 +25,7 @@ class Song
     if query.blank?
       where(:id => 0)
     else
+      query = Regexp.escape query
       any_of({:title => /#{query}/i}, {:artist_name => /#{query}/i},
              {:album_name => /#{query}/i})
     end
@@ -68,7 +69,8 @@ class Song
     return if audio_integrity_error || audio_processing_error
     return unless artist.present? && title.present?
 
-    duplicate = Song.where(:title => /#{title}/i).any?{ |s|
+    name = Regexp.escape title
+    duplicate = Song.where(:title => /#{name}/i).any?{ |s|
       s.artist_name.downcase == artist_name.downcase
     }
 
