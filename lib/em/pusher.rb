@@ -67,7 +67,7 @@ module EventMachine
     end
 
     def unbind
-      raise 'The websocket connection has closed!'
+      Rails.logger.debug "Pusher socket is closing now..."
     end
 
     protected

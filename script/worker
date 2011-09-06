@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+ENV['RAILS_GROUPS'] ||= 'worker'
+ENV['RAILS_ENV'] ||= 'development'
+
 require File.expand_path('../../config/environment',  __FILE__)
 
 require 'em/pusher'
@@ -31,7 +34,10 @@ EM.run {
   uri = URI.parse('http://ws.pusherapp.com/app/' + Pusher.key)
   EM::PusherSocket.uri = uri
 
+  pusher = nil
+  downloads = []
   EM.connect uri.host, uri.port, EM::PusherSocket do |ws|
+    pusher = ws
     # ========== Fargo Events ==============
 
     # Search fargo event
@@ -59,7 +65,10 @@ EM.run {
 
       # The download can possibly take a long time. Defer this into another
       # thread so we don't block the reactor.
-      EM.defer { downloader.perform job }
+      downloads << uuid
+      EM.defer lambda { downloader.perform job }, lambda { |_|
+        downloads.delete uuid
+      }
     end
 
     # ========== Radio Events ==============
@@ -102,6 +111,28 @@ EM.run {
     end
   }
   work.call
+
+  on_exit = lambda {
+    pusher.close_connection(true)
+    queue.shutdown
+    searcher.shutdown
+    radio.disconnect
+
+    stop_reactor = lambda {
+      if downloads.empty?
+        EM.stop
+        true
+      else
+        Rails.logger.info "Cannot stop reactor yet, #{downloads.size} " \
+                          "download(s) remain"
+        false
+      end
+    }
+    stop_reactor.call || EM.add_periodic_timer(1, stop_reactor)
+  }
+  trap(:INT) { EM.schedule on_exit }
+  trap(:TERM) { EM.schedule on_exit }
+  trap(:QUIT) { EM.schedule on_exit }
 
   Playlist.update_all(:playing => false)
   Rails.logger.info 'Ready to work.'

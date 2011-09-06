@@ -16,10 +16,21 @@ set :bundle_without, [:development, :test, :heroku, :assets]
 
 server 'eve.alexcrichton.com', :app, :web, :db, :primary => true
 
+# Should contain RADIO_URL, REDISTOGO_URL, PUSHER_URL,
+# FARGO_DESTINATION, and MONGOHQ_URL
+envfile = File.expand_path('../../.env')
+if File.exists?(envfile)
+  env = {'RAILS_ENV' => 'production'}
+  File.readlines(envfiles).each { |line|
+    key, value = line.split('=', 2)
+    env[key] = value
+  }
+  set :default_environment, env
+end
+
 namespace :deploy do
   task :create_upload_dirs do
-    run "mkdir -p #{shared_path}/tmp-downloads " +
-        "#{shared_path}/config #{shared_path}/private"
+    run "mkdir -p #{shared_path}/tmp-downloads #{shared_path}/private"
   end
   after 'deploy:setup', 'deploy:create_upload_dirs'
 
@@ -36,20 +47,38 @@ namespace :deploy do
   before 'deploy:update_code', 'deploy:push_to_heroku'
 end
 
-namespace :foreman do
-  desc 'Start the foreman processes'
-  task :start do
+namespace :workers do
+  task :start_queue do
     run "cd #{current_release} && " \
-        "nohup bundle exec foreman start " \
-          "--env #{shared_path}/config/env " \
-          "--procfile #{current_release}/.foreman " \
-          "--log #{shared_path}/log " \
-          "--user #{user} &>> log/foreman.log &|"
+        "nohup bundle exec rake resque:work" \
+        "QUEUE=cleaner,convert_song,scrobble,songs --trace " \
+        "&>> log/queue.log &|"
+  end
+
+  task :start_fargo do
+    run "cd #{current_release} && " \
+        "nohup bundle exec script/worker &>> log/fargo.log"
+  end
+
+  task :start do
+    foreman.start_queue
+    foreman.start_fargo
+  end
+
+  desc 'Stop just the queue worker process'
+  task :stop_queue do
+    run "pkill -QUIT -f 'resque.*scrobble'; true"
+  end
+
+  desc 'Stop just the fargo worker process'
+  task :stop_fargo do
+    run "pkill -QUIT -f 'script/worker'; true"
   end
 
   desc 'Stop the foreman processes'
   task :stop do
-    run "pkill -f foreman; true"
+    foreman.stop_queue
+    foreman.stop_fargo
   end
 
   desc 'Restart the foreman processes'
@@ -57,5 +86,4 @@ namespace :foreman do
     foreman.stop
     foreman.start
   end
-  after 'deploy:restart', 'foreman:restart'
 end
