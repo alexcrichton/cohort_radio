@@ -7,6 +7,8 @@ require 'radio'
 
 Rails.logger = Logger.new STDOUT
 
+Resque::Status.expire_in = 1.day
+
 EM.run {
   client = Fargo::Client.new
   client.config.color = true
