@@ -45,7 +45,7 @@ group :worker, :default do
   gem 'pusher'
 
   # Queued processing
-  gem 'resque'
+  gem 'resque', '>= 1.18.0'
   gem 'resque-status', :require => 'resque/status'
 end
 
