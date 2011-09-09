@@ -44,14 +44,14 @@ namespace :deploy do
   task :push_to_heroku do
     system 'git push heroku master'
   end
-  before 'deploy:update_code', 'deploy:push_to_heroku'
+  before 'deploy:update_code', 'deploy:push_to_heroku' if ENV['HEROKU'] != 'no'
 end
 
 namespace :workers do
   task :start_queue do
     run "cd #{current_release} && " \
         "nohup bundle exec rake environment resque:work " \
-        "QUEUE=cleaner,convert_song,scrobble,songs --trace " \
+        "QUEUE=cleaner,convert_song,scrobble,songs VERBOSE=1 --trace " \
         "&>> log/queue.log &|"
   end
 
@@ -61,8 +61,8 @@ namespace :workers do
   end
 
   task :start do
-    foreman.start_queue
-    foreman.start_fargo
+    workers.start_queue
+    workers.start_fargo
   end
 
   desc 'Stop just the queue worker process'
@@ -77,13 +77,13 @@ namespace :workers do
 
   desc 'Stop the foreman processes'
   task :stop do
-    foreman.stop_queue
-    foreman.stop_fargo
+    workers.stop_queue
+    workers.stop_fargo
   end
 
   desc 'Restart the foreman processes'
   task :restart do
-    foreman.stop
-    foreman.start
+    workers.stop
+    workers.start
   end
 end
