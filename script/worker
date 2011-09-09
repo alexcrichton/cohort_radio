@@ -7,7 +7,8 @@ require File.expand_path('../../config/environment',  __FILE__)
 require 'em/pusher'
 require 'radio'
 
-Rails.logger = Logger.new STDOUT
+STDOUT.sync = true
+Rails.logger = Fargo.logger = Radio.logger = Logger.new(STDOUT)
 
 Resque::Status.expire_in = 1.day
 
