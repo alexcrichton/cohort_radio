@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/alexcrichton/fargo
-  revision: 3f55fb6b149f9557f2405293cc0e5a201a7a0ef4
+  revision: 7501e47574c0963fbc305135352aebcef9882151
   specs:
     fargo (0.4.0)
       activesupport (>= 3.0.3)
@@ -69,7 +69,7 @@ GEM
     coffee-script-source (1.1.2)
     crack (0.1.8)
     database_cleaner (0.6.7)
-    devise (1.4.4)
+    devise (1.4.5)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.0.3)
       warden (~> 1.0.3)
@@ -101,7 +101,7 @@ GEM
     highline (1.6.2)
     hike (1.2.1)
     i18n (0.6.0)
-    jquery-rails (1.0.13)
+    jquery-rails (1.0.14)
       railties (~> 3.0)
       thor (~> 0.14)
     kaminari (0.12.4)
