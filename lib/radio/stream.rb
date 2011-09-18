@@ -70,16 +70,16 @@ class Radio
 
         string = title
         string << ' ('
-        string << artist unless artist == ''
-        if album != ''
+        string << artist unless artist.blank?
+        if album.present?
           string << ' - '
           string << album
         end
         string << ')'
 
         m.add 'song',   string
-        m.add 'artist', artist unless artist == ''
-        m.add 'album',  album  unless album  == ''
+        m.add 'artist', artist unless artist.blank?
+        m.add 'album',  album  unless album.blank?
         m.add 'genre', 'awesome'
 
         block.call song, m, queue_item
