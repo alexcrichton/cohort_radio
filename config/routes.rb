@@ -24,6 +24,9 @@ CohortRadio::Application.routes.draw do
 
   get 'users/search'
 
+  get 'uploads/:file' => 'songs#download_user_upload',
+      :as => :download_user_upload
+
   root :to => 'playlists#index'
 
   resources :playlists, :path => '', :except => [:index, :create, :new] do

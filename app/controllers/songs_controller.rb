@@ -35,8 +35,19 @@ class SongsController < ApplicationController
   end
 
   def create
-    flash[:notice] = 'Song created!' if @song.save
-    respond_with @song
+    audio = params.fetch(:song, {})[:audio]
+
+    if audio && audio.size < 20.megabytes
+      flash[:notice] = 'File queued for processing!'
+      filename = Rails.root.join('tmp', SecureRandom.hex(20))
+      filename.open('wb') { |f| f << audio.read }
+      Resque.enqueue DownloadSongUpload,
+                     download_user_upload_url(filename.basename)
+      redirect_to root_path
+    else
+      flash.now[:error] = 'Need a file less than 20MB'
+      render :action => 'new'
+    end
   end
 
   def edit
@@ -76,6 +87,20 @@ class SongsController < ApplicationController
            :image => "<img src='#{s.album.cover_url}' height='30px'/>"}
         }
       }
+    end
+  end
+
+  def download_user_upload
+    file = Rails.root.join('tmp').join File.basename(params[:file])
+    if file.exist?
+      if params[:delete].present?
+        file.delete
+        render :nothing => true
+      else
+        send_file file
+      end
+    else
+      render :file => Rails.root.join('public/404.html'), :status => 404
     end
   end
 
