@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/alexcrichton/fargo
-  revision: e203d1dcce65866c772a1db6b6f57a0ebad4e0c1
+  revision: b2793dddda47d9602451fb1068cc888b39430041
   specs:
     fargo (0.4.0)
       activesupport (>= 3.0.3)
@@ -85,7 +85,7 @@ GEM
     erubis (2.7.0)
     escape_utils (0.2.4)
     eventmachine (0.12.10)
-    execjs (1.2.6)
+    execjs (1.2.7)
       multi_json (~> 1.0)
     guard (0.7.0)
       thor (~> 0.14.6)
