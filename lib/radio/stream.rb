@@ -113,13 +113,21 @@ class Radio
       Radio.logger.debug "Stream: #{@playlist.name} sending block..."
 
       EventMachine.defer proc {
-        self.send data
-        pct = '%.2f%%' % [@file.pos.to_f / @size * 100]
-        Radio.logger.debug "Stream: #{@playlist.name} #{pct}"
-        self.delay.to_f
-      }, proc { |delay|
-        # If the delay is negative, the timer will immediately fire
-        EventMachine.add_timer(delay / 1000.0){ stream_song }
+        begin
+          self.send data
+          pct = '%.2f%%' % [@file.pos.to_f / @size * 100]
+          Radio.logger.debug "Stream: #{@playlist.name} #{pct}"
+          self.delay.to_f
+        rescue ShoutError => e
+          e
+        end
+      }, proc { |delay_or_exception|
+        if delay_or_exception.is_a?(ShoutError)
+          finish_stream
+        else
+          # If the delay is negative, the timer will immediately fire
+          EventMachine.add_timer(delay_or_exception / 1000.0){ stream_song }
+        end
       }
     end
 
@@ -130,7 +138,12 @@ class Radio
       if @playlist.playing
         EventMachine.next_tick { play_song }
       else
-        shout_disconnect
+        begin
+          shout_disconnect
+        rescue ShoutError
+          disconnect # Performs necessary metadata updates
+          return # Don't destroy our queue item
+        end
       end
 
       @song.inc :play_count, 1
