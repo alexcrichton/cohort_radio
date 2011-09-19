@@ -14,9 +14,10 @@ class CleanArtists
     if ENV['FARGO_LINK_DEST']
       path = Pathname.new ENV['FARGO_LINK_DEST']
       Song.all.each do |song|
-        song_path = path.join(song.artist_name, song.album_name, song.title)
+        song_path = path.join(song.artist_name, song.album_name,
+                              song.title + '.mp3')
         song_path.dirname.mkpath
-        song_path.make_symlink song.audio.path
+        FileUtils.ln_sf song.audio.path, song_path.to_s
       end
     end
 
