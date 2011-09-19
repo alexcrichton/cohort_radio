@@ -63,7 +63,7 @@ class SongsController < ApplicationController
   end
 
   def search
-    @songs = Song.search(params[:q])
+    @songs = Song.search(params[:q] || params[:term])
     @songs = @songs.limit params[:limit] || 10
     if params[:completion].blank?
       @songs = @songs.page(params[:page]).per(10)
@@ -72,8 +72,8 @@ class SongsController < ApplicationController
     respond_with @songs do |format|
       format.json {
         render :json => @songs.map{ |s|
-          {:value => s.id, :title => s.title, :artist => s.artist.name,
-            :image => "<img src='#{s.album.cover_url}' height='30px'/>"}
+          {:name => s.title, :artist => s.artist.name, :id => s.id,
+           :image => "<img src='#{s.album.cover_url}' height='30px'/>"}
         }
       }
     end

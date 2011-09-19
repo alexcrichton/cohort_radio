@@ -1,3 +1,5 @@
+#= require jquery-ui
+
 jQuery ->
   slug = $('#songs').data('id')
   channel = pusher.subscribe 'playlist-' + slug
@@ -32,3 +34,18 @@ jQuery ->
   $('.search .next').click ->
     radio.trigger 'client-next', playlist_id: slug
     false
+
+  $('#q').autocomplete(
+    source: '/songs/search.json'
+    select: (event, ui) ->
+      $(this).prev('input:hidden').val(ui.item.id)
+      $(this).val(ui.item.name)
+      false
+    focus: (event, ui) ->
+      $(this).val(ui.item.name)
+      false
+  ).data('autocomplete')._renderItem = (ul, item) ->
+    $('<li/>').data('item.autocomplete', item)
+              .append('<a>' + item.image + ' ' + item.artist + ' &mdash; ' +
+                              item.name + '</a>')
+              .appendTo(ul)
