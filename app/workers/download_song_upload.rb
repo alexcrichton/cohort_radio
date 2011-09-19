@@ -1,16 +1,15 @@
-require 'tempfile'
+require 'tmpdir'
 
 class DownloadSongUpload
 
   @queue = :songs
 
   def self.perform url
-    file = Tempfile.new 'download'
-    file.binmode
     uri = URI.parse(url)
-    file << Net::HTTP.get(uri)
-    file.close(false)
-    Resque.enqueue ConvertSong, file.path
+    dir = Dir.mktmpdir
+    file = File.join dir, File.basename(uri.path)
+    File.open(file, 'wb') { |f| f << Net::HTTP.get(uri) }
+    Resque.enqueue ConvertSong, file
     uri.query = 'delete=true'
     Net::HTTP.get(uri)
   end

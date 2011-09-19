@@ -40,7 +40,7 @@ class SongsController < ApplicationController
 
     if audio && audio.size < 20.megabytes
       flash[:notice] = 'File queued for processing!'
-      filename = Rails.root.join('tmp', SecureRandom.hex(20))
+      filename = Rails.root.join('tmp', File.basename(audio.path))
       filename.open('wb') { |f|
         while data = audio.read(65536)
           f << data
