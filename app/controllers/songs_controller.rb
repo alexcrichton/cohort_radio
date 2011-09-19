@@ -40,14 +40,14 @@ class SongsController < ApplicationController
 
     if audio && audio.size < 20.megabytes
       flash[:notice] = 'File queued for processing!'
-      filename = Rails.root.join('tmp', File.basename(audio.path))
-      filename.open('wb') { |f|
+      grid = Mongo::GridFileSystem.new Mongoid.database
+
+      grid.open(audio.original_filename, 'w') { |f|
         while data = audio.read(65536)
-          f << data
+          f.write data
         end
       }
-      Resque.enqueue DownloadSongUpload,
-                     download_user_upload_url(filename.basename)
+      Resque.enqueue DownloadSongUpload, audio.original_filename
       redirect_to root_path
     else
       flash.now[:error] = 'Need a file less than 20MB'
@@ -92,20 +92,6 @@ class SongsController < ApplicationController
            :image => "<img src='#{s.album.cover_url}' height='30px'/>"}
         }
       }
-    end
-  end
-
-  def download_user_upload
-    file = Rails.root.join('tmp').join File.basename(params[:file])
-    if file.exist?
-      if params[:delete].present?
-        file.delete
-        render :nothing => true
-      else
-        send_file file
-      end
-    else
-      render :file => Rails.root.join('public/404.html'), :status => 404
     end
   end
 
