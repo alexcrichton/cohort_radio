@@ -1,7 +1,8 @@
 class SongsController < ApplicationController
 
   load_resource :artist, :find_by => :slug
-  load_and_authorize_resource
+  load_resource :except => :create
+  authorize_resource
 
   respond_to :html, :js
 
