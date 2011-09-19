@@ -68,7 +68,7 @@ class Radio
         artist = song.audio.artist
         album  = song.audio.album
 
-        string = title
+        string = title || 'unknown'
         string << ' ('
         string << artist unless artist.blank?
         if album.present?
