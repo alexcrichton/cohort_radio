@@ -67,12 +67,13 @@ namespace :workers do
 
   desc 'Stop just the queue worker process'
   task :stop_queue do
-    run "pkill -QUIT -f 'resque.*scrobble'; true"
+    run "pkill -USR2 -f 'resque.*scrobble'; true" # Stop processing more items
+    run "pkill -QUIT -f 'resque.*scrobble'; true" # Stop after current job
   end
 
   desc 'Stop just the fargo worker process'
   task :stop_fargo do
-    run "pkill -QUIT -f 'script/worker'; true"
+    run "pkill -QUIT -f 'script/worker'; true" # Gracefully quit after downloads
   end
 
   desc 'Stop the foreman processes'
