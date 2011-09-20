@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/alexcrichton/fargo
-  revision: 2518ccbfc7b74778f26a6695b06acaa1bebbe1ea
+  revision: 508a235d15be92c76d29bb5b7f4754482dd028c0
   specs:
     fargo (0.4.0)
       activesupport (>= 3.0.3)
