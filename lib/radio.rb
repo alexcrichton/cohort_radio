@@ -22,7 +22,7 @@ class Radio
 
   def disconnect
     @streaming.each_value { |stream|
-      stream.disconnect unless stream.disconnected?
+      stream.disconnect
     }
   end
 
