@@ -119,11 +119,12 @@ class Radio
           Radio.logger.debug "Stream: #{@playlist.name} #{pct}"
           self.delay.to_f
         rescue ShoutError => e
+          Radio.logger.warn("ShoutError!!!: #{e.message}")
           e
         end
       }, proc { |delay_or_exception|
         if delay_or_exception.is_a?(ShoutError)
-          finish_stream
+          finish_stream delay_or_exception
         else
           # If the delay is negative, the timer will immediately fire
           EventMachine.add_timer(delay_or_exception / 1000.0){ stream_song }
@@ -131,11 +132,11 @@ class Radio
       }
     end
 
-    def finish_stream
+    def finish_stream err = nil
       Radio.logger.debug "Stream: #{@playlist.name} - done - #{@file.path}"
       @file.close
 
-      if @playlist.playing
+      if err.nil? && @playlist.playing
         EventMachine.next_tick { play_song }
       else
         begin
