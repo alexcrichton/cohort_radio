@@ -30,7 +30,7 @@ CohortRadio::Application.routes.draw do
       env = Rails.application.assets
       digest = Rails.application.config.assets.digest
       ['mobile.js', 'mobile.css', 'fargo/search.js',
-       'fargo/mobile_search.css'].each do |asset|
+       'fargo/mobile_search.css', 'ajax-small.gif'].each do |asset|
         if digest
           cache '/assets/' + env[asset].digest_path
         else
