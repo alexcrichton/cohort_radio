@@ -1,0 +1,38 @@
+h1 {
+  margin: 0;
+}
+
+input[type=text] {
+  width: 92%;
+  font-size: 120%;
+}
+
+#search-response {
+  list-style: none;
+  padding: 0;
+}
+
+.result {
+  border: 1px solid black;
+  overflow: auto;
+
+  .notice {
+    background-color: #CFC;
+    border: solid 1px #6C6;
+  }
+
+  .size, .download, .nick { font-size: 12px; }
+  .size { width: 60px; }
+  .download { margin: 0 auto; }
+  .nick { width: 50px; overflow: hidden; }
+  .file { clear: both; font-size: 13px}
+
+  .more { display: none; }
+
+  .coalesced { display: none; }
+
+  & > div, & > a {
+    padding: 5px;
+    float: left;
+  }
+}

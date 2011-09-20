@@ -1,0 +1,29 @@
+//= require ./menus
+
+html {
+  background-color: #4B7399;
+  font-family: Verdana, Helvetica, Arial;
+  font-size: 14px;
+  height: 100%;
+}
+
+a {
+  color: #0000FF;
+}
+
+#container {
+  background-color: #FFF;
+  border: solid 2px black;
+  margin-top: 10px;
+  overflow: auto;
+}
+
+section#content {
+  margin: 10px;
+}
+
+header {
+  overflow: auto;
+  height: 40px;
+  padding: 0 10px 0 0;
+}

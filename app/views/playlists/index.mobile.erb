@@ -1,0 +1,5 @@
+<h1>Playlists</h1>
+
+<% for playlist in @playlists %>
+  <div class='playlist'><%= link_to playlist.name, playlist %></div>
+<% end %>

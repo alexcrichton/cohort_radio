@@ -1,0 +1,19 @@
+<% provide :javascripts do %>
+  <%= javascript_include_tag 'mobile', 'fargo/search' %>
+<% end %>
+<% provide :stylesheets do %>
+  <%= stylesheet_link_tag 'fargo/mobile_search' %>
+<% end %>
+
+<h1>Searching Fargo</h1>
+
+<div class='search' id='fargo-search'>
+  <%= form_tag(fargo_search_path, :method => :get, :remote => true) do %>
+    <p>
+      <%= text_field_tag :q, params[:q], :placeholder => 'Search query' %>
+      <%= hidden_field_tag :channel, @channel %>
+    </p>
+  <% end %>
+</div>
+
+<ul id='search-response'></ul>

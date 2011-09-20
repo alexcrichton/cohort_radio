@@ -1,7 +1,5 @@
 class FargoController < ApplicationController
 
-  before_filter :require_fargo_connected
-
   def search
     @channel = params[:channel] || SecureRandom.hex(10)
     if params[:q].present?
