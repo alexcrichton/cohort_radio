@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/alexcrichton/fargo
-  revision: b2793dddda47d9602451fb1068cc888b39430041
+  revision: 2518ccbfc7b74778f26a6695b06acaa1bebbe1ea
   specs:
     fargo (0.4.0)
       activesupport (>= 3.0.3)
@@ -69,7 +69,7 @@ GEM
     coffee-script-source (1.1.2)
     crack (0.1.8)
     database_cleaner (0.6.7)
-    devise (1.4.5)
+    devise (1.4.6)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.0.3)
       warden (~> 1.0.3)
