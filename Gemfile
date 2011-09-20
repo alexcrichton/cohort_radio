@@ -17,6 +17,8 @@ gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'kaminari'
 gem 'redcarpet'
 
+gem 'rack-offline'
+
 # Asset Management
 group :assets do
   gem 'jquery-rails'
