@@ -24,20 +24,23 @@ CohortRadio::Application.routes.draw do
 
   get 'users/search'
 
-  offline = Rack::Offline.configure(:cache_interval => 1) do
-    env = Rails.application.assets
-    digest = Rails.application.config.assets.digest
-    ['mobile.js', 'mobile.css', 'fargo/search.js',
-     'fargo/mobile_search.css'].each do |asset|
-      if digest
-        cache '/assets/' + env[asset].digest_path
-      else
-        cache '/assets/' + env[asset].logical_path
+  get 'application.manifest' => lambda{ |env|
+    opts = Rails.env.production? ? {} : {:cache_interval => 1}
+    @offline ||= Rack::Offline.configure(opts) do
+      env = Rails.application.assets
+      digest = Rails.application.config.assets.digest
+      ['mobile.js', 'mobile.css', 'fargo/search.js',
+       'fargo/mobile_search.css'].each do |asset|
+        if digest
+          cache '/assets/' + env[asset].digest_path
+        else
+          cache '/assets/' + env[asset].logical_path
+        end
       end
+      network '/'
     end
-    network '/'
-  end
-  get 'application.manifest' => offline
+    @offline.call env
+  }
   root :to => 'playlists#index'
 
   resources :playlists, :path => '', :except => [:index, :create, :new] do
