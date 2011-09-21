@@ -36,7 +36,7 @@ EM.run {
 
   pusher = nil
   downloads = []
-  pusher_callback = lambda { |ws|
+  pusher_callback = proc { |ws|
     pusher = ws
     # ========== Fargo Events ==============
 
@@ -97,10 +97,10 @@ EM.run {
     end
   }
 
-  EM.connect uri.host, uri.port, EM::PusherSocket, &lambda
+  EM.connect uri.host, uri.port, EM::PusherSocket, &pusher_callback
   EM.add_periodic_timer(3600) do
     pusher.close_connection(true)
-    EM.connect uri.host, uri.port, EM::PusherSocket, &lambda
+    EM.connect uri.host, uri.port, EM::PusherSocket, &pusher_callback
   end
 
   # Failed download jobs get placed back into normal resque queues when
