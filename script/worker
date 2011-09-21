@@ -36,7 +36,7 @@ EM.run {
 
   pusher = nil
   downloads = []
-  pusher_callback = lambda do |ws|
+  pusher_callback = lambda { |ws|
     pusher = ws
     # ========== Fargo Events ==============
 
@@ -95,7 +95,7 @@ EM.run {
       Rails.logger.debug "Next song on: #{data['playlist_id']}"
       radio.next data['playlist_id']
     end
-  end
+  }
 
   EM.connect uri.host, uri.port, EM::PusherSocket, &lambda
   EM.add_periodic_timer(3600) do
