@@ -24,7 +24,7 @@ CohortRadio::Application.routes.draw do
 
   get 'users/search'
 
-  get 'application.manifest' => lambda{ |env|
+  get 'cache.manifest' => lambda{ |env|
     opts = Rails.env.production? ? {} : {:cache_interval => 1}
     @offline ||= Rack::Offline.configure(opts) do
       env = Rails.application.assets
